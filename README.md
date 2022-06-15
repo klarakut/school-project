@@ -78,7 +78,7 @@ Swagger: [API v1.0.0](https://app.swaggerhub.com/apis-docs/fox-dining/fox-dining
 
 JIRA:
 
-- see [Roadmap](https://greenfoxacademy.atlassian.net/jira/software/projects/FDP/boards/77/roadmap)
+- see [Roadmap](https://greenfoxacademy.atlassian.net/jira/software/projects/EFDT2/boards/97/roadmap)
 
 Project:
 
