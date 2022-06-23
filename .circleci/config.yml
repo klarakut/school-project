@@ -31,8 +31,7 @@ jobs:
 
       - run: 
           name: chmod permissions
-          command: |
-            sudo chmod +x ./backend/gradlew && ./backend/gradlew compileDebug --stacktrace
+          command:  sudo chmod +x ./backend/gradlew
             
           
 
