@@ -28,11 +28,11 @@ jobs:
             - v1-dependencies-{{ checksum "build.gradle" }}
             # fallback to using the latest cache if no exact match is found
 
-      - run: ./gradlew build
+      - run: ./backend/gradlew build
 
       - save_cache:
           paths:
-            - ~/.gradle
+            - ~/backend/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
 
@@ -43,6 +43,6 @@ jobs:
       #    path: build/reports/checkstyle
 
       # run tests!
-      - run: ./gradlew test
+      - run: ./backend/gradlew test
       - store_artifacts:
           path: build/reports/jacoco/test
