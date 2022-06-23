@@ -28,7 +28,9 @@ jobs:
             - v1-dependencies-{{ checksum "backend/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
 
-      - run: ./backend/gradlew build
+      - run: 
+          name: chmod permissions
+          command: sudo chmod +x ./gradlew
 
       - save_cache:
           paths:
