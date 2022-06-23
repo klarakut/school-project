@@ -2,6 +2,7 @@ version: 2.1
 jobs:
   build:
     docker:
+    - image: circleci/openjdk:11-jdk
     # specify the version you desire here
     - image: cimg/mysql:8.0
       #specify system properties
