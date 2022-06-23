@@ -30,7 +30,7 @@ jobs:
 
       - run: 
           name: chmod permissions
-          command: sudo chmod +x ./gradlew
+          command: sudo chmod +x ./backend/gradlew
 
       - save_cache:
           paths:
