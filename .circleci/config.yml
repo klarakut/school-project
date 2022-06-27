@@ -8,7 +8,7 @@ jobs:
       #specify system properties
       environment:
         DB_ROOT_USER: $DB_USERNAME
-        DB_DRIVER: com.mysql.cj.jdbc.Driver
+        DB_DRIVER: org.h2.Driver
         DB_PASS: $DB_PASSWORD
         MEMBER_DB_URL: $DB_URL
       
