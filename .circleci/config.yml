@@ -26,19 +26,19 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-{{ checksum "backend/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
 
       - run: 
           name: chmod permissions
-          command:  sudo chmod +x ./gradlew
+          command:  sudo chmod +x ./backend/gradlew
             
           
 
       - save_cache:
           paths:
-            - ~/.gradlew
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+            - ~/backend/.gradle
+          key: v1-dependencies-{{ checksum "backend/build.gradle" }}
 
 
       # run checkstyle
