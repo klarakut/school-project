@@ -1,9 +1,6 @@
 package com.gfa.users.services;
 
-import com.gfa.common.dtos.CreateUserRequestDto;
-import com.gfa.common.dtos.ErrorResponseDto;
-import com.gfa.common.dtos.ResponseDto;
-import com.gfa.common.dtos.UserResponseDto;
+import com.gfa.common.dtos.*;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -76,6 +73,18 @@ public class UserServiceImpl implements UserService{
         UserResponseDto userResponseDto = new UserResponseDto(user);
         return new ResponseEntity<UserResponseDto>(userResponseDto,HttpStatus.CREATED);
     }
+
+    @Override
+    public ResponseEntity<? extends ResponseDto> findUserByEmail(EmailRequestDto emailDto) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<? extends ResponseDto> findUserByResetToken(PasswordResetRequestDto tokenReset) {
+        return null;
+    }
+
+
 
     @Override
     public ResponseEntity<ResponseDto> index() {
