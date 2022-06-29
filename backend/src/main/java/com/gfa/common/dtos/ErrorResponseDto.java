@@ -1,10 +1,10 @@
 package com.gfa.common.dtos;
 
-public class ErrorResponseDto extends ResponseDto{
+class ErrorResponseDto {
+  public final String message;
 
-    public final String error;
-
-    public ErrorResponseDto(String error) {
-        this.error = error;
-    }
+  @JsonCreator
+  public ErrorResponseDto(String message) {
+    this.message = message;
+  }
 }
