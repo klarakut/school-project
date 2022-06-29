@@ -5,12 +5,10 @@ import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -19,9 +17,12 @@ public class UserServiceImpl implements UserService{
     private final EmailValidator emailValidator;
     private final UserRepository userRepository;
 
-    public UserServiceImpl(EmailValidator emailValidator, UserRepository userRepository) {
+    private final EmailServiceImpl emailServiceImpl;
+
+    public UserServiceImpl(EmailValidator emailValidator, UserRepository userRepository, EmailServiceImpl emailServiceImpl) {
         this.emailValidator = emailValidator;
         this.userRepository = userRepository;
+        this.emailServiceImpl = emailServiceImpl;
     }
 
     public ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto){
@@ -80,11 +81,25 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseEntity<? extends ResponseDto> findUserByEmail(EmailRequestDto emailDto) {
-    if (!userRepository.existsByEmail(emailDto.email)) {
+    if (!userRepository.existsByEmail(emailDto.email)) {                                                        //validate user by receive email
       return new ResponseEntity<>(new ErrorResponseDto("invalid email!"), HttpStatus.BAD_REQUEST);
-            }
-    User user = userRepository.findByEmail(emailDto.email);
+    } else {
+      User user = userRepository.findByEmail(emailDto.email);                                                   //find user by email
+      user.setForgottenPasswordToken(UUID.randomUUID().toString());                                             //create a Token
+      userRepository.save(user);                                                                                //save a Token
+        //String appUrl = request.getScheme() + "://" + request.getServerName();                                 // scheme of our URL
 
+        SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
+        passwordResetEmail.setFrom("support@demo");                                                             //set a emailFrom
+        passwordResetEmail.setTo(user.getEmail());
+        passwordResetEmail.setSubject("Password Reset Request");
+        passwordResetEmail.setText("To reset your password, click the link below:\n" + appUrl + "/reset?token=" + user.getForgottenPasswordToken());
+
+        emailServiceImpl.sendEmail(passwordResetEmail);
+
+        return new ResponseEntity<>(new StatusResponseDto("ok"), HttpStatus.OK);
+
+    }
 
 
 
