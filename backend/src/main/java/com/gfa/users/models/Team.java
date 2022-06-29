@@ -79,7 +79,7 @@ public class Team {
 
    */
 
-  public boolean is(Team t) {
+  /*public boolean is(Team t) {
     return (name.equals(t.name));
   }
 
@@ -99,5 +99,5 @@ public class Team {
       }
     }
     return false;
-  }
+  }*/
 }

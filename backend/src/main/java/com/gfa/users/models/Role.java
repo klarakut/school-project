@@ -68,7 +68,7 @@ public class Role {
         return (role.equals(r.role));
     }
 
-    public Boolean can(Permission permission){
+    /*public Boolean can(Permission permission){
         return can(permission.getAbility);
     }
 
@@ -79,5 +79,5 @@ public class Role {
             }
         }
         return false;
-    }
+    }*/
 }
