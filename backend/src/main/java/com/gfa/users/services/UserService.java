@@ -14,8 +14,8 @@ public interface UserService{ //extends UserDetailsService {
         ResponseEntity<ResponseDto> show(Long id);
         ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto);
 
-        ResponseEntity<? extends ResponseDto> findUserByEmail(EmailRequestDto emailDto);
-        ResponseEntity<? extends ResponseDto> findUserByResetToken(PasswordResetRequestDto tokenReset);
+        ResponseEntity<? extends ResponseDto> resetPasswords(EmailRequestDto emailDto);
+        ResponseEntity<? extends ResponseDto> resetPasswordViaToken(PasswordResetRequestDto resetPassword, String token);
 
 
 

@@ -143,6 +143,8 @@ public class User {
     return verificationTokenExpiresAt;
   }
 
+
+
   @Nullable
   public String getForgottenPasswordToken() {
     return forgottenPasswordToken;
@@ -155,6 +157,10 @@ public class User {
   @Nullable
   public Date getForgottenPasswordTokenExpiresAt() {
     return forgottenPasswordTokenExpiresAt;
+  }
+
+  public void setForgottenPasswordTokenExpiresAt(@Nullable Date forgottenPasswordTokenExpiresAt) {
+    this.forgottenPasswordTokenExpiresAt = forgottenPasswordTokenExpiresAt;
   }
 
   @NotNull
