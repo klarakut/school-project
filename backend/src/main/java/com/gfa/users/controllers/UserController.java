@@ -29,14 +29,6 @@ public abstract class UserController {
   }
      */
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<? extends ResponseDto> resetPassword(@RequestBody EmailRequestDto emailDto){
-        return userService.resetPasswords(emailDto);
-    }
 
-    @PostMapping("/reset-password/{token}")
-    public ResponseEntity<? extends ResponseDto> resetPasswordviaSendToken(@RequestBody PasswordResetRequestDto passwordResetRequestDto, @PathVariable String token){
-        return userService.resetPasswordViaToken(passwordResetRequestDto, token);
-    }
 
 }
