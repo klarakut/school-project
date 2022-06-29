@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -76,7 +78,14 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseEntity<? extends ResponseDto> findUserByEmail(EmailRequestDto emailDto) {
-        return null;
+    if (!userRepository.existsByEmail(emailDto.email)) {
+      return new ResponseEntity<>(new ErrorResponseDto("invalid email!"), HttpStatus.BAD_REQUEST);
+            }
+    User user = userRepository.findByEmail(emailDto.email);
+
+
+
+
     }
 
     @Override
