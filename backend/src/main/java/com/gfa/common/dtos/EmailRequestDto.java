@@ -1,9 +1,12 @@
 package com.gfa.common.dtos;
 
-public class EmailRequestDto {
-    public final String email;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
-    public EmailRequestDto(String email) {
-        this.email = email;
-    }
+public class EmailRequestDto {
+  public final String email;
+
+  @JsonCreator
+  public EmailRequestDto(String email) {
+    this.email = email;
+  }
 }

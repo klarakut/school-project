@@ -76,6 +76,8 @@ public class UserServiceImpl implements UserService{
         return new ResponseEntity<UserResponseDto>(userResponseDto,HttpStatus.CREATED);
     }
 
+
+
     @Override
     public ResponseEntity<? extends ResponseDto> findUserByEmail(EmailRequestDto emailDto) {
     if (!userRepository.existsByEmail(emailDto.email)) {
