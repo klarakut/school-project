@@ -88,24 +88,24 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public ResponseEntity<? extends ResponseDto> resetPasswords(EmailRequestDto emailDto) {
-    if (!userRepository.existsByEmail(emailDto.email)) { // validate user by receive email
+    if (!userRepository.existsByEmail(emailDto.email)) {                                            // validate user by receive email
       return new ResponseEntity<>(new ErrorResponseDto("invalid email!"), HttpStatus.BAD_REQUEST);
     } else {
-      User user = userRepository.findByEmail(emailDto.email); // find user by email
-      user.setForgottenPasswordToken(UUID.randomUUID().toString()); // create a Token
+      User user = userRepository.findByEmail(emailDto.email);                                       // find user by email
+      user.setForgottenPasswordToken(UUID.randomUUID().toString());                                 // create a Token
       user.setForgottenPasswordTokenExpiresAt(
-          new Date(System.currentTimeMillis() + expirationTime)); // set token with expiration
+          new Date(System.currentTimeMillis() + expirationTime));                                  // set token with expiration
       userRepository.save(user);
-      // String appUrl = request.getScheme() + "://" + request.getServerName();
-      //       // scheme of our URL
+      // String appUrl = request.getScheme() + "://" + request.getServerName();                      // scheme of our URL
 
-      SimpleMailMessage passwordResetEmail = new SimpleMailMessage(); // created mail
-      passwordResetEmail.setFrom("support@demo"); // set a emailFrom
+
+      SimpleMailMessage passwordResetEmail = new SimpleMailMessage();                               // created mail
+      passwordResetEmail.setFrom("support@demo");                                                   // set a emailFrom
       passwordResetEmail.setTo(user.getEmail());
       passwordResetEmail.setSubject("Password Reset Request");
       passwordResetEmail.setText(
           "To reset your password, click the link below:\n"
-              + appUrl // need to set in constant
+              + appUrl                                                                              // need to set in constant
               + "/reset?token="
               + user.getForgottenPasswordToken());
 
@@ -118,16 +118,12 @@ public class UserServiceImpl implements UserService {
   @Override
   public ResponseEntity<? extends ResponseDto> resetPasswordViaToken(
       PasswordResetRequestDto resetPassword, String token) {
-    User user = userRepository.findByForgottenPasswordToken(token); // finding a user by token
+    User user = userRepository.findByForgottenPasswordToken(token);                                 // finding a user by token
     Date currentDate = new Date(System.currentTimeMillis());
     if (userRepository.existsByForgottenPasswordToken(token)
-        && currentDate.after(
-            user
-                .getForgottenPasswordTokenExpiresAt())) { // check current date with expiration and
-                                                          // user
-                                                          //              //compare user by token
-      user.setPassword(resetPassword.password); // set new Password
-      user.setForgottenPasswordToken(null); // reset token value to null
+        && currentDate.before(user.getForgottenPasswordTokenExpiresAt())) {                         // check current date with expiration and compare user by token
+      user.setPassword(resetPassword.password);                                                     // set new Password
+      user.setForgottenPasswordToken(null);                                                         // reset token value to null
       userRepository.save(user);
       return new ResponseEntity<>(new StatusResponseDto("ok"), HttpStatus.OK);
     } else {
