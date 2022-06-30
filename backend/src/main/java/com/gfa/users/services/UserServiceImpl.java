@@ -166,6 +166,7 @@ public class UserServiceImpl implements UserService {
       userRepository.save(user);
       return new ResponseEntity<>(new StatusResponseDto("ok"), HttpStatus.OK);
      }
+    // 6. Request in the same password as currently set should just set the password and return the “ok” status message
     if (userRepository.existsByForgottenPasswordToken(token) && currentDate.before(user.getForgottenPasswordTokenExpiresAt()) && resetPassword.password.equals(user.getPassword())) {                                      //PROBLEM !!! will be same or not if there is a use hashing
       user.setPassword(resetPassword.password);
       user.setForgottenPasswordToken(null);
