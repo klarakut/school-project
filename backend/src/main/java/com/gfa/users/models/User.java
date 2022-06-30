@@ -43,13 +43,13 @@ public class User {
 
   @NotNull private Date createdAt;
 
-  @ManyToMany(mappedBy = "user_permissions")
+  @ManyToMany(mappedBy = "users")
   Set<Permission> permissions;
 
-  @ManyToMany(mappedBy = "user_roles")
+  @ManyToMany(mappedBy = "users")
   Set<Role> roles;
 
-  @ManyToMany(mappedBy = "user_teams")
+  @ManyToMany(mappedBy = "users")
   Set<Team> teams;
 
   public User() {}
