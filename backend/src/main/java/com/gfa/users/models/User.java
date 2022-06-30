@@ -12,11 +12,11 @@ import java.util.Set;
 @Entity
 public class User {
 
-  @Id
+  @id
   @Column(unique = true)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @NotNull
-  private Long Id;
+  private Long id;
 
   @NotNull
   @Column(unique = true)
@@ -76,7 +76,7 @@ public class User {
       @Nullable String forgottenPasswordToken,
       @Nullable Date forgottenPasswordTokenExpiresAt,
       @NotNull Date createdAt) {
-    Id = id;
+    this.id = id;
     this.username = username;
     this.email = email;
     this.password = password;
@@ -88,8 +88,18 @@ public class User {
     this.createdAt = createdAt;
   }
 
+  SecureRandom random = new SecureRandom();
+  Integer randomSecureValue = random.nextInt();
+
+  public User(CreateUserRequestDto dto, Long expirationTime){
+    this(dto.username, dto.email, dto.password);
+    this.verifiedAt = null;
+    this.verificationToken = String.valueOf(randomSecureValue);
+    this.verificationTokenExpiresAt = new Date(System.currentTimeMillis() + expirationTime);
+  }
+
   public void setId(@NotNull Long id) {
-    Id = id;
+    this.id = id;
   }
 
   @NotNull
@@ -103,7 +113,7 @@ public class User {
 
   @NotNull
   public Long getId() {
-    return Id;
+    return id;
   }
 
   @NotNull
@@ -168,15 +178,13 @@ public class User {
     return date;
   }
 
-  public Boolean can(Permission permission){
-    for(Permission p : permissions){
-      if(p.is(permission)) return true;
-    }
+  /*public Boolean can(Permission permission){    This will be implemented in a future ticket.
+    if can(permission.getAbility()) return true;
     for(Role role : roles){
-      if(role.can(permission))return true;}
+      if(role.can(permissions))return true;}
     for (Team team : teams){
-      if(team.is(permission)) return true;
+      if(team.is(permissions)) return true;
     }
     return false;
-  }
+  }*/
 }
