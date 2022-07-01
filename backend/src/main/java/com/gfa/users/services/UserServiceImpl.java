@@ -41,12 +41,12 @@ public class UserServiceImpl implements UserService{
             return new ResponseEntity<>(new ErrorResponseDto("Invalid email"), HttpStatus.BAD_REQUEST);
         }
 
-        User user = existingUserByEmail(emailRequestDto.email);
+        User user = userRepository.findUserByEmail(email);
 
         //#2
         if (user == null){
             //send an email to “random” (or designated) email address
-            return new ResponseEntity<>(HttpStatus.resolve(200));
+            return new ResponseEntity<? extends ResponseDto>(HttpStatus.OK);
         }
 
         //#3
