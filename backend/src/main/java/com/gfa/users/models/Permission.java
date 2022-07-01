@@ -18,18 +18,24 @@ public class Permission {
   @NotNull
   private String ability;
 
-  /*
+
   @ManyToMany (mappedBy = "permissions" )
   Set<Team> teams;
 
 
-  @ManyToMany (mappedBy = )
-  Set<User> users;                    Integrate after the merging other models together. I'll change it.
+  @ManyToMany
+  @JoinTable(
+            name = "permission_user",
+            joinColumns = @JoinColumn(name = "permission_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+  Set<User> users;
 
-  @ManyToMany (mappedBy = )
+
+
+  @ManyToMany (mappedBy = "permissions" )
   Set<Role> roles;
 
-   */
+
 
   public Permission() {}
 

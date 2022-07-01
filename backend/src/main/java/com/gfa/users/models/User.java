@@ -1,9 +1,11 @@
 package com.gfa.users.models;
 
+import com.gfa.common.dtos.CreateUserRequestDto;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import javax.persistence.*;
+import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,7 +14,7 @@ import java.util.Set;
 @Entity
 public class User {
 
-  @id
+  @Id
   @Column(unique = true)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @NotNull
@@ -43,13 +45,13 @@ public class User {
 
   @NotNull private Date createdAt;
 
-  @ManyToMany(mappedBy = "user_permissions")
+  @ManyToMany(mappedBy = "users")
   Set<Permission> permissions;
 
-  @ManyToMany(mappedBy = "user_roles")
+  @ManyToMany(mappedBy = "users")
   Set<Role> roles;
 
-  @ManyToMany(mappedBy = "user_teams")
+  @ManyToMany(mappedBy = "users")
   Set<Team> teams;
 
   public User() {}
@@ -91,12 +93,15 @@ public class User {
   SecureRandom random = new SecureRandom();
   Integer randomSecureValue = random.nextInt();
 
+  /*
   public User(CreateUserRequestDto dto, Long expirationTime){
     this(dto.username, dto.email, dto.password);
     this.verifiedAt = null;
     this.verificationToken = String.valueOf(randomSecureValue);
     this.verificationTokenExpiresAt = new Date(System.currentTimeMillis() + expirationTime);
   }
+
+   */
 
   public void setId(@NotNull Long id) {
     this.id = id;

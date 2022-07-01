@@ -33,7 +33,7 @@ public class UserRestController {
 
     @PostMapping("/reset-password/{token}")
     public ResponseEntity<? extends ResponseDto> resetPasswordViaSendToken(@RequestBody PasswordResetRequestDto passwordResetRequestDto, @PathVariable String token){
-        return userService.resetPasswordViaToken(passwordResetRequestDto, token);
+        return userService.resetPasswordViaToken(token,passwordResetRequestDto);
     }
 
 }

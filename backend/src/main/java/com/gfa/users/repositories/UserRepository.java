@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   Boolean existsByForgottenPasswordToken(String resetToken);
 
-  Boolean findByForgottenPasswordTokenExpiresAt (String resetToken);
+  User findByForgottenPasswordTokenExpiresAt (String resetToken);
 
   Optional<Object> findByUsernameOrEmail(String username, String email);
 

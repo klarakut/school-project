@@ -22,21 +22,21 @@ public class Role {
 
     @ManyToMany
     @JoinTable(
-            name = "role_permission_db",
+            name = "role_permission",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
     Set<Permission> permissions;
 
     @ManyToMany
     @JoinTable(
-            name = "user_role_db",
+            name = "user_role",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     Set<User> users;
 
     @ManyToMany
     @JoinTable(
-            name = "team_role_db",
+            name = "team_role",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "team_id"))
     Set<Team> teams;
@@ -69,12 +69,12 @@ public class Role {
     }
 
     public Boolean can(Permission permission){
-        return can(permission.getAbility);
+        return can(permission.getAbility());
     }
 
     public Boolean can(String ability){
         for(Permission permission : permissions){
-            if(ability.equals(permission.getAbility)){
+            if(ability.equals(permission.getAbility())){
                 return true;
             }
         }

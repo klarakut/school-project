@@ -19,25 +19,22 @@ public class Team {
   @NotNull
   private String name;
 
-  /*
+  @ManyToMany
+  @JoinTable(
+      name = "team_permissions",
+      joinColumns = @JoinColumn(name = "team_id"),
+      inverseJoinColumns = @JoinColumn(name = "permission_id"))
+  Set<Permission> permissions;
 
-    @ManyToMany
-    @JoinTable(
-            name = "teamPermissionDb",
-            joinColumns = @JoinColumn(name = "team_Id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_Id"))
-    Set<Permission> permissions;
+  @ManyToMany
+  @JoinTable(
+      name = "team_user",
+      joinColumns = @JoinColumn(name = "team_id"),
+      inverseJoinColumns = @JoinColumn(name = "user_id"))
+  Set<User> users;
 
-
-
-
-  @ManyToMany (mappedBy = )
-  Set<User> users;                    Integrate after the merging other models together
-
-  @ManyToMany (mappedBy = )
+  @ManyToMany(mappedBy = "teams")
   Set<Role> roles;
-
-   */
 
   public Team() {}
 
@@ -54,37 +51,36 @@ public class Team {
     return id;
   }
 
-  /*                                  Classes are not conneted so Unit test will be write after merging
   public void addUser(User user) {
     users.add(user);
   }
+
   public void removeUser(User user) {
     users.remove(user);
   }
 
-  public void addPermision(Permission permission){
+  public void addPermision(Permission permission) {
     permissions.add(permission);
   }
 
-  public void removePermission(Permission permission){
+  public void removePermission(Permission permission) {
     permissions.remove(permission);
   }
-  public void addRole(Role role){
+
+  public void addRole(Role role) {
     roles.add(role);
   }
 
-  public void removeRole(Role role){
+  public void removeRole(Role role) {
     roles.remove(role);
   }
-
-   */
 
   public boolean is(Team t) {
     return (name.equals(t.name));
   }
 
   public boolean can(Permission permission) {
-    return can(permission.getAbility);
+    return can(permission.getAbility());
   }
 
   public boolean can(String ability) {
@@ -94,7 +90,7 @@ public class Team {
       }
     }
     for (Role role : roles) {
-      if (ability.equals(role.getAbility())) {
+      if (role.can(ability)) {
         return true;
       }
     }

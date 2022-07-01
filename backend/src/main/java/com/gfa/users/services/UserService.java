@@ -15,7 +15,7 @@ public interface UserService{ //extends UserDetailsService {
         ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto);
 
         ResponseEntity<? extends ResponseDto> resetPasswords(EmailRequestDto emailDto);
-        ResponseEntity<? extends ResponseDto> resetPasswordViaToken(PasswordResetRequestDto resetPassword, String token);
+        ResponseEntity<? extends ResponseDto> resetPasswordViaToken(String token, PasswordResetRequestDto resetPassword);
 
 
 
