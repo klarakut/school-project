@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 
@@ -18,46 +19,49 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private final EmailValidator emailValidator;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository,EmailValidator emailValidator) {
         this.userRepository = userRepository;
+        this.emailValidator = emailValidator;
     }
 
-
     @Override
-    public User existingUserByEmail(String email){  //I not sure if this part (method) is necessary
+    public User existingUserByEmail(String email){
         Optional<User> user = userRepository.findUserByEmail(email);
         return user.orElse(null);
     }
+
     @Override
     public ResponseEntity<? extends ResponseDto> resendVerificationEmail(EmailRequestDto emailRequestDto) {
+        //#1
+        boolean isValid = emailValidator.isValid(emailRequestDto.email);
+        if(!isValid){
+            return new ResponseEntity<>(new ErrorResponseDto("Invalid email"), HttpStatus.BAD_REQUEST);
+        }
 
         User user = existingUserByEmail(emailRequestDto.email);
 
-        // #4
+        //#2
         if (user == null){
-            return new ResponseEntity<>(HttpStatus.OK);
             //send an email to “random” (or designated) email address
+            return new ResponseEntity<>(HttpStatus.resolve(200));
         }
 
-        // #1
+        //#3
         if(user.getVerifiedAt() != null){
+            if(user.getVerifiedAt().after(new Date(System.currentTimeMillis()))){
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
            return new ResponseEntity<>(new ErrorResponseDto("Email already verified"), HttpStatus.BAD_REQUEST);
         }
 
-        // #2
-        /*boolean isValid = emailValidator(emailRequestDto);
-        if(!isValid){
-            return new ResponseEntity<>(new ErrorResponseDto("Invalid email"), HttpStatus.BAD_REQUEST);
-        }*/
-
-        // #3
+        //#4
         if(user.getVerifiedAt() == null){
-            return new ResponseEntity<>(HttpStatus.OK);
             //resend email
+            return new ResponseEntity<>(HttpStatus.OK);
         }
-
-        //#5
         return new ResponseEntity<>(new ErrorResponseDto("Unknown error"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
