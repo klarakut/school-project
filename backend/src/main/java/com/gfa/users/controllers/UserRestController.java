@@ -1,7 +1,9 @@
 package com.gfa.users.controllers;
 
-import com.gfa.users.dtos.EmailRequestDto;
-import com.gfa.users.dtos.ResponseDto;
+import com.gfa.common.dtos.CreateUserRequestDto;
+import com.gfa.common.dtos.ResponseDto;
+import com.gfa.common.dtos.EmailRequestDto;
+
 import com.gfa.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,11 @@ public class UserRestController {
 
     public UserRestController(UserService userService) {
         this.userService = userService;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<? extends ResponseDto> store(@RequestBody CreateUserRequestDto dto){
+        return userService.store(dto);
     }
 
     @PostMapping("/email/verify/resend")
