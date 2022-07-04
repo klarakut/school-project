@@ -148,6 +148,7 @@ public class UserServiceImpl implements UserService {
 
        */
     }
+
     if (user.getForgottenPasswordToken().equals(token)
         && currentDate.before(user.getForgottenPasswordTokenExpiresAt())
         && resetPassword.password.equals(
