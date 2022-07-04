@@ -19,6 +19,7 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     @Autowired
     private final EmailValidator emailValidator;
+    @Autowired
     private final EmailUtils emailUtils;
 
     public UserServiceImpl(UserRepository userRepository,EmailValidator emailValidator,EmailUtils emailUtils) {
@@ -29,11 +30,12 @@ public class UserServiceImpl implements UserService{
 
     
     @Override
-    public ResponseEntity<? extends ResponseDto> resendVerificationEmail(EmailRequestDto emailRequestDto) {
+    //public ResponseEntity<? extends ResponseDto> resendVerificationEmail(EmailRequestDto emailRequestDto) {
+    public StatusResponseDto resendVerificationEmail(EmailRequestDto emailRequestDto) {
         //#1
         boolean isValid = emailValidator.isValid(emailRequestDto.email);
-        if(!isValid){
-            return new ResponseEntity<>(new ErrorResponseDto("Invalid email"), HttpStatus.BAD_REQUEST);
+        if(!isValid || emailRequestDto.email.isEmpty()){
+        throw new InvalidEmailException();
         }
 
         User user = userRepository.findUserByEmail(emailRequestDto.email);
@@ -44,26 +46,19 @@ public class UserServiceImpl implements UserService{
                     + "http://localhost:3036/email/resend-verification-email"
             + "/reset?token="
                     + user.getVerificationToken());
-            return new ResponseEntity<>(new StatusResponseDto("ok"), HttpStatus.OK);
+            return new StatusResponseDto("ok");
         }
 
         //#3
         if(user.getVerifiedAt() != null){
-            if(user.getVerifiedAt().after(new Date(System.currentTimeMillis()))){
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-           return new ResponseEntity<>(new ErrorResponseDto("Email already verified"), HttpStatus.BAD_REQUEST);
+            throw new AlreadyVerifiedException();
         }
 
-        //#4
-        if(user.getVerifiedAt() == null){
             emailUtils.sendHtmlEmail(user.getEmail(), "support@demo.com", "Resend verification email", "To verify your email address, click the link below:\n"
                     + "http://localhost:3036/email/resend-verification-email"
                     + "/reset?token="
                     + user.getVerificationToken());
-            return new ResponseEntity<>(new StatusResponseDto("ok"), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new ErrorResponseDto("Unknown error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new StatusResponseDto("ok");
     }
 
     public ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto){
