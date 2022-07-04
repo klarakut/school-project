@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
     if (user.getForgottenPasswordToken().equals(token)
         && currentDate.before(user.getForgottenPasswordTokenExpiresAt())
         && resetPassword.password.equals(
-            user.getPassword())) { // PROBLEM !!! will be same or not if there is a use hashing
+            user.getPassword())) {                          // PROBLEM !!! will be same or not if there is a use hashing
       user.setPassword(resetPassword.password);
       user.setForgottenPasswordToken(null);
       userRepository.save(user);
