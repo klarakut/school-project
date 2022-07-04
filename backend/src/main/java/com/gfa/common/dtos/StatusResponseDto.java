@@ -6,7 +6,6 @@ public class StatusResponseDto extends ResponseDto{
 
     public final String status;
 
-    @JsonCreator
     public StatusResponseDto(String status) {
         this.status = status;
     }

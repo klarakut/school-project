@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserService {
         ResponseEntity<? extends ResponseDto> resendVerificationEmail(EmailRequestDto emailRequestDto);
-        public User existingUserByEmail(String email);
         ResponseEntity<ResponseDto> index();
         ResponseEntity<ResponseDto> show(Long id);
         ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto);
