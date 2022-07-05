@@ -2,8 +2,10 @@ package com.gfa.users.services;
 
 import com.gfa.common.dtos.EmailRequestDto;
 import com.gfa.common.dtos.PasswordResetRequestDto;
+import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
@@ -17,77 +19,87 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceImplTest {
 
+
+
+
+
+  private UserServiceImpl userServiceImpl;
+  private EmailValidator emailValidator;
+  private UserRepository userRepository;
+
+  @BeforeEach
+  void setUp() {
+    this.userServiceImpl = new UserServiceImpl(emailValidator,userRepository);
+    }
+
+    @Test
+    void  sending_empty_email_exception (){
+      assertThrows(InvalidEmailException.class, () => {userServiceImpl.resetPasswords(new EmailRequestDto(""));});
+      }
+
+        @Test
+  void user_not_found_in_repository_exception(){
+    assertThrows(new StatusResponseDto("ok"), () => {userServiceImpl.resetPasswords(new EmailRequestDto("milarda@milarda.sk")); })
+  }
   @Test
-  void resetPasswords() {
-    // AAA
-    // Arrange
-    UserRepository fakeRepo = Mockito.mock(UserRepository.class);
-    UserService fakeService = Mockito.mock(UserService.class);
-    EmailValidator fakeEmailValidator = Mockito.mock(EmailValidator.class);
-
-    Date date = new Date(1000L);
-    EmailRequestDto emailDto = new EmailRequestDto("gregorgregorovic@gmail.com");
-
-    User fake1 =
-        new User(
-            3L,
-            "gregor",
-            "gregorgregorovic@gmail.com",
-            "gregr",
-            date,
-            "Gregor",
-            date,
-            "Gregor",
-            date,
-            date);
-
-    Mockito.when(fakeRepo.findByEmail(Mockito.anyString())).thenReturn(fake1); // save to the database
-    Mockito.when(fakeService.resetPasswords(emailDto))
-        .thenReturn(new ResponseEntity<>(HttpStatus.OK));
-
-    UserService userService = new UserServiceImpl(fakeEmailValidator, fakeRepo);
-
-    // Act
-    ResponseEntity result = userService.resetPasswords(emailDto);
-
-    // Assert
-    assertEquals(HttpStatus.OK, result.getStatusCode());
+  void user_without_verification_exception(){
+    User user = new User();
+    user.setEmail("gregorovic@mail.com");
+    userRepository.save(user);
+    assertThrows(UnverifiedEmailExeption.class, () => {userServiceImpl.resetPasswords(new EmailRequestDto("gregorovic@mail.com"));})
   }
 
   @Test
-  void resetPasswordViaToken() {
-    // AAA
-    // Arrange
-    UserRepository fakeRepo = Mockito.mock(UserRepository.class);
-    UserService fakeService = Mockito.mock(UserService.class);
-    EmailValidator fakeEmailValidator = Mockito.mock(EmailValidator.class);
-
-    Date date = new Date(System.currentTimeMillis() + 200000);
-    PasswordResetRequestDto resetPasswordViaToken = new PasswordResetRequestDto("mamamiaMIA");
-    String token = new String("cd");
-
-    User fake1 =
-            new User(
-                    3L,
-                    "gregor",
-                    "gregorgregorovic@gmail.com",
-                    "gregrovicovic",
-                    date,
-                    "Gregor",
-                    date,
-                    "cd",
-                    date,
-                    date);
-
-    Mockito.when(fakeRepo.findByForgottenPasswordToken(Mockito.anyString())).thenReturn(fake1); // save to the database
-    Mockito.when(fakeService.resetPasswordViaToken(token,resetPasswordViaToken)).thenReturn(new ResponseEntity<>(HttpStatus.OK));
-
-    UserService userService = new UserServiceImpl(fakeEmailValidator,fakeRepo);
-
-    // Act
-    ResponseEntity result = userService.resetPasswordViaToken(token,resetPasswordViaToken);
-
-    // Assert
-    assertEquals(HttpStatus.OK, result.getStatusCode());
+  void user_with_verification_exception(){
+    User user = new User();
+    user.setEmail("gregorovic@mail.com");
+    userRepository.save(user);
+    assertThrows(new StatusResponseDto("ok"), () => {userServiceImpl.resetPasswords(new EmailRequestDto("gregorovic@mail.com"));})
   }
+
+  @Test
+  void sending_empty_password_exception(){
+    assertThrows(InvalidEmailException.class, () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto(""));});
+  }
+  @Test
+  void not_match_forgottenPasswordToken_exception(){
+    User user = new User();
+    user.setForgottenPasswordToken("23");
+    userRepository.save(user);
+    assertThrows(InvalidEmailException.class, () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto("DVAVVVAAA"));});
+  }
+
+  @Test
+  void request_reset_password_after_expiration_token_exception(){
+    User user = new User();
+    user.setForgottenPasswordTokenExpiresAt(new Date(System.currentTimeMillis() - 20000));
+    user.setForgottenPasswordToken("22");
+    userRepository.save(user);
+    assertThrows(InvalidEmailException.class, () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto("DVAVVVAAA"));});
+  }
+
+  @Test
+  void request_reset_password_is_less_than_8_characters_exception(){
+    User user = new User();
+    user.setForgottenPasswordTokenExpiresAt(new Date(System.currentTimeMillis() + 3000));
+    user.setForgottenPasswordToken("22");
+    userRepository.save(user);
+    assertThrows(InvalidEmailException.class, () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto("Less"));});
+  }
+
+  @Test
+  void request_reset_password_is_less_than_8_characters_exception(){
+    User user = new User();
+    user.setForgottenPasswordTokenExpiresAt(new Date(System.currentTimeMillis() + 3000));
+    user.setForgottenPasswordToken("22");
+    userRepository.save(user);
+    assertThrows(new StatusResponseDto("ok"), () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto("Lessssssssss"));});
+  }
+
+
+
+
+
+
+
 }

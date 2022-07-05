@@ -24,8 +24,6 @@ public class UserServiceImpl implements UserService {
   private final EmailValidator emailValidator;
   private final UserRepository userRepository;
 
-  // private final EmailUtils emailUtils;
-
   public UserServiceImpl(EmailValidator emailValidator, UserRepository userRepository) {
     this.emailValidator = emailValidator;
     this.userRepository = userRepository;
@@ -89,85 +87,63 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public ResponseEntity<? extends ResponseDto> resetPasswords(EmailRequestDto emailDto) {
+  public StatusResponseDto resetPasswords(EmailRequestDto emailDto) {
     boolean isValidEmail = emailValidator.isValid(emailDto.email);
 
+    if (!isValidEmail || emailDto.email.isEmpty()) {
+      throw new InvalidEmailException();
+    }
     User user = userRepository.findByEmail(emailDto.email);
     if (user == null) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid email!"), HttpStatus.OK);
-    }
-    if (!isValidEmail || emailDto.email.isEmpty()) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Invalid email!"), HttpStatus.resolve(BAD_REQUEST));
+      return new StatusResponseDto("ok");
     }
     if (user.getVerifiedAt() == null) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Unverified email"), HttpStatus.resolve(BAD_REQUEST));
+      throw new UnverifiedEmailExeption();
     }
     if (user.getEmail().equals(emailDto.email) && user.getVerifiedAt() != null) {
       /*
-      emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
-            + http://localhost:3036/email/reset-password
-            + "/reset?token="
-            + user.getForgottenPasswordToken());
-      return new ResponseEntity<>(new StatusResponseDto("ok"), HttpStatus.OK);
-
+       emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
+             + "http://localhost:3036/email/reset-password"
+             + "/reset?token="
+             + user.getForgottenPasswordToken());
       */
+      return new StatusResponseDto("ok");
     }
-
-    return new ResponseEntity<>(
-        new ErrorResponseDto("Something goes wrong"), HttpStatus.BAD_REQUEST);
+    return new InvalidRequestException();
   }
 
   @Override
-  public ResponseEntity<? extends ResponseDto> resetPasswordViaToken(
-      String token, PasswordResetRequestDto resetPassword) {
+  public StatusResponseDto resetPassword(String token, PasswordResetRequestDto resetPassword) {
     User user = userRepository.findByForgottenPasswordToken(token);
     Date currentDate = new Date(System.currentTimeMillis());
 
     if (resetPassword.password.isEmpty()) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Password is required"), HttpStatus.BAD_REQUEST);
+      throw new InvalidPasswordExeption();
     }
     if (!user.getForgottenPasswordToken().equals(token)) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid token"), HttpStatus.BAD_REQUEST);
+      throw new InvalidTokenExeption();
     }
-    if (currentDate.after(user.getVerificationTokenExpiresAt())) {
-      return new ResponseEntity<>(new ErrorResponseDto("Expired token"), HttpStatus.BAD_REQUEST);
+    if (currentDate.after(user.getForgottenPasswordTokenExpiresAt())) {
+      throw new InvalidTokenExeption();
     }
     if (resetPassword.password.length() <= 8) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Password must be at least 8 characters long"),
-          HttpStatus.BAD_REQUEST);
+      throw new InvalidPasswordExeption();
       /*
-      emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
-              + http://localhost:3036/email/reset-password
-      + "/reset?token="
-              + user.getForgottenPasswordToken());
-      return new ResponseEntity<>(new StatusResponseDto("ok"), HttpStatus.OK);
+         emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
+                 + "http://localhost:3036/email/reset-password"
+         + "/reset?token="
+                 + user.getForgottenPasswordToken());
 
-       */
-    }
-
-    if (user.getForgottenPasswordToken().equals(token)
-        && currentDate.before(user.getForgottenPasswordTokenExpiresAt())
-        && resetPassword.password.equals(
-            user.getPassword())) {
-      user.setPassword(resetPassword.password);
-      user.setForgottenPasswordToken(null);
-      userRepository.save(user);
-      return new ResponseEntity<>(new StatusResponseDto("ok"), HttpStatus.OK);
+      */
     }
     if (user.getForgottenPasswordToken().equals(token)
         && currentDate.before(user.getForgottenPasswordTokenExpiresAt())) {
       user.setPassword(resetPassword.password);
       user.setForgottenPasswordToken(null);
       userRepository.save(user);
-      return new ResponseEntity<>(new StatusResponseDto("ok"), HttpStatus.OK);
+      return new StatusResponseDto("ok");
     }
-
-    return new ResponseEntity<>(
-        new ErrorResponseDto("Something goes wrong"), HttpStatus.BAD_REQUEST);
+    return new InvalidRequestException();
   }
 
   @Override
