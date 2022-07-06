@@ -59,14 +59,14 @@ class UserServiceImplTest {
 
   @Test
   void sending_empty_password_exception(){
-    assertThrows(InvalidEmailException.class, () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto(""));});
+    assertThrows(InvalidPasswordExeption.class, () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto(""));});
   }
   @Test
   void not_match_forgottenPasswordToken_exception(){
     User user = new User();
     user.setForgottenPasswordToken("23");
     userRepository.save(user);
-    assertThrows(InvalidEmailException.class, () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto("DVAVVVAAA"));});
+    assertThrows(InvalidTokenExeption.class, () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto("DVAVVVAAA"));});
   }
 
   @Test
@@ -75,7 +75,7 @@ class UserServiceImplTest {
     user.setForgottenPasswordTokenExpiresAt(new Date(System.currentTimeMillis() - 20000));
     user.setForgottenPasswordToken("22");
     userRepository.save(user);
-    assertThrows(InvalidEmailException.class, () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto("DVAVVVAAA"));});
+    assertThrows(InvalidTokenExeption.class, () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto("DVAVVVAAA"));});
   }
 
   @Test
@@ -84,11 +84,11 @@ class UserServiceImplTest {
     user.setForgottenPasswordTokenExpiresAt(new Date(System.currentTimeMillis() + 3000));
     user.setForgottenPasswordToken("22");
     userRepository.save(user);
-    assertThrows(InvalidEmailException.class, () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto("Less"));});
+    assertThrows(InvalidPasswordExeption.class, () => {userServiceImpl.resetPassword("22", new PasswordResetRequestDto("Less"));});
   }
 
   @Test
-  void request_reset_password_is_less_than_8_characters_exception(){
+  void request_reset_password_is_more_than_8_characters_exception(){
     User user = new User();
     user.setForgottenPasswordTokenExpiresAt(new Date(System.currentTimeMillis() + 3000));
     user.setForgottenPasswordToken("22");
