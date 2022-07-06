@@ -1,6 +1,6 @@
 package com.gfa.common.dtos;
 
-class ErrorResponseDto {
+public class ErrorResponseDto {
   public final String message;
 
   @JsonCreator

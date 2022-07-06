@@ -6,23 +6,22 @@ import com.gfa.common.dtos.ResponseDto;
 import com.gfa.common.dtos.UserResponseDto;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService{
 
-    //private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailValidator emailValidator;
     private final UserRepository userRepository;
+    private final Long tokenExpiration;
 
-    public UserServiceImpl(EmailValidator emailValidator, UserRepository userRepository) {
+    public UserServiceImpl(EmailValidator emailValidator, UserRepository userRepository,@Value("${token_expiration}") Long tokenExpiration) {
         this.emailValidator = emailValidator;
         this.userRepository = userRepository;
+        this.tokenExpiration = tokenExpiration;
     }
 
     public ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto){
@@ -43,13 +42,6 @@ public class UserServiceImpl implements UserService{
             return new ResponseEntity<>(error,HttpStatus.CONFLICT);
         }
 
-        /*boolean userExist = userRepository.findByEmail(dto.email).isPresent();
-        if(userExist){
-            // throw new IllegalStateException("email already taken ");
-            ErrorResponseDto error = new ErrorResponseDto("Email is already taken");
-            return new ResponseEntity<>(error,HttpStatus.CONFLICT);
-        }*/
-
         if(dto.username.length() < 4){
             ErrorResponseDto error = new ErrorResponseDto("Username must be at least 4 characters long");
             return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
@@ -62,19 +54,20 @@ public class UserServiceImpl implements UserService{
 
         boolean isValidEmail = emailValidator.isValid(dto.email);
         if(!isValidEmail){
-            //throw new IllegalStateException("email not valid");
             ErrorResponseDto error = new ErrorResponseDto("Invalid email");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
-
-       // String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-       // user.setPassword(encodedPassword);
-
-        User user = new User(dto);
+        User user = new User(dto,tokenExpiration);
         userRepository.save(user);
         UserResponseDto userResponseDto = new UserResponseDto(user);
-        return new ResponseEntity<UserResponseDto>(userResponseDto,HttpStatus.CREATED);
+
+        boolean userCreated = userRepository.findByUsername(dto.username).isPresent();
+        if(!userCreated){
+            ErrorResponseDto error = new ErrorResponseDto("Unknown error");
+            return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(userResponseDto,HttpStatus.CREATED);
     }
 
     @Override
@@ -86,10 +79,4 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity<ResponseDto> show(Long id) {
         return null;
     }
-
-    /*@Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }*/
 }
