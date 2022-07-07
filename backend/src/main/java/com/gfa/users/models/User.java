@@ -159,4 +159,29 @@ public class User {
   public Date getCreatedAt() {
     return createdAt;
   }
+
+  public boolean can(Permission permission) {
+    return can(permission.getAbility());
+  }
+
+  public boolean can(String ability){
+    for(Permission permission : permissions){
+      if(ability.equals(permission.getAbility()){
+        return true;
+    }
+    }
+    for(Role role : roles){
+      if(role.can(ability)){
+        return true;
+      }
+    }
+    for(Team team : teams){
+      if(team.can(ability)){
+        return true;
+      }
+    }
+    return false;
+  }
+
+
 }

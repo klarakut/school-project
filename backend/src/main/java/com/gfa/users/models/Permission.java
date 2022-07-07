@@ -55,7 +55,7 @@ public class Permission {
     return ability;
   }
 
-  public Boolean can(Permission p) {
+  public boolean can(Permission p) {
     return (ability.equals(p.ability));
   }
 }
