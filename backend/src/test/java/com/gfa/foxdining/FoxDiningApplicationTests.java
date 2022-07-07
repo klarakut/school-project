@@ -7,9 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class FoxDiningApplicationTests {
 
   @Test
-  void contextLoads() {
-  }
-  
+  void contextLoads() {}
+
   @Test
   void main_runs_without_exceptions() {
 
@@ -18,5 +17,4 @@ class FoxDiningApplicationTests {
           FoxDiningApplication.main(new String[] {"--spring.main.web-environment=false"});
         });
   }
-
 }
