@@ -1,4 +1,4 @@
-package com.gfa.users;
+package com.gfa.EmailUtils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
