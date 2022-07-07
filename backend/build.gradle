@@ -18,7 +18,18 @@ configurations {
 }
 
 checkstyle {
-    toolVersion "8.18"
+  toolVersion "8.32"
+  configFile file("config/stylecheck/stylecheck.xml")
+}
+checkstyleMain {
+  source = 'src/main/java'
+}
+checkstyleTest {
+  source = 'src/test/java'
+}
+tasks.withType(Checkstyle) {
+    exclude 'src/main/resources'
+    exclude 'src/test/resources'
 }
 
 jacocoTestReport {
