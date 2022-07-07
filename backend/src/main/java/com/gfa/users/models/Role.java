@@ -1,12 +1,17 @@
 package com.gfa.users.models;
 
 import java.util.HashSet;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import org.jetbrains.annotations.NotNull;
-import com.gfa.users.models.Permission;
-import com.gfa.users.models.User;
-import com.gfa.users.models.Team;
 
-import javax.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -14,7 +19,6 @@ import java.util.Set;
 public class Role {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(unique = true, name = "id")
   @NotNull
   private Long id;
 

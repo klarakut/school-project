@@ -5,7 +5,12 @@ import java.security.SecureRandom;
 import java.util.HashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import java.util.Date;
 import java.util.Set;
 
@@ -90,7 +95,7 @@ public class User {
   SecureRandom random = new SecureRandom();
   Integer randomSecureValue = random.nextInt();
 
-  public User(CreateUserRequestDto dto, Long expirationTime){
+  public User(CreateUserRequestDto dto, Long expirationTime) {
     this(dto.username, dto.email, dto.password, new Date());
     this.verifiedAt = null;
     this.verificationToken = String.valueOf(randomSecureValue);
