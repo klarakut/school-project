@@ -11,6 +11,9 @@ public class UserResponseDto extends ResponseDto{
     public final String email;
     public final Date verifiedAt;
     public final Date createdAt;
+    public boolean mfa;
+    public String secretImageUri;
+
 
     public UserResponseDto(User user) {
         this.id = user.getId();
