@@ -1,18 +1,23 @@
 package com.gfa.users.models;
 
+import com.gfa.common.dtos.CreateUserRequestDto;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import javax.persistence.*;
+import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 @Entity
-public class User {
+public class User{
 
-  @id
+  @Id
   @Column(unique = true)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @NotNull
@@ -42,6 +47,9 @@ public class User {
   @Nullable private Date forgottenPasswordTokenExpiresAt;
 
   @NotNull private Date createdAt;
+
+  private boolean mfa;
+  private String secret;
 
   @ManyToMany(mappedBy = "users")
   Set<Permission> permissions;
