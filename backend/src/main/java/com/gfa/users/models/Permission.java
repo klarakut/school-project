@@ -58,4 +58,10 @@ public class Permission {
   public boolean can(Permission p) {
     return (ability.equals(p.ability));
   }
+  public boolean can(String ability){
+    for(Permission permission : permissions){
+      
+    }
+  }
+
 }
