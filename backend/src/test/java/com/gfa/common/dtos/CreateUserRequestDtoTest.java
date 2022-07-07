@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CreateUserRequestDtoTest {
 
-    @Test
-    void can_create_createUserRequestDto(){
-        CreateUserRequestDto createUserRequestDtoTest = new CreateUserRequestDto("alex","alex@gmail.com","abc");
-        assertEquals("alex",createUserRequestDtoTest.username);
-    }
-
+  @Test
+  void can_create_dto() {
+    CreateUserRequestDto createUserRequestDtoTest =
+        new CreateUserRequestDto("alex", "alex@gmail.com", "abc");
+    assertEquals("alex", createUserRequestDtoTest.username);
+  }
 }

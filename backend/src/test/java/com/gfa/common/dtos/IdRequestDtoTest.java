@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class IdRequestDtoTest {
 
   @Test
-  void getId() {
+  void can_create_dto() {
     IdRequestDto idRequestDto = new IdRequestDto(55L);
-    assertEquals(55L, idRequestDto.getId());
+    assertEquals(55L, idRequestDto.id);
   }
 }

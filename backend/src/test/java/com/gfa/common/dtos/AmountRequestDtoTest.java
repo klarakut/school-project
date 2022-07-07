@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class AmountRequestDtoTest {
 
   @Test
-  void getAmount() {
+  void can_create_dto() {
     AmountRequestDto amountRequestDto = new AmountRequestDto(55L, 20);
-    assertEquals(20, amountRequestDto.getAmount());
+    assertEquals(20, amountRequestDto.amount);
   }
 }

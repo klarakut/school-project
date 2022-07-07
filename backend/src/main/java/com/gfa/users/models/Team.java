@@ -1,5 +1,6 @@
 package com.gfa.users.models;
 
+import java.util.HashSet;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
@@ -36,9 +37,15 @@ public class Team {
   @ManyToMany(mappedBy = "teams")
   Set<Role> roles;
 
-  public Team() {}
+  public Team() {
+    permissions = new HashSet<>();
+    roles = new HashSet<>();
+    users = new HashSet<>();
+  }
 
   public Team(@NotNull String name) {
+
+    this();
     this.name = name;
   }
 

@@ -1,5 +1,7 @@
 package com.gfa.common.dtos;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 class AmountRequestDto extends IdRequestDto {
   public final Integer amount;
 

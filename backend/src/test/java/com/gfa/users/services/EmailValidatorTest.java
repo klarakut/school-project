@@ -9,36 +9,35 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EmailValidatorTest {
 
-    @ParameterizedTest(name = "#{index} - Run test with email = {0}")
-    @MethodSource("validEmailProvider")
-    void test_email_valid(String email) {
-        assertTrue(EmailValidator.isValid(email));
-    }
+  @ParameterizedTest(name = "#{index} - Run test with email = {0}")
+  @MethodSource("validEmailProvider")
+  void test_email_valid(String email) {
+    assertTrue(EmailValidator.isValid(email));
+  }
 
-    @ParameterizedTest(name = "#{index} - Run test with email = {0}")
-    @MethodSource("invalidEmailProvider")
-    void test_email_invalid(String email) {
-        assertFalse(EmailValidator.isValid(email));
-    }
+  @ParameterizedTest(name = "#{index} - Run test with email = {0}")
+  @MethodSource("invalidEmailProvider")
+  void test_email_invalid(String email) {
+    assertFalse(EmailValidator.isValid(email));
+  }
 
-    // Valid email addresses
-    static Stream<String> validEmailProvider() {
-        return Stream.of(
-                "hello@example.com",          // simple
-                "hello@example.co.uk",              // .co.uk
-                "hello-.+_=#|@example.com",         // special characters
-                "h@example.com",                    // local-part one letter
-                "h@com",                            // domain one letter
-                "我買@屋企.香港"                      // unicode, chinese characters
+  // Valid email addresses
+  static Stream<String> validEmailProvider() {
+    return Stream.of(
+        "hello@example.com", // simple
+        "hello@example.co.uk", // .co.uk
+        "hello-.+_=#|@example.com", // special characters
+        "h@example.com", // local-part one letter
+        "h@com", // domain one letter
+        "我買@屋企.香港" // unicode, chinese characters
         );
-    }
+  }
 
-    // Invalid email addresses
-    static Stream<String> invalidEmailProvider() {
-        return Stream.of(
-                "hello",                        // email need at least one @
-                "hello@ "                              // domain can not end with space (whitespace)
+  // Invalid email addresses
+  static Stream<String> invalidEmailProvider() {
+    return Stream.of(
+        "hello", // email need at least one @
+        "hello@ " // domain can not end with space (whitespace)
         );
-    }
-
+  }
 }
