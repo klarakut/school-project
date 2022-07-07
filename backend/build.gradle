@@ -55,7 +55,7 @@ jacocoTestCoverageVerification {
         }
     }
 }
-
+jacocoTestCoverageVerification.dependsOn jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification
 
 repositories {
