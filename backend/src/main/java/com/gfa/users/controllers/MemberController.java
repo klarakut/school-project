@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/members")
-public class MemberController extends UserController{
+public class MemberController extends UserController {
 
-    @Autowired
-    public MemberController(UserService userService) {
-        super(userService);
-    }
+  @Autowired
+  public MemberController(UserService userService) {
+    super(userService);
+  }
 }
