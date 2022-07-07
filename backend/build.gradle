@@ -19,7 +19,7 @@ configurations {
 
 checkstyle {
   toolVersion "8.32"
-  configFile file("config/stylecheck/stylecheck.xml")
+  configFile file("config/checkstyle/checkstyle.xml")
 }
 checkstyleMain {
   source = 'src/main/java'
