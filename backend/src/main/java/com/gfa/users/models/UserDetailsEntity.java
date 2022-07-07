@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 
 public class UserDetailsEntity extends User  implements UserDetails {
 
-    /*public UserDetailsEntity(final User user){
+    public UserDetailsEntity(final User user){
         super(user);
-    }*/
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
