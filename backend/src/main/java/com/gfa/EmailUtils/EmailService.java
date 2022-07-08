@@ -18,12 +18,9 @@ public class EmailService {
   @Autowired private final EmailConfiguration emailConfiguration;
   private JavaMailSender javaMailSender;
 
-
-
   public EmailService(EmailConfiguration emailConfiguration) {
     this.emailConfiguration = emailConfiguration;
   }
-
 
   public JavaMailSender getJavaMailSender() {
     JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();
@@ -43,14 +40,14 @@ public class EmailService {
     getJavaMailSender().send(message);
   }
 
-  public void sendHtmlEmail(String to, String from, String subject, String text) throws MessagingException {
+  public void sendHtmlEmail(String to, String from, String subject, String text)
+      throws MessagingException {
     MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-    MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,"utf-8");
+    MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "utf-8");
     mimeMessage.setContent(text, "text/html");
     mimeMessageHelper.setFrom(from);
     mimeMessageHelper.setTo(to);
     mimeMessageHelper.setSubject(subject);
     javaMailSender.send(mimeMessage);
-
   }
 }
