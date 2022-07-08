@@ -4,7 +4,7 @@ import com.gfa.common.dtos.CreateUserRequestDto;
 import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.dtos.ResponseDto;
 import com.gfa.common.dtos.UserResponseDto;
-import com.gfa.users.models.User;
+import com.gfa.users.exceptions.*;
 import com.gfa.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,32 +19,29 @@ import java.net.URI;
 @RestController
 public class UserRestController {
 
-  @Autowired private final UserService userService;
 
+    private final UserService userService;
+
+
+    @Autowired
   public UserRestController(UserService userService) {
     this.userService = userService;
   }
-
-  /* old version
-  @PostMapping("/register")
-  public ResponseEntity<? extends ResponseDto> store(@RequestBody CreateUserRequestDto dto) {
-    return userService.store(dto);
-  }*/
 
   @PostMapping("/register")
   public ResponseEntity<? extends ResponseDto> store(@RequestBody CreateUserRequestDto dto) {
       try {
           UserResponseDto userResponse = userService.store(dto);
 
-          URI location = ServletUriComponentsBuilder
+         /* URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/register/{username}")
                 .buildAndExpand(userResponse.username).toUri();
 
-          return ResponseEntity
+           ResponseEntity
                 .created(location)
-                .body(userResponse);
+                .body(userResponse);*/
 
-          //return new ResponseEntity<>(userResponse,HttpStatus.CREATED);
+          return new ResponseEntity<>(userResponse,HttpStatus.CREATED);
        }
        catch (UsernameMissingException e){
            return new ResponseEntity<>(new ErrorResponseDto("Username is required"),HttpStatus.BAD_REQUEST);
@@ -61,7 +58,7 @@ public class UserRestController {
        catch (UsernameTakenException e){
            return new ResponseEntity<>(new ErrorResponseDto("Username is already taken"),HttpStatus.CONFLICT);
        }
-       catch (ShortUsernameException){
+       catch (ShortUsernameException e){
            return new ResponseEntity<>(new ErrorResponseDto("Username must be at least 4 characters long"),HttpStatus.BAD_REQUEST);
        }
        catch (ShortPasswordException e){

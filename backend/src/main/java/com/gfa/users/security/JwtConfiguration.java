@@ -1,22 +1,24 @@
 package com.gfa.users.security;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JwtConfiguration {
 
-    @Value("${security.jwt.uri=}")
+    @Value("${security.jwt.uri}")
     private String Uri;
 
-    @Value("${security.jwt.header=}")
+    @Value("${security.jwt.header}")
     private String header;
 
-    @Value("${security.jwt.prefix=}")
+    @Value("${security.jwt.prefix}")
     private String prefix;
 
-    @Value("${security.jwt.expiration=}")
-    private int expiration;
+    @Value("${security.jwt.expiration}")
+    private String expiration;
 
-    @Value("${security.jwt.secret=}")
+    @Value("${security.jwt.secret}")
     private String secret;
 
     public JwtConfiguration() {
@@ -35,7 +37,7 @@ public class JwtConfiguration {
     }
 
     public int getExpiration() {
-        return expiration;
+        return 60;
     }
 
     public String getSecret() {

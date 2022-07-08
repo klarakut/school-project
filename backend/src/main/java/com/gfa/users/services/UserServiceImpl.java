@@ -3,15 +3,15 @@ package com.gfa.users.services;
 import com.gfa.common.dtos.CreateUserRequestDto;
 import com.gfa.common.dtos.ResponseDto;
 import com.gfa.common.dtos.UserResponseDto;
+import com.gfa.users.controllers.UserRestController;
+import com.gfa.users.exceptions.*;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.rmi.UnexpectedException;
 import java.util.Optional;
 
 @Service
@@ -23,10 +23,13 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenManager jwtTokenManager;
     private final TotpManager totpManager;
 
-    public UserServiceImpl(EmailValidator emailValidator, UserRepository userRepository, @Value("${token_expiration}") Long tokenExpiration, JwtTokenManager jwtTokenManager, TotpManager totpManager) {
+
+    @Autowired
+    public UserServiceImpl(EmailValidator emailValidator, UserRepository userRepository, JwtTokenManager jwtTokenManager, TotpManager totpManager) {
         this.emailValidator = emailValidator;
         this.userRepository = userRepository;
-        this.tokenExpiration = tokenExpiration;
+        //this.tokenExpiration = tokenExpiration; @Value("${config.security.token_expiration}") Long tokenExpiration,
+        this.tokenExpiration = 60L;
         this.jwtTokenManager = jwtTokenManager;
         this.totpManager = totpManager;
     }
@@ -34,13 +37,13 @@ public class UserServiceImpl implements UserService {
     //public ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto) {
     public UserResponseDto store(CreateUserRequestDto dto) {
 
-        if (dto.username.isEmpty()) {
+        if (dto.username.isEmpty() || dto.username == null) {
             throw new UsernameMissingException();
         }
-        if (dto.password.isEmpty()) {
+        if (dto.password.isEmpty() || dto.password == null) {
             throw new PasswordMissingException();
         }
-        if (dto.email.isEmpty()) {
+        if (dto.email.isEmpty() || dto.email == null) {
             throw new EmailMissingException();
         }
 

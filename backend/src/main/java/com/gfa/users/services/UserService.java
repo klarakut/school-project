@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
-
-
 public interface UserService {
 
         ResponseEntity<ResponseDto> index();

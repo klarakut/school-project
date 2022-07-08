@@ -2,6 +2,7 @@ package com.gfa.users.services;
 
 import com.gfa.users.security.JwtConfiguration;
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 public class JwtTokenManager {
     private final JwtConfiguration jwtConfiguration;
 
+    @Autowired
     public JwtTokenManager(JwtConfiguration jwtConfiguration) {
         this.jwtConfiguration = jwtConfiguration;
     }
