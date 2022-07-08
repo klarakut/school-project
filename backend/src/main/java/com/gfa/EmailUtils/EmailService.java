@@ -18,8 +18,9 @@ public class EmailService {
 
   @Autowired
   public EmailService(EmailConfiguration emailConfiguration) {
-   this.emailConfiguration = emailConfiguration;
+    this.emailConfiguration = emailConfiguration;
   }
+
   public JavaMailSender getJavaMailSender() {
     JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();
     mailSenderImpl.setHost(emailConfiguration.getHost());

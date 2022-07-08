@@ -5,54 +5,64 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class EmailConfiguration {
-    @Value("${spring.mail.host}")
-    private String host;
-    @Value("${spring.mail.port}")
-    private Integer port;
-    @Value("${spring.mail.username}")
-    private String username;
-    @Value("${spring.mail.password}")
-    private String password;
+  @Value("${spring.mail.host}")
+  private String host;
 
-    public String getHost() {
-        return host;
-    }
+  @Value("${spring.mail.port}")
+  private Integer port;
 
-    public void setHost(String host) {
-        this.host = host;
-    }
+  @Value("${spring.mail.username}")
+  private String username;
 
-    public Integer getPort() {
-        return port;
-    }
+  @Value("${spring.mail.password}")
+  private String password;
 
-    public void setPort(Integer port) {
-        this.port = port;
-    }
+  public String getHost() {
+    return host;
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  public void setHost(String host) {
+    this.host = host;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public Integer getPort() {
+    return port;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public void setPort(Integer port) {
+    this.port = port;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    @Override
-    public String toString() {
-        return "EmailConfiguration{" +
-                "host='" + host + '\'' +
-                ", port=" + port +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  @Override
+  public String toString() {
+    return "EmailConfiguration{"
+        + "host='"
+        + host
+        + '\''
+        + ", port="
+        + port
+        + ", username='"
+        + username
+        + '\''
+        + ", password='"
+        + password
+        + '\''
+        + '}';
+  }
 }

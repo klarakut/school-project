@@ -9,20 +9,28 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.mail.MessagingException;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest(classes = {EmailService.class, EmailConfiguration.class})
 @ContextConfiguration
 class EmailServiceTest {
-@Autowired
-    private EmailService emailService;
+  @Autowired private EmailService emailService;
 
-    @Test
-    void sendPlainEmail() {
-        emailService.sendPlainEmail("klarakutlakova@seznam.cz","mar.gazik.mg@gmail.com","testMail","Zdraví Vás Gregor Gregorovič");
-    }
+  @Test
+  void sendPlainEmail() {
+    emailService.sendPlainEmail(
+        "klarakutlakova@seznam.cz",
+        "mar.gazik.mg@gmail.com",
+        "testMail",
+        "Zdraví Vás Gregor Gregorovič");
+  }
 
-    @Test
-    void sendHtmlEmail() throws MessagingException {
+  @Test
+  void sendHtmlEmail() throws MessagingException {
 
-        emailService.sendHtmlEmail("klarakutlakova@seznam.cz","mar.gazik.mg@gmail.com","Akcioska","Zdraví Vás Gregor Gregorovič");
-    }
+    emailService.sendHtmlEmail(
+        "klarakutlakova@seznam.cz",
+        "mar.gazik.mg@gmail.com",
+        "Akcioska",
+        "Zdraví Vás Gregor Gregorovič");
+  }
 }
