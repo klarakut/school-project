@@ -15,10 +15,11 @@ public class UserDetailsEntity extends User  implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles()
+        return null;
+        /*return getRoles()
                 .stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet());*/
     }
 
     @Override

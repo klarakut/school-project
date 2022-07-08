@@ -43,16 +43,21 @@ public class JwtTokenManager {
             return true;
 
         } catch (SignatureException ex) {
-            log.error("Invalid JWT signature");
+            throw new RuntimeException("Invalid JWT signature");
+            //log.error("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
-            log.error("Invalid JWT token");
+            throw new RuntimeException("Invalid JWT token");
+            //log.error("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
-            log.error("Expired JWT token");
+            throw new RuntimeException("Expired JWT token");
+            //log.error("Expired JWT token");
         } catch (UnsupportedJwtException ex) {
-            log.error("Unsupported JWT token");
+            throw new RuntimeException("Unsupported JWT token");
+            //log.error("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
-            log.error("JWT claims string is empty.");
+            throw new RuntimeException("JWT claims string is empty.");
+            //log.error("JWT claims string is empty.");
         }
-        return false;
+       // return false;
     }
 }

@@ -99,11 +99,38 @@ public class User{
   SecureRandom random = new SecureRandom();
   Integer randomSecureValue = random.nextInt();
 
-  public User(CreateUserRequestDto dto, Long expirationTime){
-    this(dto.username, dto.email, dto.password);
+  public User(User user) {
+    this.id = user.id;
+    this.username = user.username;
+    this.email = user.email;
+    this.password = user.password;
+    this.verifiedAt = user.verifiedAt;
+    this.verificationToken = user.verificationToken;
+    this.verificationTokenExpiresAt = user.verificationTokenExpiresAt;
+    this.forgottenPasswordToken = user.forgottenPasswordToken;
+    this.forgottenPasswordTokenExpiresAt = user.forgottenPasswordTokenExpiresAt;
+    this.createdAt = user.createdAt;
+    this.mfa = user.mfa;
+    this.secret = user.secret;
+  }
+
+  public boolean isMfa() {
+    return mfa;
+  }
+
+  public String getSecret() {
+    return secret;
+  }
+
+  public User(CreateUserRequestDto dto, Long expirationTime, String secret){
+    //this(dto.username, dto.email, dto.password);
+    this.username = dto.username;
+    this.email = dto.email;
+    this.password = dto.password;
     this.verifiedAt = null;
     this.verificationToken = String.valueOf(randomSecureValue);
     this.verificationTokenExpiresAt = new Date(System.currentTimeMillis() + expirationTime);
+    this.secret = secret;
   }
 
   public void setId(@NotNull Long id) {
