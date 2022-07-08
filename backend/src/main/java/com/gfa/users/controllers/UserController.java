@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public abstract class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
-    /*
+  /*
      @GetMapping("/")
   public ResponseEntity<ResponseDto> index(){
     return service.index();

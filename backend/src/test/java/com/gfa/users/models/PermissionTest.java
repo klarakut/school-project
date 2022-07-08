@@ -1,19 +1,22 @@
 package com.gfa.users.models;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PermissionTest {
 
-  Permission permission = new Permission();
-
   @Test
   void can_create_permission() {
-    Permission permisionTest = new Permission("do something");
-    Permission permisionSecondTest = new Permission("do something");
-    assertEquals("do something", permisionTest.getAbility());
-    assertTrue(permisionTest.can(permisionSecondTest));
+    Permission permission = new Permission("do something");
+    assertEquals("do something", permission.getAbility());
+  }
+
+  @Test
+  void can_is_true_for_same_permissions() {
+    Permission p1 = new Permission("do something");
+    Permission p2 = new Permission("do something");
+    assertTrue(p1.can(p2));
   }
 }

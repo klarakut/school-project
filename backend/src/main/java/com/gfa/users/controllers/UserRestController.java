@@ -19,6 +19,7 @@ public class UserRestController {
     this.userService = userService;
   }
 
+
   @PostMapping("/register")
   public ResponseEntity<? extends ResponseDto> store(@RequestBody CreateUserRequestDto dto) {
     return userService.store(dto);
@@ -54,5 +55,6 @@ public class UserRestController {
     } catch (InvalidPasswordException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Password must be at leat 8 characters long"), HttpStatus.BAD_REQUEST);
     }
+
   }
 }
