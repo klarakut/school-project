@@ -1,0 +1,28 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+    - image: cimg/openjdk:8.0
+    
+    working_directory: ~/project-fox-dining/backend
+    
+    steps:
+      - checkout:
+          path: ~/project-fox-dining
+          
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: gradle dependencies
+            
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      - run: gradle build
+      - run: gradle test

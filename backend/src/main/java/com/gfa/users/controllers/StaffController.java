@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/staff")
-public class StaffController extends UserController{
+public class StaffController extends UserController {
 
-    @Autowired
-    public StaffController(UserService userService) {
-        super(userService);
-    }
+  @Autowired
+  public StaffController(UserService userService) {
+    super(userService);
+  }
 }

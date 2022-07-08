@@ -1,8 +1,7 @@
 package com.gfa.common.dtos;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 public class ErrorResponseDto extends ResponseDto{
+
   public final String message;
 
   public ErrorResponseDto(String message) {

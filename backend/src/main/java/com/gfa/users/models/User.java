@@ -3,16 +3,10 @@ package com.gfa.users.models;
 import com.gfa.common.dtos.CreateUserRequestDto;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import javax.persistence.*;
 import java.security.SecureRandom;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
+
 
 @Entity
 public class User{
@@ -20,25 +14,21 @@ public class User{
   @Id
   @Column(unique = true)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @NotNull
   private Long id;
 
-  @NotNull
   @Column(unique = true)
   private String username;
 
-  @NotNull
   @Column(unique = true)
   private String email;
 
-  @NotNull private String password;
-  @NotNull private Date verifiedAt = null;
+  private String password;
+  private Date verifiedAt;
 
-  @NotNull
   @Column(unique = true)
   private String verificationToken;
 
-  @NotNull private Date verificationTokenExpiresAt;
+  private Date verificationTokenExpiresAt;
 
   @Column(unique = true)
   @Nullable
@@ -46,9 +36,9 @@ public class User{
 
   @Nullable private Date forgottenPasswordTokenExpiresAt;
 
-  @NotNull private Date createdAt;
+  private Date createdAt;
 
-  private boolean mfa;
+  private Boolean mfa;
   private String secret;
 
   @ManyToMany(mappedBy = "users")
@@ -60,7 +50,11 @@ public class User{
   @ManyToMany(mappedBy = "users")
   Set<Team> teams;
 
-  public User() {}
+  public User() {
+    permissions = new HashSet<>();
+    roles = new HashSet<>();
+    teams = new HashSet<>();
+  }
 
   public User(
       @NotNull String username,
@@ -99,6 +93,7 @@ public class User{
   SecureRandom random = new SecureRandom();
   Integer randomSecureValue = random.nextInt();
 
+
   public User(User user) {
     this.id = user.id;
     this.username = user.username;
@@ -114,16 +109,7 @@ public class User{
     this.secret = user.secret;
   }
 
-  public boolean isMfa() {
-    return mfa;
-  }
-
-  public String getSecret() {
-    return secret;
-  }
-
   public User(CreateUserRequestDto dto, Long expirationTime, String secret){
-    //this(dto.username, dto.email, dto.password);
     this.username = dto.username;
     this.email = dto.email;
     this.password = dto.password;
@@ -131,13 +117,9 @@ public class User{
     this.verificationToken = String.valueOf(randomSecureValue);
     this.verificationTokenExpiresAt = new Date(System.currentTimeMillis() + expirationTime);
     this.secret = secret;
+    this.mfa = true;
   }
 
-  public void setId(@NotNull Long id) {
-    this.id = id;
-  }
-
-  @NotNull
   public String getEmail() {
     return email;
   }
@@ -146,35 +128,26 @@ public class User{
     this.email = email;
   }
 
-  @NotNull
   public Long getId() {
     return id;
   }
 
-  @NotNull
   public String getUsername() {
     return username;
   }
 
-  public void setUsername(@NotNull String username) {
-    this.username = username;
-  }
-
-  @NotNull
   public String getPassword() {
     return password;
   }
 
   public void setPassword(@NotNull String password) {
-    this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
+    this.password = password;
   }
 
-  @NotNull
   public Date getVerifiedAt() {
     return verifiedAt;
   }
 
-  @NotNull
   public String getVerificationToken() {
     return verificationToken;
   }
@@ -183,7 +156,6 @@ public class User{
     this.verificationToken = verificationToken;
   }
 
-  @NotNull
   public Date getVerificationTokenExpiresAt() {
     return verificationTokenExpiresAt;
   }
@@ -202,24 +174,15 @@ public class User{
     return forgottenPasswordTokenExpiresAt;
   }
 
-  @NotNull
   public Date getCreatedAt() {
     return createdAt;
   }
 
-  public Date strToDate(String strDate) throws ParseException {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    Date date = simpleDateFormat.parse(strDate);
-    return date;
+  public Boolean isMfa() {
+    return mfa;
   }
 
-  /*public Boolean can(Permission permission){    This will be implemented in a future ticket.
-    if can(permission.getAbility()) return true;
-    for(Role role : roles){
-      if(role.can(permissions))return true;}
-    for (Team team : teams){
-      if(team.is(permissions)) return true;
-    }
-    return false;
-  }*/
+  public String getSecret() {
+    return secret;
+  }
 }

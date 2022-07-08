@@ -1,6 +1,3 @@
 package com.gfa.common.dtos;
 
-public abstract class ResponseDto {
-
-
-}
+public abstract class ResponseDto {}
