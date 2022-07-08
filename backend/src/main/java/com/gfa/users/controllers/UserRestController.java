@@ -12,16 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserRestController {
 
-    @Autowired
-    private final UserService userService;
+  @Autowired private final UserService userService;
 
-    public UserRestController(UserService userService) {
-        this.userService = userService;
-    }
+  public UserRestController(UserService userService) {
+    this.userService = userService;
+  }
 
-    @PostMapping("/register")
-    public ResponseEntity<? extends ResponseDto> store(@RequestBody CreateUserRequestDto dto){
-        return userService.store(dto);
-    }
-
+  @PostMapping("/register")
+  public ResponseEntity<? extends ResponseDto> store(@RequestBody CreateUserRequestDto dto) {
+    return userService.store(dto);
+  }
 }
