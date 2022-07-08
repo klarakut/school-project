@@ -30,12 +30,11 @@ public class UserServiceImpl implements UserService{
 
     
     @Override
-    //public ResponseEntity<? extends ResponseDto> resendVerificationEmail(EmailRequestDto emailRequestDto) {
     public StatusResponseDto resendVerificationEmail(EmailRequestDto emailRequestDto) {
         //#1
         boolean isValid = emailValidator.isValid(emailRequestDto.email);
         if(!isValid || emailRequestDto.email.isEmpty()){
-        throw new InvalidEmailException();
+            throw new InvalidEmailException();
         }
 
         User user = userRepository.findUserByEmail(emailRequestDto.email);
@@ -54,11 +53,12 @@ public class UserServiceImpl implements UserService{
             throw new AlreadyVerifiedException();
         }
 
-            emailUtils.sendHtmlEmail(user.getEmail(), "support@demo.com", "Resend verification email", "To verify your email address, click the link below:\n"
-                    + "http://localhost:3036/email/resend-verification-email"
-                    + "/reset?token="
-                    + user.getVerificationToken());
-            return new StatusResponseDto("ok");
+        //#4
+        emailUtils.sendHtmlEmail(user.getEmail(), "support@demo.com", "Resend verification email", "To verify your email address, click the link below:\n"
+                + "http://localhost:3036/email/resend-verification-email"
+                + "/reset?token="
+                + user.getVerificationToken());
+        return new StatusResponseDto("ok");
     }
 
     public ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto){
