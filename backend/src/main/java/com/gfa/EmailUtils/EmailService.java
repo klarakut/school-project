@@ -21,7 +21,7 @@ public class EmailService {
     this.emailConfiguration = emailConfiguration;
   }
 
-  public JavaMailSender getJavaMailSender() {
+  private JavaMailSender getJavaMailSender() {
     JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();
     mailSenderImpl.setHost(emailConfiguration.getHost());
     mailSenderImpl.setPort(emailConfiguration.getPort());
