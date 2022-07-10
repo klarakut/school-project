@@ -10,12 +10,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "roles")
+@SQLDelete(sql = "UPDATE roles SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Role {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +30,7 @@ public class Role {
   @NotNull
   @Column(unique = true, name = "role")
   private String role;
+  private Boolean deleted = Boolean.FALSE;
 
   @ManyToMany
   @JoinTable(
