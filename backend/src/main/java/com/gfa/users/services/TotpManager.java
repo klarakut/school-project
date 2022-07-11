@@ -21,6 +21,8 @@ public class TotpManager {
         return generator.generate();
     }
 
+
+
     public String getUriForImage(String secret){
         QrData data = new QrData.Builder()
                 .label("Two-factor-authentication")
