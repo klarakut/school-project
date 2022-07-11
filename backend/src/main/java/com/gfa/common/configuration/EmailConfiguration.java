@@ -1,68 +1,34 @@
 package com.gfa.common.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-@Component
+import java.util.Properties;
+
+@Configuration
 public class EmailConfiguration {
-  @Value("${spring.mail.host}")
-  private String host;
 
-  @Value("${spring.mail.port}")
-  private Integer port;
+    private final Environment env;
+@Autowired
+    public EmailConfiguration(Environment env) {
+        this.env = env;
+    }
 
-  @Value("${spring.mail.username}")
-  private String username;
-
-  @Value("${spring.mail.password}")
-  private String password;
-
-  public String getHost() {
-    return host;
-  }
-
-  public void setHost(String host) {
-    this.host = host;
-  }
-
-  public Integer getPort() {
-    return port;
-  }
-
-  public void setPort(Integer port) {
-    this.port = port;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  @Override
-  public String toString() {
-    return "EmailConfiguration{"
-        + "host='"
-        + host
-        + '\''
-        + ", port="
-        + port
-        + ", username='"
-        + username
-        + '\''
-        + ", password='"
-        + password
-        + '\''
-        + '}';
-  }
+    @Bean
+    public JavaMailSender getJavaMailSender() {
+        JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();
+        mailSenderImpl.setHost(env.getProperty("spring.mail.host"));
+        mailSenderImpl.setPort(Integer.parseInt(env.getProperty("spring.mail.port")));
+        mailSenderImpl.setUsername(env.getProperty("spring.mail.username"));
+        mailSenderImpl.setPassword(env.getProperty("spring.mail.password"));
+        Properties props = new Properties();                        // ???
+        props.setProperty("mail.transport.protocol", "smtp");       //???
+        mailSenderImpl.setJavaMailProperties(props);
+        return mailSenderImpl;
+    }
 }

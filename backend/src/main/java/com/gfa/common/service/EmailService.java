@@ -1,11 +1,8 @@
 package com.gfa.common.service;
 
-import com.gfa.common.configuration.EmailConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
@@ -15,39 +12,29 @@ import javax.mail.internet.MimeMessage;
 @Service
 public class EmailService {
 
-  private final EmailConfiguration emailConfiguration;
+    private final JavaMailSender javaMailSender;
+@Autowired
+    public EmailService(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
-  @Autowired
-  public EmailService(EmailConfiguration emailConfiguration) {
-    this.emailConfiguration = emailConfiguration;
-  }
+    public void sendPlainEmail(String to, String from, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        message.setFrom(from);
+        javaMailSender.send(message);
+    }
 
-  private JavaMailSender getJavaMailSender() {
-    JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();
-    mailSenderImpl.setHost(emailConfiguration.getHost());
-    mailSenderImpl.setPort(emailConfiguration.getPort());
-    mailSenderImpl.setUsername(emailConfiguration.getUsername());
-    mailSenderImpl.setPassword(emailConfiguration.getPassword());
-    return mailSenderImpl;
-  }
-
-  public void sendPlainEmail(String to, String from, String subject, String text) {
-    SimpleMailMessage message = new SimpleMailMessage();
-    message.setTo(to);
-    message.setSubject(subject);
-    message.setText(text);
-    message.setFrom(from);
-    getJavaMailSender().send(message);
-  }
-
-  public void sendHtmlEmail(String to, String from, String subject, String text)
-      throws MessagingException {
-    MimeMessage mimeMessage = getJavaMailSender().createMimeMessage();
-    MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "charset=UTF-8");
-    mimeMessage.setContent(text, "text/html; charset=UTF-8");
-    mimeMessageHelper.setFrom(from);
-    mimeMessageHelper.setTo(to);
-    mimeMessageHelper.setSubject(subject);
-    getJavaMailSender().send(mimeMessage);
-  }
+    public void sendHtmlEmail(String to, String from, String subject, String text)
+            throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "charset=UTF-8");
+        mimeMessage.setContent(text, "text/html; charset=UTF-8");
+        mimeMessageHelper.setFrom(from);
+        mimeMessageHelper.setTo(to);
+        mimeMessageHelper.setSubject(subject);
+        javaMailSender.send(mimeMessage);
+    }
 }
