@@ -1,14 +1,13 @@
 package com.gfa.EmailUtils;
 
+import com.gfa.common.configuration.EmailConfiguration;
+import com.gfa.common.service.EmailService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.mail.MessagingException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {EmailService.class, EmailConfiguration.class})
 @ContextConfiguration

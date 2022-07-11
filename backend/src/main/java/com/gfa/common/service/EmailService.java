@@ -1,5 +1,6 @@
-package com.gfa.EmailUtils;
+package com.gfa.common.service;
 
+import com.gfa.common.configuration.EmailConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.mail.SimpleMailMessage;
