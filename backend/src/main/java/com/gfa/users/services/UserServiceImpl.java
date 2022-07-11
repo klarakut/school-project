@@ -25,11 +25,10 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    public UserServiceImpl(EmailValidator emailValidator, UserRepository userRepository, JwtTokenManager jwtTokenManager, TotpManager totpManager) {
+    public UserServiceImpl(EmailValidator emailValidator, UserRepository userRepository, @Value("${config.security.token_expiration}") Long tokenExpiration,JwtTokenManager jwtTokenManager, TotpManager totpManager) {
         this.emailValidator = emailValidator;
         this.userRepository = userRepository;
-        //this.tokenExpiration = tokenExpiration; @Value("${config.security.token_expiration}") Long tokenExpiration,
-        this.tokenExpiration = 60L;
+        this.tokenExpiration = tokenExpiration;
         this.jwtTokenManager = jwtTokenManager;
         this.totpManager = totpManager;
     }

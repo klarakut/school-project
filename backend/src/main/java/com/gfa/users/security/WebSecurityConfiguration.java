@@ -32,11 +32,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private JwtConfiguration jwtConfiguration;
     private JwtTokenManager tokenManager;
 
+    // #1
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+    // extra
     @Bean
     AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider
@@ -46,6 +48,20 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     return provider;
     }
 
+    // #3
+    /*@Bean(BeanIds.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }*/
+
+    // #4
+    /*@Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }*/
+
+    //extra
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -61,6 +77,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .httpBasic();
     }
 
+    // #2
     /* @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -79,17 +96,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticated();
     }*/
 
-    /*@Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    }*/
 
-    /*@Bean(BeanIds.AUTHENTICATION_MANAGER)
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }*/
-
+    // #5
     /*@Bean
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

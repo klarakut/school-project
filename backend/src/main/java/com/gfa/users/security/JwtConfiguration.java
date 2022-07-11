@@ -36,10 +36,9 @@ public class JwtConfiguration {
         return prefix;
     }
 
-    public int getExpiration() {
-        return 60;
+    public String getExpiration() {
+        return expiration;
     }
-
     public String getSecret() {
         return secret;
     }
