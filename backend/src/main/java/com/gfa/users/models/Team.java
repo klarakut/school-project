@@ -90,9 +90,9 @@ public class Team {
     roles.remove(role);
   }
 
-  public boolean is(Team t) {
+  /*public boolean is(Team t) {
     return (name.equals(t.name));
-  }
+  }*/
 
   public boolean can(Permission permission) {
     return can(permission.getAbility());

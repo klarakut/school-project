@@ -73,9 +73,9 @@ public class Role {
     permissions.remove(p);
   }
 
-  public boolean is(Role r) {
+  /*public boolean is(Role r) {
     return (role.equals(r.role));
-  }
+  }*/
 
   public boolean can(Permission permission) {
     return can(permission.getAbility());

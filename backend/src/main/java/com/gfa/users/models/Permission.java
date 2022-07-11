@@ -56,13 +56,10 @@ public class Permission {
   }
 
   public boolean can(Permission p) {
-    return (ability.equals(p.ability));
+    return this.can(p.ability);
   }
 
-  public boolean can(String permission) {
-    if (permission.equals(this.ability)) {
-      return true;
-    }
-    return false;
+  public boolean can(String ability) {
+    return ability.equals(this.ability);
   }
 }
