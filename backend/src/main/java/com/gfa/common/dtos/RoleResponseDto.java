@@ -1,6 +1,6 @@
 package com.gfa.common.dtos;
 
-public abstract class RoleResponseDto {
+public class RoleResponseDto extends ResponseDto {
 
     public final Long id;
     public final String role;
