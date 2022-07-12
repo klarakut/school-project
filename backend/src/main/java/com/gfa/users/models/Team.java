@@ -61,6 +61,10 @@ public class Team {
     return this.name;
   }
 
+  public void setName(@NotNull String name) {
+    this.name = name;
+  }
+
   @NotNull
   public Long getId() {
     return id;

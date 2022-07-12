@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserService  {
 
-  ResponseEntity<ResponseDto> index();
+ // ResponseEntity<ResponseDto> index();
 
 
         ResponseEntity<ResponseDto> index();
