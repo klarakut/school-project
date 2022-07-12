@@ -1,21 +1,30 @@
 package com.gfa.users.services;
 
-import com.gfa.common.dtos.TeamCreateRequestDto;
-import com.gfa.common.dtos.TeamPatchRequestDto;
-import com.gfa.common.dtos.TeamRequestDto;
-import com.gfa.common.dtos.TeamResponseDto;
+import com.gfa.common.dtos.*;
 
 import java.util.List;
 
 public interface TeamService {
 
-    public List<TeamResponseDto> index ();
+     List<TeamResponseDto> index ();
 
-    public TeamResponseDto  store (TeamCreateRequestDto teamCreateRequestDto);
+     TeamResponseDto  store (TeamCreateRequestDto teamCreateRequestDto);
 
-    public TeamResponseDto show(Long id);
+     TeamResponseDto show(Long id);
 
-    public TeamResponseDto update (Long id, TeamPatchRequestDto teamPatchRequestDto);
+     TeamResponseDto update (Long id, TeamPatchRequestDto teamPatchRequestDto);
 
-    public TeamResponseDto destroy(Long id);
+     void destroy(Long id);
+
+     void addUserToTeam(Long id, UserRequestDto userRequestDto);             ////Zmeniť TeamResponse
+
+    void deleteUserFromTeam(Long id, Long user_id);
+
+    void addPermissionsToTeam(Long id, PermissionRequestDto permissionRequestDto); ////zmeniť Teamresponse
+
+    void deletePermissionFromTeam(Long id, Long permission_id);
+
+    void addRoleToTeam(Long id, RoleRequestDto roleRequestDto);
+
+    void deleteRoleFromTeam(Long id, Long role_id);
 }

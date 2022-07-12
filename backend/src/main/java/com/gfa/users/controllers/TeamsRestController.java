@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.util.List;
+
 @RestController
 public class TeamsRestController {
 
@@ -18,15 +21,12 @@ public class TeamsRestController {
   }
 
   @GetMapping("/teams")
-  public ResponseEntity<? extends TeamResponseDto> index() {
-    TeamResponseDto dtoRespone = teamService.index();     //?????????
-    return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
-    teamService.index();
-    return null; // ??? podla mna má byt List preto to mám červené
+  public List<TeamResponseDto> index() {
+    return teamService.index();
   }
 
   @PostMapping("/teams")
-  public ResponseEntity<? extends TeamResponseDto> store(
+  public ResponseEntity<? extends ResponseDto> store(
       @RequestBody TeamCreateRequestDto teamCreateRequestDto) {
 
     try {
@@ -42,7 +42,7 @@ public class TeamsRestController {
   }
 
   @GetMapping("/teams/{id}")
-  public ResponseEntity<? extends TeamResponseDto> show(@PathVariable Long id) {
+  public ResponseEntity<? extends ResponseDto> show(@PathVariable Long id) {
 
     try {
       TeamResponseDto dtoRespone = teamService.show(id);
@@ -58,7 +58,7 @@ public class TeamsRestController {
   }
 
   @PatchMapping("/teams/{id}")
-  public ResponseEntity<? extends TeamResponseDto> update(
+  public ResponseEntity<? extends ResponseDto> update(
       @PathVariable Long id, @RequestBody TeamPatchRequestDto teamPatchRequestDto) {
     try {
       TeamResponseDto dtoRespone = teamService.update(id, teamPatchRequestDto);
@@ -70,19 +70,129 @@ public class TeamsRestController {
           new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
     } catch (InvalidRequestException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid data"), HttpStatus.BAD_REQUEST);
+    }catch (InvalidServerError e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
     }
   }
 
   @DeleteMapping("/teams/{id}")
-  public ResponseEntity<? extends TeamResponseDto> destroy(@PathVariable Long id) {
+  public ResponseEntity<? extends ResponseDto> destroy(@PathVariable Long id) {
     try {
-      TeamResponseDto dtoRespone = teamService.destroy(id);
-      return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
+      teamService.destroy(id);
+      return null;
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (InvalidTeamNotFoundException e) {
       return new ResponseEntity<>(
           new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidServerError e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
     }
   }
+
+  @PostMapping("/teams/{id}/user")
+  public ResponseEntity<? extends ResponseDto> addUserToTeam(@PathVariable Long id, @RequestBody UserRequestDto userRequestDto){
+    try {
+      teamService.addUserToTeam(id, userRequestDto);
+      return null;
+      //
+    } catch (InvalidEmptyException e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidTeamNotFoundException e) {
+      return new ResponseEntity<>(
+              new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidServerError e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+
+  @DeleteMapping("/teams/{id}/user/{user_id}")
+  public ResponseEntity<? extends ResponseDto> deleteUserFromTeam(@PathVariable Long id, @PathVariable Long user_id ){
+    try {
+      teamService.deleteUserFromTeam(id, user_id);
+      return null;
+      //
+    } catch (InvalidEmptyException e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidTeamAndUserNotFoundException e) {
+      return new ResponseEntity<>(
+              new TeamErrorResponseDto("Team or User not found"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidServerError e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+
+  @PostMapping("/teams/{id}/permissions")
+  public ResponseEntity<? extends ResponseDto> addPermissionsToTeam(@PathVariable Long id, @RequestBody PermissionRequestDto permissionRequestDto){
+
+    try {
+      teamService.addPermissionsToTeam(id, permissionRequestDto);
+      return null;
+      //
+    } catch (InvalidEmptyException e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidTeamNotFoundException e) {
+      return new ResponseEntity<>(
+              new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidServerError e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @DeleteMapping("/teams/{id}/permissions/{permission_id}")
+  public ResponseEntity<? extends ResponseDto> deletePermissionFromTeam(@PathVariable Long id, @PathVariable Long permission_id ){
+
+    try {
+      teamService.deletePermissionFromTeam(id, permission_id);
+      return null;
+      //
+    } catch (InvalidEmptyException e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidTeamAndPermissionNotFoundException e) {
+      return new ResponseEntity<>(
+              new TeamErrorResponseDto("Team or Permission not found"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidServerError e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @PostMapping("/teams/{id}/roles")
+  public ResponseEntity<? extends ResponseDto> addRoleToTeam(@PathVariable Long id, @RequestBody RoleRequestDto roleRequestDto){
+
+    try {
+      teamService.addRoleToTeam(id, roleRequestDto);
+      return null;
+      //
+    } catch (InvalidEmptyException e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidTeamNotFoundException e) {
+      return new ResponseEntity<>(
+              new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidServerError e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @DeleteMapping("/teams/{id}/roles/{role_id}")
+  public ResponseEntity<? extends ResponseDto> deleteRoleFromTeam(@PathVariable Long id, @PathVariable Long role_id ){
+    teamService.deleteRoleFromTeam(id, role_id);                                                                               // ????????
+    return null;
+
+    try {
+      teamService.deleteRoleFromTeam(id, role_id);
+      return null;
+      //
+    } catch (InvalidEmptyException e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidTeamAndRoleNotFoundException e) {
+      return new ResponseEntity<>(
+              new TeamErrorResponseDto("Team or Role not found"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidServerError e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+
 }
