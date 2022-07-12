@@ -10,9 +10,6 @@ import javax.mail.MessagingException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-
-
 @SpringBootTest(classes = {EmailService.class, EmailConfiguration.class})
 @ContextConfiguration
 class EmailServiceTest {
