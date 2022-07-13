@@ -1,7 +1,6 @@
 package com.gfa.common.dtos;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import org.jetbrains.annotations.NotNull;
 
 public class CreateUserRequestDto {
     public final String username;
