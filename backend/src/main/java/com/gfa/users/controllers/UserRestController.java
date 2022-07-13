@@ -29,14 +29,11 @@ public class UserRestController {
         try{
             StatusResponseDto dtoStatus = userService.resendVerificationEmail(emailRequestDto);
             return new ResponseEntity<>(dtoStatus, HttpStatus.OK);
-        }
-        catch (InvalidEmailException e){
+        } catch (InvalidEmailException e){
             return new ResponseEntity<>(new ErrorResponseDto("Invalid email"),HttpStatus.BAD_REQUEST);
-        }
-        catch (AlreadyVerifiedException e){
+        } catch (AlreadyVerifiedException e){
             return new ResponseEntity<>(new ErrorResponseDto("Email already verified!"),HttpStatus.BAD_REQUEST);
-        }
-        finally {
+        } finally {
             return new ResponseEntity<>(new ErrorResponseDto("Unknown error"),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -45,7 +42,7 @@ public class UserRestController {
     public ResponseEntity<? extends ResponseDto> resetPassword(
           @RequestBody EmailRequestDto emailDto) {
         try {
-          StatusResponseDto dtoStatus = userService.resetPasswords(emailDto);
+            StatusResponseDto dtoStatus = userService.resetPasswords(emailDto);
             return new ResponseEntity<>(dtoStatus, HttpStatus.OK);
         } catch (InvalidEmailException e) {
             return new ResponseEntity<>(new ErrorResponseDto("Invalid email"), HttpStatus.BAD_REQUEST);
@@ -56,11 +53,11 @@ public class UserRestController {
         }
       }
 
-      @PostMapping("/reset-password/{token}")
-      public ResponseEntity<? extends ResponseDto> resetPassword(
+    @PostMapping("/reset-password/{token}")
+    public ResponseEntity<? extends ResponseDto> resetPassword(
           @RequestBody PasswordResetRequestDto passwordResetRequestDto, @PathVariable String token) {
         try {
-          StatusResponseDto dtoStatus = userService.resetPassword(token, passwordResetRequestDto);
+            StatusResponseDto dtoStatus = userService.resetPassword(token, passwordResetRequestDto);
             return new ResponseEntity<>(dtoStatus, HttpStatus.OK);
         } catch (InvalidPasswordException e) {
             return new ResponseEntity<>(new ErrorResponseDto("Invalid password!"), HttpStatus.BAD_REQUEST);
@@ -69,7 +66,7 @@ public class UserRestController {
         } catch (InvalidPasswordException e) {
             return new ResponseEntity<>(new ErrorResponseDto("Expired token!"), HttpStatus.BAD_REQUEST);
         } catch (InvalidPasswordException e) {
-            return new ResponseEntity<>(new ErrorResponseDto("Password must be at leat 8 characters long"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorResponseDto("Password must be at least 8 characters long"), HttpStatus.BAD_REQUEST);
         }
-      }
+    }
 }

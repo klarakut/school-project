@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService{
             throw new InvalidEmailException();
         }
 
-        User user = userRepository.findUserByEmail(emailRequestDto.email);
+        User user = userRepository.findByEmail(emailRequestDto.email);
 
         /*
         //#2
@@ -58,10 +58,10 @@ public class UserServiceImpl implements UserService{
         }
 
         //#4
-        emailUtils.sendHtmlEmail(user.getEmail(), "support@demo.com", "Resend verification email", "To verify your email address, click the link below:\n"
+        /*emailUtils.sendHtmlEmail(user.getEmail(), "support@demo.com", "Resend verification email", "To verify your email address, click the link below:\n"
                 + "http://localhost:3036/email/resend-verification-email"
                 + "/reset?token="
-                + user.getVerificationToken());
+                + user.getVerificationToken());*/
         return new StatusResponseDto("ok");
     }
 
@@ -103,7 +103,6 @@ public class UserServiceImpl implements UserService{
             //throw new RuntimeException();
         }
 
-
         // String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         // user.setPassword(encodedPassword);
 
@@ -114,67 +113,65 @@ public class UserServiceImpl implements UserService{
   }
 
 
+    @Override
+    public StatusResponseDto resetPasswords(EmailRequestDto emailDto) {
+        boolean isValidEmail = emailValidator.isValid(emailDto.email);
 
-
-  @Override
-  public StatusResponseDto resetPasswords(EmailRequestDto emailDto) {
-    boolean isValidEmail = emailValidator.isValid(emailDto.email);
-
-    if (!isValidEmail || emailDto.email.isEmpty()) {
-      throw new InvalidEmailException();
-    }
-    User user = userRepository.findByEmail(emailDto.email);
-    if (user == null) {
-      return new StatusResponseDto("ok");
-    }
-    if (user.getVerifiedAt() == null) {
-        throw new UnverifiedEmailExeption();
-    }
-    if (user.getEmail().equals(emailDto.email) && user.getVerifiedAt() != null) {
-      /*
-       emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
-             + "http://localhost:3036/email/reset-password"
-             + "/reset?token="
-             + user.getForgottenPasswordToken());
-      */
-        return new StatusResponseDto("ok");
+        if (!isValidEmail || emailDto.email.isEmpty()) {
+            throw new InvalidEmailException();
+        }
+        User user = userRepository.findByEmail(emailDto.email);
+        if (user == null) {
+            return new StatusResponseDto("ok");
+        }
+        if (user.getVerifiedAt() == null) {
+            throw new UnverifiedEmailExeption();
+        }
+        if (user.getEmail().equals(emailDto.email) && user.getVerifiedAt() != null) {
+        /*
+            emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
+                 + "http://localhost:3036/email/reset-password"
+                 + "/reset?token="
+                 + user.getForgottenPasswordToken());
+        */
+            return new StatusResponseDto("ok");
       }
     return new InvalidRequestException();
   }
 
 
 
-        public StatusResponseDto resetPassword (String token, PasswordResetRequestDto resetPassword){
-            User user = userRepository.findByForgottenPasswordToken(token);
-            Date currentDate = new Date(System.currentTimeMillis());
+  public StatusResponseDto resetPassword (String token, PasswordResetRequestDto resetPassword){
+      User user = userRepository.findByForgottenPasswordToken(token);
+      Date currentDate = new Date(System.currentTimeMillis());
 
-            if (resetPassword.password.isEmpty()) {
-                throw new InvalidPasswordExeption();
-            }
-            if (!user.getForgottenPasswordToken().equals(token)) {
-                throw new InvalidTokenExeption();
-            }
-            if (currentDate.after(user.getForgottenPasswordTokenExpiresAt())) {
-                throw new InvalidTokenExeption();
-            }
-            if (resetPassword.password.length() <= 8) {
-                throw new InvalidPasswordExeption();
-                /*
-                 emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
-                         + "http://localhost:3036/email/reset-password"
-                 + "/reset?token="
-                         + user.getForgottenPasswordToken());
-                */
-            }
-            if (user.getForgottenPasswordToken().equals(token)
+      if (resetPassword.password.isEmpty()) {
+          throw new InvalidPasswordExeption();
+      }
+      if (!user.getForgottenPasswordToken().equals(token)) {
+          throw new InvalidTokenExeption();
+      }
+      if (currentDate.after(user.getForgottenPasswordTokenExpiresAt())) {
+          throw new InvalidTokenExeption();
+      }
+      if (resetPassword.password.length() <= 8) {
+          throw new InvalidPasswordExeption();
+          /*
+            emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
+                + "http://localhost:3036/email/reset-password"
+                + "/reset?token="
+                + user.getForgottenPasswordToken());
+          */
+      }
+      if (user.getForgottenPasswordToken().equals(token)
                     && currentDate.before(user.getForgottenPasswordTokenExpiresAt())) {
-                user.setPassword(resetPassword.password);
-                user.setForgottenPasswordToken(null);
-                userRepository.save(user);
-                return new StatusResponseDto("ok");
-            }
-            return new InvalidRequestException();
-        }
+          user.setPassword(resetPassword.password);
+          user.setForgottenPasswordToken(null);
+          userRepository.save(user);
+          return new StatusResponseDto("ok");
+      }
+      return new InvalidRequestException();
+  }
 
     @Override
     public ResponseEntity<ResponseDto> index () {
