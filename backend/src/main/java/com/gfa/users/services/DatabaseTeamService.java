@@ -55,19 +55,22 @@ public class DatabaseTeamService implements TeamService {
       throw new InvalidTeamExsistException();
     }
     // #Unauthorized User
-    if (){
-    }
+    //if (){
+    //}
     // #Insufficient rights
-    if (){
-    }
+    //if (){
+    //}
     // #Create a Team
+    try{
       Team teamCreate = new Team(teamCreateRequestDto.getName());
       teamRepository.save(teamCreate);
-      boolean teamWasCreated = teamRepository.existByName(teamCreate.getName());
-      // #Server Error check
-    if (!teamWasCreated){
-      throw new ServerErrorException();
+    } catch (Exception e) {
+      throw new UnknownErrorException();
     }
+
+     // boolean teamWasCreated = teamRepository.existByName(teamCreate.getName());
+      // #Server Error check
+
   }
 
   @Override
