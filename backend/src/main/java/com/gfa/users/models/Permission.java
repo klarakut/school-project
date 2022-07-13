@@ -1,17 +1,13 @@
 package com.gfa.users.models;
 
 import org.jetbrains.annotations.NotNull;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "permissions")
@@ -25,21 +21,6 @@ public class Permission {
   @Column(unique = true)
   @NotNull
   private String ability;
-
-
-
-  @ManyToMany
-  @JoinTable(
-          name = "permission_role",
-          joinColumns = @JoinColumn(name = "permmission_id"),
-          inverseJoinColumns = @JoinColumn(name = "role_id"))
-  Set<Role> roles;
-
-  @ManyToMany(mappedBy = "permissions")
-  Set<User> users;
-
-  @ManyToMany(mappedBy = "permissions")
-  Set<Team> teams;
 
   public Permission() {}
 

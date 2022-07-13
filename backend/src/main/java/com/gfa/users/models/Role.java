@@ -1,13 +1,8 @@
 package com.gfa.users.models;
 
 import java.util.HashSet;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -24,14 +19,12 @@ public class Role {
   @Column(unique = true, name = "role")
   private String role;
 
-  @ManyToMany(mappedBy = "roles")
+  @ManyToMany
+  @JoinTable(
+          name = "roles_permission",
+          joinColumns = @JoinColumn(name = "role_id"),
+          inverseJoinColumns = @JoinColumn(name = "permission_id"))
   Set<Permission> permissions;
-
-  @ManyToMany(mappedBy = "roles")
-  Set<User> users;
-
-  @ManyToMany(mappedBy = "roles")
-  Set<Team> teams;
 
   public Role() {
     permissions = new HashSet<>();
@@ -65,7 +58,7 @@ public class Role {
 
   public boolean can(String ability) {
     for (Permission permission : permissions) {
-      if (ability.equals(permission.getAbility())) {
+      if (permission.can(ability)) {}) {
         return true;
       }
     }

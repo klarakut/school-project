@@ -29,16 +29,16 @@ public class Team {
 
   @ManyToMany
   @JoinTable(
-          name = "team_role",
-          joinColumns = @JoinColumn(name = "team_id"),
-          inverseJoinColumns = @JoinColumn(name = "role_id"))
+      name = "team_role",
+      joinColumns = @JoinColumn(name = "team_id"),
+      inverseJoinColumns = @JoinColumn(name = "role_id"))
   Set<Role> roles;
 
   @ManyToMany
   @JoinTable(
-          name = "team_permission",
-          joinColumns = @JoinColumn(name = "team_id"),
-          inverseJoinColumns = @JoinColumn(name = "permission_id"))
+      name = "team_permission",
+      joinColumns = @JoinColumn(name = "team_id"),
+      inverseJoinColumns = @JoinColumn(name = "permission_id"))
   Set<Permission> permissions;
 
   @ManyToMany(mappedBy = "teams")
@@ -47,7 +47,6 @@ public class Team {
   public Team() {
     permissions = new HashSet<>();
     roles = new HashSet<>();
-
   }
 
   public Team(@NotNull String name) {
@@ -73,7 +72,7 @@ public class Team {
     users.remove(user);
   }
 
-  public void addPermision(Permission permission) {
+  public void addPermission(Permission permission) {
     permissions.add(permission);
   }
 

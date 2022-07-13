@@ -40,23 +40,23 @@ public class User {
 
   @ManyToMany
   @JoinTable(
-          name = "user_permission",
-          joinColumns = @JoinColumn(name = "user_id"),
-          inverseJoinColumns = @JoinColumn(name = "permission_id"))
+      name = "user_permission",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "permission_id"))
   Set<Permission> permissions;
 
   @ManyToMany
   @JoinTable(
-          name = "user_role",
-          joinColumns = @JoinColumn(name = "user_id"),
-          inverseJoinColumns = @JoinColumn(name = "role_id"))
+      name = "user_role",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "role_id"))
   Set<Role> roles;
 
   @ManyToMany
   @JoinTable(
-          name = "user_team",
-          joinColumns = @JoinColumn(name = "user_id"),
-          inverseJoinColumns = @JoinColumn(name = "team_id"))
+      name = "user_team",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "team_id"))
   Set<Team> teams;
 
   public User() {
@@ -102,9 +102,8 @@ public class User {
   SecureRandom random = new SecureRandom();
   Integer randomSecureValue = random.nextInt();
 
-
-  public User(CreateUserRequestDto dto, Long expirationTime){
-    this(dto.username, dto.email, dto.password);
+  public User(CreateUserRequestDto dto, Long expirationTime) {
+    this(dto.username, dto.email, dto.password, new Date());
     this.verifiedAt = null;
     this.verificationToken = String.valueOf(randomSecureValue);
     this.verificationTokenExpiresAt = new Date(System.currentTimeMillis() + expirationTime);
@@ -150,8 +149,6 @@ public class User {
     return verificationTokenExpiresAt;
   }
 
-
-
   @Nullable
   public String getForgottenPasswordToken() {
     return forgottenPasswordToken;
@@ -165,7 +162,6 @@ public class User {
   public Date getForgottenPasswordTokenExpiresAt() {
     return forgottenPasswordTokenExpiresAt;
   }
-
 
   public void setForgottenPasswordTokenExpiresAt(@Nullable Date forgottenPasswordTokenExpiresAt) {
     this.forgottenPasswordTokenExpiresAt = forgottenPasswordTokenExpiresAt;
@@ -182,7 +178,9 @@ public class User {
 
   public boolean can(String ability) {
 
-    if(this.getUsername().equals("root")) return true;  // root permissions
+    if (this.getUsername().equals("root")) {
+      return true;
+    } // root permissions
 
     for (Permission permission : permissions) {
       if (permission.can(ability)) {
