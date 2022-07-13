@@ -48,6 +48,8 @@ public class UserServiceImpl implements UserService {
     }
     if (user.getVerifiedAt() == null) {
       throw new UnverifiedEmailExeption();
+      }
+    }
 
  
 
@@ -150,3 +152,4 @@ public class UserServiceImpl implements UserService {
   }*/
 
 }
+
