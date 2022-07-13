@@ -14,17 +14,17 @@ public interface TeamService {
 
      TeamResponseDto update (Long id, TeamPatchRequestDto teamPatchRequestDto);
 
-     void destroy(Long id);
+    EmptyResponseDto destroy(Long id);
 
-     void addUserToTeam(Long id, UserRequestDto userRequestDto);             ////Zmeniť TeamResponse
+    StatusResponseDto addUserToTeam(Long id, UserRequestDto userRequestDto);             ////Zmeniť TeamResponse
 
-    void deleteUserFromTeam(Long id, Long user_id);
+    EmptyResponseDto deleteUserFromTeam(Long id, Long user_id);
 
-    void addPermissionsToTeam(Long id, PermissionRequestDto permissionRequestDto); ////zmeniť Teamresponse
+    StatusResponseDto addPermissionsToTeam(Long id, PermissionRequestDto permissionRequestDto); ////zmeniť Teamresponse
 
-    void deletePermissionFromTeam(Long id, Long permission_id);
+    EmptyResponseDto deletePermissionFromTeam(Long id, Long permission_id);
 
-    void addRoleToTeam(Long id, RoleRequestDto roleRequestDto);
+    StatusResponseDto addRoleToTeam(Long id, RoleRequestDto roleRequestDto);
 
-    void deleteRoleFromTeam(Long id, Long role_id);
+    EmptyResponseDto deleteRoleFromTeam(Long id, Long role_id);
 }

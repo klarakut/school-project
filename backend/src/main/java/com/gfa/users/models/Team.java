@@ -65,33 +65,40 @@ public class Team {
     this.name = name;
   }
 
+
   @NotNull
   public Long getId() {
     return id;
   }
 
-  public void addUser(User user) {
+  public boolean addUser(User user) {
     users.add(user);
+    return true;
   }
 
-  public void removeUser(User user) {
+  public boolean removeUser(User user) {
     users.remove(user);
+    return true;
   }
 
-  public void addPermision(Permission permission) {
+  public boolean addPermision(Permission permission) {
     permissions.add(permission);
+    return true;
   }
 
-  public void removePermission(Permission permission) {
+  public boolean removePermission(Permission permission) {
     permissions.remove(permission);
+    return true;
   }
 
-  public void addRole(Role role) {
+  public boolean addRole(Role role) {
     roles.add(role);
+    return true;
   }
 
-  public void removeRole(Role role) {
+  public boolean removeRole(Role role) {
     roles.remove(role);
+    return true;
   }
 
   public boolean is(Team t) {

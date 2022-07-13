@@ -55,22 +55,19 @@ public class DatabaseTeamService implements TeamService {
       throw new InvalidTeamExsistException();
     }
     // #Unauthorized User
-    //if (){
-    //}
+    // if (){
+    // }
     // #Insufficient rights
-    //if (){
-    //}
+    // if (){
+    // }
     // #Create a Team
-    try{
+    try {
       Team teamCreate = new Team(teamCreateRequestDto.getName());
       teamRepository.save(teamCreate);
+      return new TeamResponseDto(teamCreate.getId(),teamCreate.getName());
     } catch (Exception e) {
       throw new UnknownErrorException();
     }
-
-     // boolean teamWasCreated = teamRepository.existByName(teamCreate.getName());
-      // #Server Error check
-
   }
 
   @Override
@@ -104,25 +101,24 @@ public class DatabaseTeamService implements TeamService {
       throw new InvalidTeamNotFoundException();
     }
     // #Unauthorized User
-    if (){
-    }
+    //if (){
+    //}
     // #Insufficient right
-    if (){
+    //if (){
+    //}
+    try{
+      Team teamUpdate = teamRepository.findById(id).get();
+      teamUpdate.setName(teamPatchRequestDto.getName());
+      teamRepository.save(teamUpdate);
+      return new TeamResponseDto(teamUpdate.getId(), teamUpdate.getName());
+    } catch (Exception e){
+      throw new UnknownErrorException();
     }
-    // #Update a Team
-    Team teamUpdate = teamRepository.findById(id).get();
-    teamUpdate.setName(teamPatchRequestDto.getName());
-    teamRepository.save(teamUpdate);
-    return new TeamResponseDto(teamUpdate.getId(), teamUpdate.getName());
 
-    // #Server error
-    if (!teamUpdate.getName().equals(teamPatchRequestDto.getName())){
-      throw new ServerErrorException();
-    }
   }
 
   @Override
-  public void destroy(Long id) {
+  public EmptyResponseDto destroy(Long id) {
 
     // #Invalid Id input
     if (id <= 0) {
@@ -134,183 +130,201 @@ public class DatabaseTeamService implements TeamService {
       throw new InvalidTeamNotFoundException();
     }
     // #Unauthorized User
-    if(){
-    }
+    //if(){
+    //}
     // #Insufficient right
-    if(){
-    }
+    //if(){
+    //}
     // #Destroy a Team
-    Team teamDestroy = teamRepository.findById(id).get();
-    teamRepository.delete(teamDestroy);
-    // #Server error
-    if (team){
-      throw new InvalidServerError();
+    try{
+      Team teamDestroy = teamRepository.findById(id).get();
+      teamRepository.delete(teamDestroy);
+      return new EmptyResponseDto();
+    } catch (Exception e) {
+      throw new UnknownErrorException();
     }
   }
 
   @Override
-  public void addUserToTeam(Long id, UserRequestDto userRequestDto) {
+  public StatusResponseDto addUserToTeam(Long id, UserRequestDto userRequestDto) {
     // #Invalid Id input
-    if (id <= 0){
+    if (id <= 0) {
       throw new InvalidEmptyException();
     }
     // #Unauthorized User
-    if(){
-    }
+    // if(){
+    // }
     // #Insufficient right
-    if(){
-    }
+    // if(){
+    // }
     // #Team was not found
     boolean team = teamRepository.existsById(id);
     if (!team) {
       throw new InvalidTeamNotFoundException();
     }
-    // #Add user to the team
-    Team teamFound = teamRepository.findById(id).get();
-    User user = userRepository.findById(userRequestDto.getId()).get();
-    teamFound.addUser(user);
-    teamRepository.save(teamFound);
-    // #Server error
-    if (){
+    try {
+      Team teamFound = teamRepository.findById(id).get();
+      User user = userRepository.findById(userRequestDto.getId()).get();
+      if (teamFound.addUser(user)) {
+        teamRepository.save(teamFound);
+        return new StatusResponseDto("ok");
+      }
+      return null;
+
+    } catch (Exception e) {
+      throw new UnknownErrorException();
     }
   }
 
   @Override
-  public void deleteUserFromTeam(Long id, Long user_id) {
+  public EmptyResponseDto deleteUserFromTeam(Long id, Long user_id) {
     // #Invalid Id input
     if (user_id <= 0 || id <=0) {
       throw new InvalidIdException();
     }
     // #Unauthorized User
-    if(){
-    }
+    //if(){
+    //}
     // #Insufficient right
-    if(){
-    }
+    //if(){
+    //}
     // #Team or User not found
     boolean team = teamRepository.existsById(id);
     boolean user = userRepository.existsById(user_id);
     if (!team || !user) {
       throw new InvalidTeamAndUserNotFoundException();
     }
-    // #Delete user to the team
-    Team teamFound = teamRepository.findById(id).get();
-    User userFound = userRepository.findById(user_id).get();
-    teamFound.removeUser(userFound);
-    teamRepository.save(teamFound);
-    // #Server error
-    if (){
+    try{
+      Team teamFound = teamRepository.findById(id).get();
+      User userFound = userRepository.findById(user_id).get();
+      if (teamFound.removeUser(userFound)){
+        teamRepository.save(teamFound);
+        return new EmptyResponseDto();
+      }
+      return null;
+    } catch (Exception e) {
+      throw new UnknownErrorException();
     }
   }
   @Override
-  public void addPermissionsToTeam(Long id, PermissionRequestDto permissionRequestDto) {
+  public StatusResponseDto addPermissionsToTeam(Long id, PermissionRequestDto permissionRequestDto) {
     // #Invalid Id input
     if (id < 0){
       throw new InvalidEmptyException();
     }
     // #Unauthorized User
-    if(){
-    }
+    //if(){
+    //}
     // #Insufficient right
-    if(){
-    }
+    //if(){
+    //}
     // #Team was not found
     boolean team = teamRepository.existsById(id);
     if (!team) {
       throw new InvalidTeamNotFoundException();
     }
-    // #Create permission to the team
-    Team teamFound = teamRepository.findById(id).get();
-    Permission permission = permissionRepository.findById(id).get();
-    teamFound.addPermision(permission);
-    teamRepository.save(teamFound);
-    // #Server error
-    if (!teamFound.can(permission)){
-      throw new InvalidServerError();
+    try{
+      Team teamFound = teamRepository.findById(id).get();
+      Permission permission = permissionRepository.findById(id).get();
+      if (teamFound.addPermision(permission)){
+        teamRepository.save(teamFound);
+        return new StatusResponseDto("ok");
+      }
+      return null;
+    } catch (Exception e) {
+      throw new UnknownErrorException();
     }
   }
 
   @Override
-  public void deletePermissionFromTeam(Long id, Long permission_id) {
+  public EmptyResponseDto deletePermissionFromTeam(Long id, Long permission_id) {
     // #Invalid Id input
     if (permission_id <= 0 || id <=0) {
       throw new InvalidIdException();
     }
     // #Unauthorized User
-    if(){
-    }
+    //if(){
+    //}
     // #Insufficient right
-    if(){
-    }
+    //if(){
+    //}
     // #Team or Permission not found
     boolean team = teamRepository.existsById(id);
     boolean permission = permissionRepository.existsById(permission_id);
     if (!team || !permission) {
       throw new InvalidTeamAndPermissionNotFoundException();
     }
-    // #Delete a permission from Team
-    Team teamFound = teamRepository.findById(id).get();
-    Permission permissionDelete = permissionRepository.findById(permission_id).get();
-    teamFound.removePermission(permissionDelete);
-    teamRepository.save(teamFound);
-    // #Server error
-    if (teamFound.can(permissionDelete)){
-      throw new InvalidServerError();
+    try{
+      Team teamFound = teamRepository.findById(id).get();
+      Permission permissionDelete = permissionRepository.findById(permission_id).get();
+      if (teamFound.removePermission(permissionDelete)){
+        teamRepository.save(teamFound);
+        return new EmptyResponseDto();
+      }
+      return null;
+    } catch (Exception e) {
+      throw new UnknownErrorException();
     }
   }
 
   @Override
-  public void addRoleToTeam(Long id, RoleRequestDto roleRequestDto) {
+  public StatusResponseDto addRoleToTeam(Long id, RoleRequestDto roleRequestDto) {
     // #Invalid Id input
     if (id < 0){
       throw new InvalidEmptyException();
     }
     // #Unauthorized User
-    if(){
-    }
+    //if(){
+    //}
     // #Insufficient right
-    if(){
-    }
+    //if(){
+    //}
     // #Team was not found
     boolean team = teamRepository.existsById(id);
     if (!team) {
       throw new InvalidTeamNotFoundException();
     }
-    // #Create Role from Team
-    Team teamFound = teamRepository.findById(id).get();
-    Role role = roleRepository.findById(roleRequestDto.getId()).get();
-    teamFound.addRole(role);
-    teamRepository.save(teamFound);
-    // #Server error
-    if (){
+    try{
+      Team teamFound = teamRepository.findById(id).get();
+      Role role = roleRepository.findById(roleRequestDto.getId()).get();
+     if(teamFound.addRole(role)){
+       teamRepository.save(teamFound);
+       return new StatusResponseDto("ok");
+     }
+     return null;
+    } catch (Exception e) {
+      throw new UnknownErrorException();
     }
   }
 
   @Override
-  public void deleteRoleFromTeam(Long id, Long role_id) {
+  public EmptyResponseDto deleteRoleFromTeam(Long id, Long role_id) {
     // #Invalid Id input
     if (role_id <= 0 || id <=0) {
       throw new InvalidIdException();
     }
     // #Unauthorized User
-    if(){
-    }
+    //if(){
+    //}
     // #Insufficient right
-    if(){
-    }
+    //if(){
+    //}
     // #Team or Role not found
     boolean team = teamRepository.existsById(id);
     boolean role = roleRepository.existsById(role_id);
     if (!team || !role) {
       throw new InvalidTeamAndRoleNotFoundException();
     }
-    // #Delete a Role from Team
-    Team teamFound = teamRepository.findById(id).get();
-    Role roleDelete = roleRepository.findById(role_id).get();
-    teamFound.removeRole(roleDelete);
-    teamRepository.save(teamFound);
-    // #Server error
-    if (){
+    try{
+      Team teamFound = teamRepository.findById(id).get();
+      Role roleDelete = roleRepository.findById(role_id).get();
+      if (teamFound.removeRole(roleDelete)){
+        teamRepository.save(teamFound);
+        return new EmptyResponseDto();
+      }
+      return null;
+    } catch (Exception e) {
+      throw new UnknownErrorException();
     }
   }
 
