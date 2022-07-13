@@ -6,8 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.jetbrains.annotations.NotNull;
@@ -26,25 +24,13 @@ public class Role {
   @Column(unique = true, name = "role")
   private String role;
 
-  @ManyToMany
-  @JoinTable(
-      name = "role_permission",
-      joinColumns = @JoinColumn(name = "role_id"),
-      inverseJoinColumns = @JoinColumn(name = "permission_id"))
+  @ManyToMany(mappedBy = "roles")
   Set<Permission> permissions;
 
-  @ManyToMany
-  @JoinTable(
-      name = "user_role",
-      joinColumns = @JoinColumn(name = "role_id"),
-      inverseJoinColumns = @JoinColumn(name = "user_id"))
+  @ManyToMany(mappedBy = "roles")
   Set<User> users;
 
-  @ManyToMany
-  @JoinTable(
-      name = "team_role",
-      joinColumns = @JoinColumn(name = "role_id"),
-      inverseJoinColumns = @JoinColumn(name = "team_id"))
+  @ManyToMany(mappedBy = "roles")
   Set<Team> teams;
 
   public Role() {
@@ -72,10 +58,6 @@ public class Role {
   public void removePermission(Permission p) {
     permissions.remove(p);
   }
-
-  /*public boolean is(Role r) {
-    return (role.equals(r.role));
-  }*/
 
   public boolean can(Permission permission) {
     return can(permission.getAbility());

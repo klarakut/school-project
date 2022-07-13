@@ -5,12 +5,7 @@ import java.security.SecureRandom;
 import java.util.HashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
@@ -43,13 +38,25 @@ public class User {
 
   private Date createdAt;
 
-  @ManyToMany(mappedBy = "users")
+  @ManyToMany
+  @JoinTable(
+          name = "user_permission",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "permission_id"))
   Set<Permission> permissions;
 
-  @ManyToMany(mappedBy = "users")
+  @ManyToMany
+  @JoinTable(
+          name = "user_role",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "role_id"))
   Set<Role> roles;
 
-  @ManyToMany(mappedBy = "users")
+  @ManyToMany
+  @JoinTable(
+          name = "user_team",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "team_id"))
   Set<Team> teams;
 
   public User() {
@@ -165,6 +172,9 @@ public class User {
   }
 
   public boolean can(String ability) {
+
+    if(this.getUsername().equals("root")) return true;  // root permissions
+
     for (Permission permission : permissions) {
       if (permission.can(ability)) {
         return true;

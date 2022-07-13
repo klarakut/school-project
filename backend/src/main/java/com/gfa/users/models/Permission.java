@@ -26,18 +26,20 @@ public class Permission {
   @NotNull
   private String ability;
 
-  @ManyToMany(mappedBy = "permissions")
-  Set<Team> teams;
+
 
   @ManyToMany
   @JoinTable(
-      name = "permission_user",
-      joinColumns = @JoinColumn(name = "permission_id"),
-      inverseJoinColumns = @JoinColumn(name = "user_id"))
+          name = "permission_role",
+          joinColumns = @JoinColumn(name = "permmission_id"),
+          inverseJoinColumns = @JoinColumn(name = "role_id"))
+  Set<Role> roles;
+
+  @ManyToMany(mappedBy = "permissions")
   Set<User> users;
 
   @ManyToMany(mappedBy = "permissions")
-  Set<Role> roles;
+  Set<Team> teams;
 
   public Permission() {}
 
