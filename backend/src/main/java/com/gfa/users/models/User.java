@@ -94,6 +94,7 @@ public class User{
   Integer randomSecureValue = random.nextInt();
 
 
+  // constructor for use in Spring Security
   public User(User user) {
     this.id = user.id;
     this.username = user.username;
