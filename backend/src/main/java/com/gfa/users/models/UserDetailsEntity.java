@@ -30,21 +30,12 @@ public class UserDetailsEntity extends User implements UserDetails {
                 .collect(Collectors.toSet());
 */
        // return Collections.singleton(new SimpleGrantedAuthority(user.getRoles()));
-    }
+
     /*return getRoles()
                 .stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                .map(role -> new SimpleGrantedAuthority(role.getRole()))
                 .collect(Collectors.toSet());*/
-
-    /*@Override
-    public String getPassword() {
-        return user.getPassword();
     }
-
-    @Override
-    public String getUsername() {
-        return user.getUsername()  ;
-    }*/
 
     @Override
     public boolean isAccountNonExpired() {
