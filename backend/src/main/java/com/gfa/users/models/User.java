@@ -102,8 +102,9 @@ public class User {
   SecureRandom random = new SecureRandom();
   Integer randomSecureValue = random.nextInt();
 
-  public User(CreateUserRequestDto dto, Long expirationTime) {
-    this(dto.username, dto.email, dto.password, new Date());
+
+  public User(CreateUserRequestDto dto, Long expirationTime){
+    this(dto.username, dto.email, dto.password);
     this.verifiedAt = null;
     this.verificationToken = String.valueOf(randomSecureValue);
     this.verificationTokenExpiresAt = new Date(System.currentTimeMillis() + expirationTime);
@@ -149,6 +150,8 @@ public class User {
     return verificationTokenExpiresAt;
   }
 
+
+
   @Nullable
   public String getForgottenPasswordToken() {
     return forgottenPasswordToken;
@@ -163,6 +166,12 @@ public class User {
     return forgottenPasswordTokenExpiresAt;
   }
 
+
+  public void setForgottenPasswordTokenExpiresAt(@Nullable Date forgottenPasswordTokenExpiresAt) {
+    this.forgottenPasswordTokenExpiresAt = forgottenPasswordTokenExpiresAt;
+  }
+
+  @NotNull
   public Date getCreatedAt() {
     return createdAt;
   }
