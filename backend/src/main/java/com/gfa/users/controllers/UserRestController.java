@@ -33,15 +33,14 @@ public class UserRestController {
       try {
           UserResponseDto userResponse = userService.store(dto);
 
-         /* URI location = ServletUriComponentsBuilder
+          URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/register/{username}")
                 .buildAndExpand(userResponse.username).toUri();
 
-           ResponseEntity
+           return ResponseEntity
                 .created(location)
-                .body(userResponse);*/
+                .body(userResponse);
 
-          return new ResponseEntity<>(userResponse,HttpStatus.CREATED);
        }
        catch (UsernameMissingException e){
            return new ResponseEntity<>(new ErrorResponseDto("Username is required"),HttpStatus.BAD_REQUEST);
