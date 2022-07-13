@@ -33,7 +33,6 @@ public class UserServiceImpl implements UserService {
         this.totpManager = totpManager;
     }
 
-    //public ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto) {
     public UserResponseDto store(CreateUserRequestDto dto) {
 
         if (dto.username.isEmpty() || dto.username == null) {
@@ -73,17 +72,6 @@ public class UserServiceImpl implements UserService {
         if (!userCreated) {
             throw new UnexpectedErrorException();
         }
-
-        /*URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/register/{username}")
-                .buildAndExpand(user.getUsername()).toUri();
-
-        //return new ResponseEntity<>(userResponseDto,HttpStatus.CREATED);
-
-        ResponseEntity
-                .created(location)
-                .body(userResponseDto);*/
-
         return userResponseDto;
     }
 
