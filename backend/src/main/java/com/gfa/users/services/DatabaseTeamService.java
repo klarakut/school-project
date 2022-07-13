@@ -24,7 +24,11 @@ public class DatabaseTeamService implements TeamService {
   public final RoleRepository roleRepository;
 
   @Autowired
-  public DatabaseTeamService(TeamRepository teamRepository, UserRepository userRepository, PermissionRepository permissionRepository, RoleRepository roleRepository) {
+  public DatabaseTeamService(
+      TeamRepository teamRepository,
+      UserRepository userRepository,
+      PermissionRepository permissionRepository,
+      RoleRepository roleRepository) {
     this.teamRepository = teamRepository;
     this.userRepository = userRepository;
     this.permissionRepository = permissionRepository;
@@ -54,17 +58,10 @@ public class DatabaseTeamService implements TeamService {
     if (team) {
       throw new InvalidTeamExsistException();
     }
-    // #Unauthorized User
-    // if (){
-    // }
-    // #Insufficient rights
-    // if (){
-    // }
-    // #Create a Team
     try {
       Team teamCreate = new Team(teamCreateRequestDto.getName());
       teamRepository.save(teamCreate);
-      return new TeamResponseDto(teamCreate.getId(),teamCreate.getName());
+      return new TeamResponseDto(teamCreate.getId(), teamCreate.getName());
     } catch (Exception e) {
       throw new UnknownErrorException();
     }
@@ -100,21 +97,14 @@ public class DatabaseTeamService implements TeamService {
     if (!team) {
       throw new InvalidTeamNotFoundException();
     }
-    // #Unauthorized User
-    //if (){
-    //}
-    // #Insufficient right
-    //if (){
-    //}
-    try{
+    try {
       Team teamUpdate = teamRepository.findById(id).get();
       teamUpdate.setName(teamPatchRequestDto.getName());
       teamRepository.save(teamUpdate);
       return new TeamResponseDto(teamUpdate.getId(), teamUpdate.getName());
-    } catch (Exception e){
+    } catch (Exception e) {
       throw new UnknownErrorException();
     }
-
   }
 
   @Override
@@ -129,14 +119,7 @@ public class DatabaseTeamService implements TeamService {
     if (!team) {
       throw new InvalidTeamNotFoundException();
     }
-    // #Unauthorized User
-    //if(){
-    //}
-    // #Insufficient right
-    //if(){
-    //}
-    // #Destroy a Team
-    try{
+    try {
       Team teamDestroy = teamRepository.findById(id).get();
       teamRepository.delete(teamDestroy);
       return new EmptyResponseDto();
@@ -151,12 +134,6 @@ public class DatabaseTeamService implements TeamService {
     if (id <= 0) {
       throw new InvalidEmptyException();
     }
-    // #Unauthorized User
-    // if(){
-    // }
-    // #Insufficient right
-    // if(){
-    // }
     // #Team was not found
     boolean team = teamRepository.existsById(id);
     if (!team) {
@@ -179,25 +156,19 @@ public class DatabaseTeamService implements TeamService {
   @Override
   public EmptyResponseDto deleteUserFromTeam(Long id, Long user_id) {
     // #Invalid Id input
-    if (user_id <= 0 || id <=0) {
+    if (user_id <= 0 || id <= 0) {
       throw new InvalidIdException();
     }
-    // #Unauthorized User
-    //if(){
-    //}
-    // #Insufficient right
-    //if(){
-    //}
     // #Team or User not found
     boolean team = teamRepository.existsById(id);
     boolean user = userRepository.existsById(user_id);
     if (!team || !user) {
       throw new InvalidTeamAndUserNotFoundException();
     }
-    try{
+    try {
       Team teamFound = teamRepository.findById(id).get();
       User userFound = userRepository.findById(user_id).get();
-      if (teamFound.removeUser(userFound)){
+      if (teamFound.removeUser(userFound)) {
         teamRepository.save(teamFound);
         return new EmptyResponseDto();
       }
@@ -206,27 +177,23 @@ public class DatabaseTeamService implements TeamService {
       throw new UnknownErrorException();
     }
   }
+
   @Override
-  public StatusResponseDto addPermissionsToTeam(Long id, PermissionRequestDto permissionRequestDto) {
+  public StatusResponseDto addPermissionsToTeam(
+      Long id, PermissionRequestDto permissionRequestDto) {
     // #Invalid Id input
-    if (id < 0){
+    if (id < 0) {
       throw new InvalidEmptyException();
     }
-    // #Unauthorized User
-    //if(){
-    //}
-    // #Insufficient right
-    //if(){
-    //}
     // #Team was not found
     boolean team = teamRepository.existsById(id);
     if (!team) {
       throw new InvalidTeamNotFoundException();
     }
-    try{
+    try {
       Team teamFound = teamRepository.findById(id).get();
       Permission permission = permissionRepository.findById(id).get();
-      if (teamFound.addPermision(permission)){
+      if (teamFound.addPermision(permission)) {
         teamRepository.save(teamFound);
         return new StatusResponseDto("ok");
       }
@@ -239,25 +206,19 @@ public class DatabaseTeamService implements TeamService {
   @Override
   public EmptyResponseDto deletePermissionFromTeam(Long id, Long permission_id) {
     // #Invalid Id input
-    if (permission_id <= 0 || id <=0) {
+    if (permission_id <= 0 || id <= 0) {
       throw new InvalidIdException();
     }
-    // #Unauthorized User
-    //if(){
-    //}
-    // #Insufficient right
-    //if(){
-    //}
     // #Team or Permission not found
     boolean team = teamRepository.existsById(id);
     boolean permission = permissionRepository.existsById(permission_id);
     if (!team || !permission) {
       throw new InvalidTeamAndPermissionNotFoundException();
     }
-    try{
+    try {
       Team teamFound = teamRepository.findById(id).get();
       Permission permissionDelete = permissionRepository.findById(permission_id).get();
-      if (teamFound.removePermission(permissionDelete)){
+      if (teamFound.removePermission(permissionDelete)) {
         teamRepository.save(teamFound);
         return new EmptyResponseDto();
       }
@@ -270,28 +231,22 @@ public class DatabaseTeamService implements TeamService {
   @Override
   public StatusResponseDto addRoleToTeam(Long id, RoleRequestDto roleRequestDto) {
     // #Invalid Id input
-    if (id < 0){
+    if (id < 0) {
       throw new InvalidEmptyException();
     }
-    // #Unauthorized User
-    //if(){
-    //}
-    // #Insufficient right
-    //if(){
-    //}
     // #Team was not found
     boolean team = teamRepository.existsById(id);
     if (!team) {
       throw new InvalidTeamNotFoundException();
     }
-    try{
+    try {
       Team teamFound = teamRepository.findById(id).get();
       Role role = roleRepository.findById(roleRequestDto.getId()).get();
-     if(teamFound.addRole(role)){
-       teamRepository.save(teamFound);
-       return new StatusResponseDto("ok");
-     }
-     return null;
+      if (teamFound.addRole(role)) {
+        teamRepository.save(teamFound);
+        return new StatusResponseDto("ok");
+      }
+      return null;
     } catch (Exception e) {
       throw new UnknownErrorException();
     }
@@ -300,25 +255,19 @@ public class DatabaseTeamService implements TeamService {
   @Override
   public EmptyResponseDto deleteRoleFromTeam(Long id, Long role_id) {
     // #Invalid Id input
-    if (role_id <= 0 || id <=0) {
+    if (role_id <= 0 || id <= 0) {
       throw new InvalidIdException();
     }
-    // #Unauthorized User
-    //if(){
-    //}
-    // #Insufficient right
-    //if(){
-    //}
     // #Team or Role not found
     boolean team = teamRepository.existsById(id);
     boolean role = roleRepository.existsById(role_id);
     if (!team || !role) {
       throw new InvalidTeamAndRoleNotFoundException();
     }
-    try{
+    try {
       Team teamFound = teamRepository.findById(id).get();
       Role roleDelete = roleRepository.findById(role_id).get();
-      if (teamFound.removeRole(roleDelete)){
+      if (teamFound.removeRole(roleDelete)) {
         teamRepository.save(teamFound);
         return new EmptyResponseDto();
       }
@@ -327,6 +276,4 @@ public class DatabaseTeamService implements TeamService {
       throw new UnknownErrorException();
     }
   }
-
-
 }
