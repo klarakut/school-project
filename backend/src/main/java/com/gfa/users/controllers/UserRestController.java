@@ -16,6 +16,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+import static org.springframework.web.servlet.function.ServerResponse.created;
+
 @RestController
 public class UserRestController {
 
@@ -33,14 +35,15 @@ public class UserRestController {
       try {
           UserResponseDto userResponse = userService.store(dto);
 
-          URI location = ServletUriComponentsBuilder
+         /* URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/register/{username}")
                 .buildAndExpand(userResponse.username).toUri();
 
-           return ResponseEntity
-                .created(location)
-                .body(userResponse);
+            return  ResponseEntity
+                  .created(location)
+                  .body(userResponse);*/
 
+          return new ResponseEntity<>(userResponse,HttpStatus.CREATED);
        }
        catch (UsernameMissingException e){
            return new ResponseEntity<>(new ErrorResponseDto("Username is required"),HttpStatus.BAD_REQUEST);
