@@ -71,8 +71,13 @@ public class Role {
     return role;
   }
 
-  public void addPermission(Permission p) {
+  public void setRole(@NotNull String role) {
+    this.role = role;
+  }
+
+  public boolean addPermission(Permission p) {
     permissions.add(p);
+    return true;
   }
 
   public void removePermission(Permission p) {
