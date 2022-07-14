@@ -130,7 +130,7 @@ class UserTest {
 
   @Test
   void add_permission() {
-    assertFalse(user.can(permission))
+    assertFalse(user.can(permission));
     assertTrue(user.addPermission(permission));
     assertTrue(user.can(permission));
   }

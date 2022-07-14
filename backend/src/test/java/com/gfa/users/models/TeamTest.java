@@ -17,10 +17,10 @@ class TeamTest {
 
   @BeforeEach
   public void beforeEach() {
-    Permission permission = new Permission("permission");
+    permission = new Permission("permission");
     role = new Role("role");
     team = new Team("team");
-    user = new User("user","xx","x", date = new Date());
+    user = new User("user","xx","x", date = new Date(0L));
   }
 
   @Test
@@ -30,7 +30,7 @@ class TeamTest {
 
   @Test
   void add_permission() {
-    assertFalse(team.can(permission))
+    assertFalse(team.can(permission));
     assertTrue(team.addPermission(permission));
     assertTrue(team.can(permission));
   }

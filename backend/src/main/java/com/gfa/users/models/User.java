@@ -205,7 +205,7 @@ public class User {
   }
 
   public boolean addRole(Role role) {
-    if(roles.contains(role)) {
+    if (roles.contains(role)) {
       return false;
     }
     roles.add(role);

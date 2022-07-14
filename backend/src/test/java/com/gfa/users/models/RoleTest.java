@@ -50,7 +50,7 @@ class RoleTest {
 
   @Test
   void can_true_permissions() {
-    Role role = new Role("role");
+    role = new Role("role");
     Permission permission_01 = new Permission("do something");
     role.addPermission(permission_01);
     assertTrue(role.can(permission_01));
