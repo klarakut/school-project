@@ -86,4 +86,29 @@ class TeamTest {
     assertTrue(team.removeRole(role));
     assertFalse(team.removeRole(role));
   }
+
+  @Test
+  void canString() {
+    assertFalse(team.can("permission"));
+    team.addPermission(permission);
+    assertTrue(team.can("permission"));
+    team.removePermission(permission);
+    role.addPermission(permission);
+    assertFalse(team.can("permission"));
+    team.addRole(role);
+    assertTrue(team.can("permission"));
+  }
+
+  @Test
+  void canPermission() {
+    assertFalse(team.can(permission));
+    team.addPermission(permission);
+    assertTrue(team.can(permission));
+    team.removePermission(permission);
+    role.addPermission(permission);
+    assertFalse(team.can(permission));
+    team.addRole(role);
+    assertTrue(team.can(permission));
+  }
+
 }
