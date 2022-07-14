@@ -4,13 +4,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UserTest {
 
+  Team team;
+  Role role;
+  Permission permission;
+  Permission per;
+  Permission mission;
   User user;
   Date verifiedAt = new Date(0L);
   Date verificationTokenExpiresAt = new Date(0L);
@@ -19,6 +23,12 @@ class UserTest {
 
   @BeforeEach
   public void beforeEach() {
+
+    team = new Team("team");
+    role = new Role("role");
+    permission = new Permission("permission");
+    per = new Permission("per");
+    mission = new Permission("mission");
 
     verifiedAt = new Date(0L);
     verificationTokenExpiresAt = new Date(0L);
@@ -116,5 +126,94 @@ class UserTest {
   @Test
   void get_created_at_returns_the_correct_date_and_time() {
     assertEquals(verifiedAt, user.getCreatedAt());
+  }
+
+  @Test
+  void add_permission() {
+    assertFalse(user.can(permission))
+    assertTrue(user.addPermission(permission));
+    assertTrue(user.can(permission));
+  }
+
+  @Test
+  void add_twice_permission() {
+    user.addPermission(permission);
+    assertFalse(user.addPermission(permission));
+  }
+
+  @Test
+  void remove_permission() {
+    user.addPermission(permission);
+    assertTrue(user.removePermission(permission));
+    assertTrue(user.can(permission));
+    assertFalse(user.removePermission(permission));
+  }
+
+  @Test
+  void add_role() {
+    assertTrue(user.addRole(role));
+  }
+
+  @Test
+  void add_twice_role() {
+    assertTrue(user.addRole(role));
+    assertFalse(user.addRole(role));
+  }
+
+  @Test
+  void remove_role() {
+    assertFalse(user.removeRole(role));
+    assertTrue(user.addRole(role));
+    assertTrue(user.removeRole(role));
+    assertFalse(user.removeRole(role));
+  }
+
+  @Test
+  void add_team() {
+    assertTrue(user.addTeam(team));
+  }
+
+  @Test
+  void add_twice_team() {
+    assertTrue(user.addTeam(team));
+    assertFalse(user.addTeam(team));
+  }
+
+  @Test
+  void remove_team() {
+    assertFalse(user.removeTeam(team));
+    assertTrue(user.addTeam(team));
+    assertTrue(user.removeTeam(team));
+    assertFalse(user.removeTeam(team));
+  }
+
+  @Test
+  void can_permission() {
+    user.addRole(role);
+    user.addTeam(team);
+    assertFalse(user.can(permission));
+    assertTrue(user.addPermission(permission));
+    assertTrue(user.can(permission));
+    assertFalse(user.can(per));
+    role.addPermission(per);
+    assertTrue(user.can(per));
+    assertFalse(user.can(mission));
+    team.addPermission(mission);
+    assertTrue(user.can(mission));
+  }
+
+  @Test
+  void can_string() {
+    user.addRole(role);
+    user.addTeam(team);
+    assertFalse(user.can("permission"));
+    assertTrue(user.addPermission(permission));
+    assertTrue(user.can("permission"));
+    assertFalse(user.can("per"));
+    role.addPermission(per);
+    assertTrue(user.can("per"));
+    assertFalse(user.can("mission"));
+    team.addPermission(mission);
+    assertTrue(user.can("mission"));
   }
 }

@@ -18,31 +18,31 @@ class TeamTest {
   @BeforeEach
   public void beforeEach() {
     Permission permission = new Permission("permission");
-    Role role = new Role("role");
-    Team team = new Team("team");
-    User user = new User("user","xx","x", new Date());
+    role = new Role("role");
+    team = new Team("team");
+    user = new User("user","xx","x", date = new Date());
   }
 
   @Test
-  void getName() {
+  void get_name() {
     assertEquals("team", team.getName());
   }
 
   @Test
-  void addPermission() {
+  void add_permission() {
     assertFalse(team.can(permission))
     assertTrue(team.addPermission(permission));
     assertTrue(team.can(permission));
   }
 
   @Test
-  void addTwicePermission() {
+  void add_twice_permission() {
     team.addPermission(permission);
     assertFalse(team.addPermission(permission));
   }
 
   @Test
-  void removePermission() {
+  void remove_permission() {
     team.addPermission(permission);
     assertTrue(team.removePermission(permission));
     assertTrue(team.can(permission));
@@ -50,18 +50,18 @@ class TeamTest {
   }
 
   @Test
-  void addUser() {
+  void add_user() {
     assertTrue(team.addUser(user));
   }
 
   @Test
-  void addTwiceUser() {
+  void add_twice_user() {
     assertTrue(team.addUser(user));
     assertFalse(team.addUser(user));
   }
 
   @Test
-  void removeUser(){
+  void remove_user(){
     assertFalse(team.removeUser(user));
     assertTrue(team.addUser(user));
     assertTrue(team.removeUser(user));
@@ -69,18 +69,18 @@ class TeamTest {
   }
 
   @Test
-  void addRole() {
+  void add_role() {
     assertTrue(team.addRole(role));
   }
 
   @Test
-  void addTwiceRole() {
+  void add_twice_role() {
     assertTrue(team.addRole(role));
     assertFalse(team.addRole(role));
   }
 
   @Test
-  void removeRole() {
+  void remove_role() {
     assertFalse(team.removeRole(role));
     assertTrue(team.addRole(role));
     assertTrue(team.removeRole(role));
@@ -88,7 +88,7 @@ class TeamTest {
   }
 
   @Test
-  void canString() {
+  void can_string() {
     assertFalse(team.can("permission"));
     team.addPermission(permission);
     assertTrue(team.can("permission"));
@@ -100,7 +100,7 @@ class TeamTest {
   }
 
   @Test
-  void canPermission() {
+  void can_permission() {
     assertFalse(team.can(permission));
     team.addPermission(permission);
     assertTrue(team.can(permission));
@@ -110,5 +110,4 @@ class TeamTest {
     team.addRole(role);
     assertTrue(team.can(permission));
   }
-
 }
