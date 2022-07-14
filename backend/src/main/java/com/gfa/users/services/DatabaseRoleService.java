@@ -1,11 +1,10 @@
 package com.gfa.users.services;
 
-import com.gfa.common.dtos.PermissionRequestDto;
-import com.gfa.common.dtos.RoleCreateRequestDto;
-import com.gfa.common.dtos.RolePatchRequestDto;
-import com.gfa.common.dtos.RoleResponseDto;
+import com.gfa.common.dtos.*;
+import com.gfa.users.Exception.*;
 import com.gfa.users.models.Permission;
 import com.gfa.users.models.Role;
+import com.gfa.users.repositories.PermissionRepository;
 import com.gfa.users.repositories.RoleRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +15,11 @@ import java.util.List;
 public class DatabaseRoleService implements RoleService{
 
     private final RoleRepository roleRepository;
+    private final PermissionRepository permissionRepository;
 
-    public DatabaseRoleService(RoleRepository roleRepository) {
+    public DatabaseRoleService(RoleRepository roleRepository, PermissionRepository permissionRepository) {
         this.roleRepository = roleRepository;
+        this.permissionRepository = permissionRepository;
     }
 
     @Override
@@ -58,16 +59,18 @@ public class DatabaseRoleService implements RoleService{
             throw new RoleExistException();
         }
 
-        //TODO -> unauthorized user => 401
+        // TODO -> unauthorized user => 401
         // TODO -> insufficient rights to create roles => 403
 
-        Role role = new Role(dto.role);
-        roleRepository.save(role);
-        if (!roleRepository.findById(role.getId()).isPresent()){
+        try {
+            Role role = new Role(dto.role);
+            roleRepository.save(role);
+            RoleResponseDto roleDto = new RoleResponseDto(role.getId(),role.getRole());
+            return roleDto;
+        }
+        catch (Exception e){
             throw new UnknownErrorException();
         }
-        RoleResponseDto roleDto = new RoleResponseDto(role.getId(),role.getRole());
-        return roleDto;
     }
 
     @Override
@@ -85,17 +88,19 @@ public class DatabaseRoleService implements RoleService{
             throw new InvalidInputException();
         }
 
-        //TODO -> unauthorized user => 401
+        // TODO -> unauthorized user => 401
         // TODO -> insufficient rights to create roles => 403
 
-        Role role = roleRepository.findById(id).get();
-        role.setRole(dto.role);
-        roleRepository.save(role);
-        if(!role.getRole().equals(dto.role)){
+        try {
+            Role role = roleRepository.findById(id).get();
+            role.setRole(dto.role);
+            roleRepository.save(role);
+            RoleResponseDto roleDto = new RoleResponseDto(role.getId(), dto.role);
+            return roleDto;
+        }
+        catch (Exception e){
             throw new UnknownErrorException();
         }
-        RoleResponseDto roleDto = new RoleResponseDto(role.getId(), dto.role);
-        return roleDto;
     }
 
     @Override
@@ -109,14 +114,14 @@ public class DatabaseRoleService implements RoleService{
             throw new IdNotFoundException();
         }
 
-        //TODO -> unauthorized user => 401
+        // TODO -> unauthorized user => 401
         // TODO -> insufficient rights to create roles => 403
 
         roleRepository.deleteById(id);
     }
 
     @Override
-    public void storePermission(Long id, PermissionRequestDto permission) {
+    public StatusResponseDto storePermission(Long id, PermissionRequestDto permission) {
         if(permission.ability.isEmpty()){
             throw new InvalidInputException();
         }
@@ -126,17 +131,18 @@ public class DatabaseRoleService implements RoleService{
             throw new IdNotFoundException();
         }
 
-        //TODO -> unauthorized user => 401
+        // TODO -> unauthorized user => 401
         // TODO -> insufficient rights to create roles => 403
 
-        Permission p = permissionRepository.findByAbility(permission.ability).get();
+        Permission p = permissionRepository.findById(permission.id).get();
         Role role = roleRepository.findById(id).get();
-        role.addPermission(p);
-        roleRepository.save(role);
-
-        if (!role.can(p)){
-            throw new UnknownErrorException();
-        }
+            if(role.addPermission(p)) {
+                roleRepository.save(role);
+                StatusResponseDto status = new StatusResponseDto("ok");
+                return status;
+            } else {
+                throw new UnknownErrorException();
+                }
     }
 
     @Override
@@ -150,7 +156,7 @@ public class DatabaseRoleService implements RoleService{
             throw new PermissionIdNotFoundException();
         }
 
-        //TODO -> unauthorized user => 401
+        // TODO -> unauthorized user => 401
         // TODO -> insufficient rights to create roles => 403
 
         Role role = roleRepository.findById(id).get();
@@ -159,10 +165,12 @@ public class DatabaseRoleService implements RoleService{
         if(!hasPermission){
             throw new InvalidInputException();
         }
-        role.removePermission(permission);
-        roleRepository.save(role);
 
-        if (role.can(permission)){
+        try {
+            role.removePermission(permission);
+            roleRepository.save(role);
+        }
+        catch (Exception e){
             throw new UnknownErrorException();
         }
     }

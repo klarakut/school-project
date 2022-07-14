@@ -12,7 +12,7 @@ public interface RoleService {
     List<RoleResponseDto> index();
     void destroy(Long id);
 
-    void storePermission(Long id, PermissionRequestDto permission);
+    StatusResponseDto storePermission(Long id, PermissionRequestDto permission);
 
     void destroyPermission(Long id, Long permissionId);
 }

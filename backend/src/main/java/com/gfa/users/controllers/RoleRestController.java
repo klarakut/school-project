@@ -1,6 +1,7 @@
 package com.gfa.users.controllers;
 
 import com.gfa.common.dtos.*;
+import com.gfa.users.Exception.*;
 import com.gfa.users.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
