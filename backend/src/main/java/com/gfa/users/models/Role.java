@@ -21,9 +21,9 @@ public class Role {
 
   @ManyToMany
   @JoinTable(
-          name = "roles_permission",
-          joinColumns = @JoinColumn(name = "role_id"),
-          inverseJoinColumns = @JoinColumn(name = "permission_id"))
+      name = "roles_permission",
+      joinColumns = @JoinColumn(name = "role_id"),
+      inverseJoinColumns = @JoinColumn(name = "permission_id"))
   Set<Permission> permissions;
 
   public Role() {
@@ -44,12 +44,20 @@ public class Role {
     return role;
   }
 
-  public void addPermission(Permission p) {
+  public boolean addPermission(Permission p) {
+    if (permissions.contains(p)) {
+      return false;
+    }
     permissions.add(p);
+    return true;
   }
 
-  public void removePermission(Permission p) {
+  public boolean removePermission(Permission p) {
+    if (permissions.contains(p)) {
+      return false;
+    }
     permissions.remove(p);
+    return true;
   }
 
   public boolean can(Permission permission) {
@@ -58,7 +66,7 @@ public class Role {
 
   public boolean can(String ability) {
     for (Permission permission : permissions) {
-      if (permission.can(ability)) {}) {
+      if (permission.can(ability)) {
         return true;
       }
     }
