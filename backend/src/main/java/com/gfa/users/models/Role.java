@@ -54,10 +54,10 @@ public class Role {
 
   public boolean removePermission(Permission p) {
     if (permissions.contains(p)) {
-      return false;
+      permissions.remove(p);
+      return true;
     }
-    permissions.remove(p);
-    return true;
+    return false;
   }
 
   public boolean can(Permission permission) {

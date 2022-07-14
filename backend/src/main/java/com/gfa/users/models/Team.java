@@ -64,28 +64,52 @@ public class Team {
     return id;
   }
 
-  public void addUser(User user) {
+  public boolean addUser(User user) {
+    if (users.contains(user)) {
+      return false;
+    }
     users.add(user);
+    return true;
   }
 
-  public void removeUser(User user) {
-    users.remove(user);
+  public boolean removeUser(User user) {
+    if (users.contains(user)) {
+      users.remove(user);
+      return true;
+    }
+    return false;
   }
 
-  public void addPermission(Permission permission) {
+  public boolean addPermission(Permission permission) {
+    if (permissions.contains(permission)) {
+      return false;
+    }
     permissions.add(permission);
+    return true;
   }
 
-  public void removePermission(Permission permission) {
-    permissions.remove(permission);
+  public boolean removePermission(Permission permission) {
+    if (permissions.contains(permission)) {
+      permissions.remove(permission);
+      return true;
+    }
+    return false;
   }
 
-  public void addRole(Role role) {
+  public boolean addRole(Role role) {
+    if(roles.contains(role)) {
+      return false;
+    }
     roles.add(role);
+    return true;
   }
 
-  public void removeRole(Role role) {
-    roles.remove(role);
+  public boolean removeRole(Role role) {
+    if (roles.contains(role)) {
+      roles.remove(role);
+      return true;
+    }
+    return false;
   }
 
   public boolean can(Permission permission) {
