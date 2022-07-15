@@ -1,13 +1,6 @@
 package com.gfa.users.controllers;
 
-import com.gfa.common.dtos.EmailRequestDto;
-import com.gfa.common.dtos.PasswordResetRequestDto;
-import com.gfa.common.dtos.ResponseDto;
 import com.gfa.users.services.UserService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 public abstract class UserController {
 
@@ -28,7 +21,4 @@ public abstract class UserController {
     return service.show(id);
   }
      */
-
-
-
 }

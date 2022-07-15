@@ -1,27 +1,20 @@
 package com.gfa.users.services;
 
-import com.gfa.common.dtos.*;
+import com.gfa.common.dtos.CreateUserRequestDto;
+import com.gfa.common.dtos.ErrorResponseDto;
+import com.gfa.common.dtos.ResponseDto;
+import com.gfa.common.dtos.UserResponseDto;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
-
-import static sun.security.timestamp.TSResponse.BAD_REQUEST;
 
 @Service
 public class UserServiceImpl implements UserService {
 
- private final EmailValidator emailValidator;
+  private final EmailValidator emailValidator;
   private final UserRepository userRepository;
   private final Long tokenExpiration;
 
@@ -33,23 +26,6 @@ public class UserServiceImpl implements UserService {
     this.userRepository = userRepository;
     this.tokenExpiration = tokenExpiration;
   }
-
-
-  @Override
-  public StatusResponseDto resetPasswords(EmailRequestDto emailDto) {
-    boolean isValidEmail = emailValidator.isValid(emailDto.email);
-
-    if (!isValidEmail || emailDto.email.isEmpty()) {
-      throw new InvalidEmailException();
-    }
-    User user = userRepository.findByEmail(emailDto.email);
-    if (user == null) {
-      return new StatusResponseDto("ok");
-    }
-    if (user.getVerifiedAt() == null) {
-      throw new UnverifiedEmailExeption();
-
- 
 
   public ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto) {
 
@@ -83,53 +59,18 @@ public class UserServiceImpl implements UserService {
     if (!isValidEmail) {
       ErrorResponseDto error = new ErrorResponseDto("Invalid email");
       throw new RuntimeException();
+    }
 
-    }
-    if (user.getEmail().equals(emailDto.email) && user.getVerifiedAt() != null) {
-      /*
-       emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
-             + "http://localhost:3036/email/reset-password"
-             + "/reset?token="
-             + user.getForgottenPasswordToken());
-      */
-      return new StatusResponseDto("ok");
-    }
-    return new InvalidRequestException();
-  }
+    User user = new User(dto, tokenExpiration);
+    userRepository.save(user);
+    UserResponseDto userResponseDto = new UserResponseDto(user);
 
-
-  public StatusResponseDto resetPassword(String token, PasswordResetRequestDto resetPassword) {
-    User user = userRepository.findByForgottenPasswordToken(token);
-    Date currentDate = new Date(System.currentTimeMillis());
-
-    if (resetPassword.password.isEmpty()) {
-      throw new InvalidPasswordExeption();
+    boolean userCreated = userRepository.findByUsername(dto.username).isPresent();
+    if (!userCreated) {
+      ErrorResponseDto error = new ErrorResponseDto("Unknown error");
+      throw new RuntimeException();
     }
-    if (!user.getForgottenPasswordToken().equals(token)) {
-      throw new InvalidTokenExeption();
-    }
-    if (currentDate.after(user.getForgottenPasswordTokenExpiresAt())) {
-      throw new InvalidTokenExeption();
-    }
-    if (resetPassword.password.length() <= 8) {
-      throw new InvalidPasswordExeption();
-      /*
-         emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
-                 + "http://localhost:3036/email/reset-password"
-         + "/reset?token="
-                 + user.getForgottenPasswordToken());
-
-      */
-    }
-    if (user.getForgottenPasswordToken().equals(token)
-        && currentDate.before(user.getForgottenPasswordTokenExpiresAt())) {
-      user.setPassword(resetPassword.password);
-      user.setForgottenPasswordToken(null);
-      userRepository.save(user);
-      return new StatusResponseDto("ok");
-    }
-    return new InvalidRequestException();
-
+    return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
   }
 
   @Override
@@ -141,12 +82,4 @@ public class UserServiceImpl implements UserService {
   public ResponseEntity<ResponseDto> show(Long id) {
     return null;
   }
-
-
-  /*@Override
-  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-      return userRepository.findByEmail(email)
-              .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-  }*/
-
 }

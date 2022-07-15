@@ -1,14 +1,7 @@
 package com.gfa.users.models;
 
 import com.gfa.common.dtos.CreateUserRequestDto;
-
-
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import javax.persistence.*;
 import java.security.SecureRandom;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import java.util.HashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-
 import java.util.Date;
 import java.util.Set;
 
@@ -26,7 +18,6 @@ import java.util.Set;
 public class User {
 
   @Id
-  @Column(unique = true)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
@@ -104,15 +95,12 @@ public class User {
   SecureRandom random = new SecureRandom();
   Integer randomSecureValue = random.nextInt();
 
-
-  public User(CreateUserRequestDto dto, Long expirationTime){
-    this(dto.username, dto.email, dto.password);
+  public User(CreateUserRequestDto dto, Long expirationTime) {
+    this(dto.username, dto.email, dto.password, new Date());
     this.verifiedAt = null;
     this.verificationToken = String.valueOf(randomSecureValue);
     this.verificationTokenExpiresAt = new Date(System.currentTimeMillis() + expirationTime);
   }
-
-
 
   public String getEmail() {
     return email;
@@ -154,8 +142,6 @@ public class User {
     return verificationTokenExpiresAt;
   }
 
-
-
   @Nullable
   public String getForgottenPasswordToken() {
     return forgottenPasswordToken;
@@ -170,12 +156,6 @@ public class User {
     return forgottenPasswordTokenExpiresAt;
   }
 
-
-  public void setForgottenPasswordTokenExpiresAt(@Nullable Date forgottenPasswordTokenExpiresAt) {
-    this.forgottenPasswordTokenExpiresAt = forgottenPasswordTokenExpiresAt;
-  }
-
-  @NotNull
   public Date getCreatedAt() {
     return createdAt;
   }
