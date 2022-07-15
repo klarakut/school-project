@@ -1,6 +1,6 @@
 package com.gfa.common.dtos;
 
-public class ErrorResponseDto {
+public class ErrorResponseDto extends ResponseDto {
   public final String message;
 
   public ErrorResponseDto(String message) {
