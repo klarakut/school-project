@@ -1,6 +1,5 @@
 package com.gfa.common.configuration;
 
-import java.util.Objects;
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +28,7 @@ public class MailConfiguration {
     mailSender.setJavaMailProperties(getProperties());
     return mailSender;
   }
+
   private Properties getProperties() {
     Properties properties = new Properties();
     properties.setProperty("mail.transport.protocol", "smtp");
