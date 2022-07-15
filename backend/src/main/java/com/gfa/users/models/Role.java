@@ -1,6 +1,7 @@
 package com.gfa.users.models;
 
 import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,8 +12,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -31,21 +30,7 @@ public class Role {
       name = "role_permission",
       joinColumns = @JoinColumn(name = "role_id"),
       inverseJoinColumns = @JoinColumn(name = "permission_id"))
-  Set<Permission> permissions;
-
-  @ManyToMany
-  @JoinTable(
-      name = "user_role",
-      joinColumns = @JoinColumn(name = "role_id"),
-      inverseJoinColumns = @JoinColumn(name = "user_id"))
-  Set<User> users;
-
-  @ManyToMany
-  @JoinTable(
-      name = "team_role",
-      joinColumns = @JoinColumn(name = "role_id"),
-      inverseJoinColumns = @JoinColumn(name = "team_id"))
-  Set<Team> teams;
+  private Set<Permission> permissions;
 
   public Role() {
     permissions = new HashSet<>();
@@ -65,25 +50,21 @@ public class Role {
     return role;
   }
 
-  public void addPermission(Permission p) {
-    permissions.add(p);
+  public boolean addPermission(Permission p) {
+    return permissions.add(p);
   }
 
-  public void removePermission(Permission p) {
-    permissions.remove(p);
+  public boolean removePermission(Permission p) {
+    return permissions.remove(p);
   }
 
-  public Boolean is(Role r) {
-    return (role.equals(r.role));
-  }
-
-  public Boolean can(Permission permission) {
+  public boolean can(Permission permission) {
     return can(permission.getAbility());
   }
 
-  public Boolean can(String ability) {
+  public boolean can(String ability) {
     for (Permission permission : permissions) {
-      if (ability.equals(permission.getAbility())) {
+      if (permission.can(ability)) {
         return true;
       }
     }
