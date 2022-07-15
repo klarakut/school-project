@@ -7,6 +7,7 @@ import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.common.exceptions.InvalidEmailException;
 import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
+import com.gfa.common.exceptions.UnknownErrorException;
 import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
@@ -14,7 +15,6 @@ import com.gfa.users.exceptions.InvalidPasswordException;
 import com.gfa.users.exceptions.PasswordTooShortException;
 import com.gfa.users.exceptions.UnverifiedEmailException;
 import com.gfa.users.services.UserService;
-import com.sun.jdi.request.InvalidRequestStateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +49,7 @@ public class UserRestController {
     } catch (UnverifiedEmailException e) {
       return new ResponseEntity<>(
           new ErrorResponseDto("Unverified email!"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidRequestStateException e) {
+    } catch (UnknownErrorException e) {
       return new ResponseEntity<>(
           new ErrorResponseDto("Something goes wrong"), HttpStatus.BAD_REQUEST);
     }
