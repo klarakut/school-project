@@ -5,6 +5,12 @@ import java.security.SecureRandom;
 import java.util.HashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -13,6 +19,7 @@ import java.util.Set;
 public class User {
 
   @Id
+  @Column(unique = true)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 

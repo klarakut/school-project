@@ -11,15 +11,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-
-  User findByEmail(String email);
-
-  User findByForgottenPasswordToken(String resetToken);
-
-  Boolean existsByForgottenPasswordToken(String resetToken);
-
-  User findByForgottenPasswordTokenExpiresAt (String resetToken);
-
+  Optional<User> findByEmail(String email);
 
   Optional<Object> findByUsernameOrEmail(String username, String email);
 
