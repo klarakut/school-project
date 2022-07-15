@@ -103,3 +103,7 @@ tasks.named('test') {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
 }
+
+springBoot {
+    mainClass = "com.gfa.ProjectApplication"
+}
