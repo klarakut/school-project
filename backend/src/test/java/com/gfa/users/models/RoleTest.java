@@ -14,15 +14,7 @@ class RoleTest {
   }
 
   @Test
-  void add_permission() {
-    Role r1 = new Role("role");
-    Permission permission_01 = new Permission("do something");
-    assertTrue(r1.addPermission(permission_01));
-    assertTrue(r1.can(permission_01));
-  }
-
-  @Test
-  void add_same_permission_twice() {
+  void can_is_false_for_add_same_permission_twice() {
     Role r1 = new Role("role");
     Permission permission_01 = new Permission("do something");
     r1.addPermission(permission_01);
@@ -30,7 +22,7 @@ class RoleTest {
   }
 
   @Test
-  void remove_permission() {
+  void can_remove_added_permission() {
     Role r1 = new Role("role");
     Permission permission_01 = new Permission("do something");
     r1.addPermission(permission_01);
@@ -40,7 +32,7 @@ class RoleTest {
   }
 
   @Test
-  void can_False_permissions() {
+  void can_is_false_for_unadded_permission() {
     Role role = new Role("role");
     Permission permission_01 = new Permission("do something");
     Permission permission_02 = new Permission("do something else");
@@ -49,7 +41,7 @@ class RoleTest {
   }
 
   @Test
-  void can_true_permissions() {
+  void can_is_true_for_added_permission() {
     role = new Role("role");
     Permission permission_01 = new Permission("do something");
     role.addPermission(permission_01);
@@ -57,7 +49,7 @@ class RoleTest {
   }
 
   @Test
-  void can_false_string() {
+  void can_is_false_for_unadded_permission_in_string() {
     Role role = new Role("role");
     Permission permission_01 = new Permission("do something");
     role.addPermission(permission_01);
@@ -65,7 +57,7 @@ class RoleTest {
   }
 
   @Test
-  void can_true_string() {
+  void can_is_true_for_added_permission_in_string() {
     Role role = new Role("role");
     Permission permission_01 = new Permission("do something");
     role.addPermission(permission_01);

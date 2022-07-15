@@ -129,20 +129,20 @@ class UserTest {
   }
 
   @Test
-  void add_permission() {
+  void can_is_true_for_added_permission() {
     assertFalse(user.can(permission));
     assertTrue(user.addPermission(permission));
     assertTrue(user.can(permission));
   }
 
   @Test
-  void add_twice_permission() {
+  void can_is_false_for_add_same_permission_twice() {
     user.addPermission(permission);
     assertFalse(user.addPermission(permission));
   }
 
   @Test
-  void remove_permission() {
+  void can_remove_added_permission() {
     user.addPermission(permission);
     assertTrue(user.removePermission(permission));
     assertTrue(user.can(permission));
@@ -155,13 +155,13 @@ class UserTest {
   }
 
   @Test
-  void add_twice_role() {
+  void add_role_is_false_for_add_same_role_twice() {
     assertTrue(user.addRole(role));
     assertFalse(user.addRole(role));
   }
 
   @Test
-  void remove_role() {
+  void can_remove_added_role() {
     assertFalse(user.removeRole(role));
     assertTrue(user.addRole(role));
     assertTrue(user.removeRole(role));
@@ -174,13 +174,13 @@ class UserTest {
   }
 
   @Test
-  void add_twice_team() {
+  void add_team_is_false_for_add_same_team_twice() {
     assertTrue(user.addTeam(team));
     assertFalse(user.addTeam(team));
   }
 
   @Test
-  void remove_team() {
+  void can_remove_added_team() {
     assertFalse(user.removeTeam(team));
     assertTrue(user.addTeam(team));
     assertTrue(user.removeTeam(team));
@@ -188,7 +188,7 @@ class UserTest {
   }
 
   @Test
-  void can_permission() {
+  void can_is_true_through_TEAM_ROLE_USER_classes_with_permission() {
     user.addRole(role);
     user.addTeam(team);
     assertFalse(user.can(permission));
@@ -203,7 +203,7 @@ class UserTest {
   }
 
   @Test
-  void can_string() {
+  void can_is_true_through_TEAM_ROLE_USER_classes_with_string() {
     user.addRole(role);
     user.addTeam(team);
     assertFalse(user.can("permission"));

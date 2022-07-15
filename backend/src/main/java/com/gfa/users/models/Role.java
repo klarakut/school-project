@@ -45,19 +45,11 @@ public class Role {
   }
 
   public boolean addPermission(Permission p) {
-    if (permissions.contains(p)) {
-      return false;
-    }
-    permissions.add(p);
-    return true;
+    return permissions.add(p);
   }
 
   public boolean removePermission(Permission p) {
-    if (permissions.contains(p)) {
-      permissions.remove(p);
-      return true;
-    }
-    return false;
+    return permissions.remove(p);
   }
 
   public boolean can(Permission permission) {

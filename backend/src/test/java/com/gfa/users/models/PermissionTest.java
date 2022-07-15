@@ -9,27 +9,27 @@ class PermissionTest {
 
 
   @Test
-  void canCreatePermission() {
+  void can_create_permission() {
     Permission permission = new Permission("do something");
     assertEquals("do something", permission.getAbility());
   }
 
   @Test
-  void canTrueForSamePermissions() {
+  void can_is_true_for_same_permissions() {
     Permission p1 = new Permission("do something");
     Permission p2 = new Permission("do something");
     assertTrue(p1.can(p2));
   }
 
   @Test
-  void canFalseForSamePermissions() {
+  void can_is_false_for_different_permissions() {
     Permission p1 = new Permission("do something");
     Permission p2 = new Permission("do something else");
     assertFalse(p1.can(p2));
   }
 
   @Test
-  void canFalseString() {
+  void can_is_false_for_different_abilities() {
     Permission p1 = new Permission("do something");
     assertFalse(p1.can("something else"));
   }
