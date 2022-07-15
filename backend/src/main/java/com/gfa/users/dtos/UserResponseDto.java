@@ -1,7 +1,7 @@
-package com.gfa.common.dtos;
+package com.gfa.users.dtos;
 
+import com.gfa.common.dtos.ResponseDto;
 import com.gfa.users.models.User;
-
 import java.util.Date;
 
 public class UserResponseDto extends ResponseDto {

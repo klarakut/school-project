@@ -1,6 +1,6 @@
 package com.gfa.users.models;
 
-import com.gfa.common.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.CreateUserRequestDto;
 import java.security.SecureRandom;
 import java.util.HashSet;
 import org.jetbrains.annotations.NotNull;

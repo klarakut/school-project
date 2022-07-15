@@ -1,6 +1,6 @@
 package com.gfa.users.controllers;
 
-import com.gfa.common.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.common.dtos.ResponseDto;
 import com.gfa.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

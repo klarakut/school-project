@@ -1,6 +1,6 @@
 package com.gfa.users.services;
 
-import com.gfa.common.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.common.dtos.ResponseDto;
 import org.springframework.http.ResponseEntity;
 

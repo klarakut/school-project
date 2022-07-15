@@ -1,9 +1,9 @@
 package com.gfa.users.services;
 
-import com.gfa.common.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.dtos.ResponseDto;
-import com.gfa.common.dtos.UserResponseDto;
+import com.gfa.users.dtos.UserResponseDto;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
