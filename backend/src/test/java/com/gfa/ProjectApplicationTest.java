@@ -1,11 +1,14 @@
 package com.gfa;
 
-import com.gfa.ProjectApplication;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest
-class ProjectApplicationTests {
+@ContextConfiguration
+class ProjectApplicationTest {
 
   @Test
   void contextLoads() {}
@@ -13,7 +16,7 @@ class ProjectApplicationTests {
   @Test
   void main_runs_without_exceptions() {
 
-    org.junit.jupiter.api.Assertions.assertDoesNotThrow(
+    assertDoesNotThrow(
         () -> {
           ProjectApplication.main(new String[] {"--spring.main.web-environment=false"});
         });
