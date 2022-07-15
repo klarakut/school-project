@@ -150,7 +150,7 @@ class UserTest {
   }
 
   @Test
-  void add_role() {
+  void add_role_is_true() {
     assertTrue(user.addRole(role));
   }
 
@@ -169,7 +169,7 @@ class UserTest {
   }
 
   @Test
-  void add_team() {
+  void add_team_is_true() {
     assertTrue(user.addTeam(team));
   }
 

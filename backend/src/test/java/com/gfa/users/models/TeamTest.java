@@ -50,7 +50,7 @@ class TeamTest {
   }
 
   @Test
-  void add_user() {
+  void add_user_is_true() {
     assertTrue(team.addUser(user));
   }
 
@@ -69,7 +69,7 @@ class TeamTest {
   }
 
   @Test
-  void add_role() {
+  void add_role_is_ture() {
     assertTrue(team.addRole(role));
   }
 
