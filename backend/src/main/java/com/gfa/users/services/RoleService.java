@@ -10,9 +10,7 @@ public interface RoleService {
     RoleResponseDto update(Long id, RolePatchRequestDto dto);
     RoleResponseDto show(Long id);
     List<RoleResponseDto> index();
-    void destroy(Long id);
-
+    StatusResponseDto destroy(Long id);
     StatusResponseDto storePermission(Long id, PermissionRequestDto permission);
-
-    void destroyPermission(Long id, Long permissionId);
+    StatusResponseDto destroyPermission(Long id, Long permissionId);
 }
