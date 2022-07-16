@@ -1,13 +1,30 @@
 package com.gfa.users.controllers;
 
-import com.gfa.common.dtos.*;
-import com.gfa.users.Exception.*;
+import com.gfa.common.dtos.ErrorResponseDto;
+import com.gfa.common.dtos.ResponseDto;
+import com.gfa.common.dtos.RoleCreateRequestDto;
+import com.gfa.common.dtos.RoleResponseDto;
+import com.gfa.common.dtos.RolePatchRequestDto;
+import com.gfa.common.dtos.StatusResponseDto;
+import com.gfa.common.dtos.PermissionRequestDto;
+import com.gfa.users.Exception.EmptyBodyException;
+import com.gfa.users.Exception.RoleExistException;
+import com.gfa.users.Exception.UnknownErrorException;
+import com.gfa.users.Exception.IdNotFoundException;
+import com.gfa.users.Exception.NegativeIdException;
+import com.gfa.users.Exception.PermissionIdNotFoundException;
+import com.gfa.users.Exception.InvalidInputException;
 import com.gfa.users.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -139,7 +156,7 @@ public class RoleRestController {
             return new ResponseEntity<>(new ErrorResponseDto("Insufficient rights to create roles"), HttpStatus.FORBIDDEN);
         }*/
     }
-    
+
     @DeleteMapping("roles/{id}/permissions/{permission_id}")
     public ResponseEntity<? extends ResponseDto> destroyPermission(@PathVariable ("id") Long id, @PathVariable ("permissionId") Long permissionId){
         try {
