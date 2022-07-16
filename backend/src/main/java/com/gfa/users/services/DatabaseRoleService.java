@@ -39,11 +39,7 @@ public class DatabaseRoleService implements RoleService{
             throw new NegativeIdException();
         }
 
-        Boolean roleExists = roleRepository.findById(id).isPresent();
-        if(!roleExists){
-            throw new IdNotFoundException();
-        }
-        Role role = roleRepository.findById(id).get();
+        Role role = roleRepository.findById(id).orElseThrow( () -> new IdNotFoundException());
         RoleResponseDto roleDto = new RoleResponseDto(role.getId(),role.getRole());
         return roleDto;
     }
@@ -55,7 +51,7 @@ public class DatabaseRoleService implements RoleService{
         }
 
         Boolean existingRole = roleRepository.findByRole(dto.role).isPresent();
-        if (existingRole){
+            if (existingRole){
             throw new RoleExistException();
         }
 
@@ -79,11 +75,6 @@ public class DatabaseRoleService implements RoleService{
             throw new NegativeIdException();
         }
 
-        Boolean roleExists = roleRepository.findById(id).isPresent();
-        if(!roleExists){
-            throw new IdNotFoundException();
-        }
-
         if (dto.role.isEmpty() || dto.role == null){
             throw new InvalidInputException();
         }
@@ -91,8 +82,9 @@ public class DatabaseRoleService implements RoleService{
         // TODO -> unauthorized user => 401
         // TODO -> insufficient rights to create roles => 403
 
+        Role role = roleRepository.findById(id).orElseThrow(() -> new IdNotFoundException());
+
         try {
-            Role role = roleRepository.findById(id).get();
             role.setRole(dto.role);
             roleRepository.save(role);
             RoleResponseDto roleDto = new RoleResponseDto(role.getId(), dto.role);
@@ -104,63 +96,56 @@ public class DatabaseRoleService implements RoleService{
     }
 
     @Override
-    public void destroy(Long id) {
+    public StatusResponseDto destroy(Long id) {
         if (id <= 0){
             throw new NegativeIdException();
         }
 
-        Boolean roleExists = roleRepository.findById(id).isPresent();
-        if(!roleExists){
-            throw new IdNotFoundException();
-        }
-
         // TODO -> unauthorized user => 401
         // TODO -> insufficient rights to create roles => 403
 
-        roleRepository.deleteById(id);
+        Role role = roleRepository.findById(id).orElseThrow(() -> new IdNotFoundException());
+        roleRepository.deleteById(role.getId());
+        StatusResponseDto status = new StatusResponseDto("ok");
+        return status;
     }
 
     @Override
-    public StatusResponseDto storePermission(Long id, PermissionRequestDto permission) {
-        if(permission.ability.isEmpty()){
+    public StatusResponseDto storePermission(Long id, PermissionRequestDto permissionRequestDto) {
+        if(permissionRequestDto.ability.isEmpty()){
             throw new InvalidInputException();
         }
 
-        Boolean existingRole = roleRepository.findById(id).isPresent();
-        if (!existingRole){
-            throw new IdNotFoundException();
-        }
-
         // TODO -> unauthorized user => 401
         // TODO -> insufficient rights to create roles => 403
 
-        Permission p = permissionRepository.findById(permission.id).get();
-        Role role = roleRepository.findById(id).get();
-            if(role.addPermission(p)) {
+        Permission permission = permissionRepository.findById(permissionRequestDto.id).orElseThrow(() -> new PermissionIdNotFoundException());
+        Role role = roleRepository.findById(id).orElseThrow(() -> new IdNotFoundException());
+
+        Boolean hasPermission = role.can(permission);
+        if(hasPermission){
+            throw new InvalidInputException();
+        }
+
+        try {
+                role.addPermission(permission);
                 roleRepository.save(role);
                 StatusResponseDto status = new StatusResponseDto("ok");
                 return status;
-            } else {
+        } catch (Exception e){
                 throw new UnknownErrorException();
-                }
+        }
     }
 
     @Override
-    public void destroyPermission(Long id, Long permissionId) {
-        Boolean existingRole = roleRepository.findById(id).isPresent();
-        if(!existingRole){
-            throw new IdNotFoundException();
-        }
-        Boolean existingPermission = permissionRepository.findById(permissionId).isPresent();
-        if(!existingPermission){
-            throw new PermissionIdNotFoundException();
-        }
+    public StatusResponseDto destroyPermission(Long id, Long permissionId) {
 
         // TODO -> unauthorized user => 401
         // TODO -> insufficient rights to create roles => 403
 
-        Role role = roleRepository.findById(id).get();
-        Permission permission = permissionRepository.findById(permissionId).get();
+        Role role = roleRepository.findById(id).orElseThrow(() -> new IdNotFoundException());
+        Permission permission = permissionRepository.findById(permissionId).orElseThrow(() -> new PermissionIdNotFoundException());
+
         Boolean hasPermission = role.can(permission);
         if(!hasPermission){
             throw new InvalidInputException();
@@ -169,6 +154,8 @@ public class DatabaseRoleService implements RoleService{
         try {
             role.removePermission(permission);
             roleRepository.save(role);
+            StatusResponseDto status = new StatusResponseDto("ok");
+            return status;
         }
         catch (Exception e){
             throw new UnknownErrorException();
