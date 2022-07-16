@@ -80,8 +80,9 @@ public class Role {
     return true;
   }
 
-  public void removePermission(Permission p) {
+  public boolean removePermission(Permission p) {
     permissions.remove(p);
+    return true;
   }
 
   public Boolean is(Role r) {
