@@ -21,13 +21,12 @@ public class RoleRestController {
         this.roleService = roleService;
     }
 
-    // #GET /roles
+
     @GetMapping("/roles")
     public List<RoleResponseDto> index(){
         return roleService.index();
     }
 
-    // #POST /roles/
     @PostMapping("/roles")
     public ResponseEntity<? extends ResponseDto> store(@RequestBody RoleCreateRequestDto dto){
         try{
@@ -52,7 +51,6 @@ public class RoleRestController {
         }*/
     }
 
-    // #GET /roles/{id}
     @GetMapping("/roles/{id}")
     public ResponseEntity<? extends ResponseDto> show(@PathVariable("id") Long id){
         try {
@@ -67,7 +65,6 @@ public class RoleRestController {
         }
     }
 
-    // #PUT
     @PutMapping("/roles/{id}")
     public ResponseEntity<? extends ResponseDto> update(@PathVariable("id") Long id, @RequestBody RolePatchRequestDto dto){
         try {
@@ -95,7 +92,6 @@ public class RoleRestController {
         }*/
     }
 
-    // #DELETE
     @DeleteMapping("/roles/{id}")
     public ResponseEntity<? extends ResponseDto> destroy(@PathVariable("id") Long id){
         try {
@@ -117,7 +113,6 @@ public class RoleRestController {
         }*/
     }
 
-    // #POST
     @PostMapping("roles/{id}/permissions")
     public ResponseEntity<? extends ResponseDto> storePermission(@PathVariable ("id") Long id, @RequestBody PermissionRequestDto permission){
         try {
@@ -144,8 +139,7 @@ public class RoleRestController {
             return new ResponseEntity<>(new ErrorResponseDto("Insufficient rights to create roles"), HttpStatus.FORBIDDEN);
         }*/
     }
-
-    //#DELETE
+    
     @DeleteMapping("roles/{id}/permissions/{permission_id}")
     public ResponseEntity<? extends ResponseDto> destroyPermission(@PathVariable ("id") Long id, @PathVariable ("permissionId") Long permissionId){
         try {
