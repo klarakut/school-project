@@ -99,8 +99,8 @@ public class RoleRestController {
     @DeleteMapping("/roles/{id}")
     public ResponseEntity<? extends ResponseDto> destroy(@PathVariable("id") Long id){
         try {
-            roleService.destroy(id);
-            return new ResponseEntity<>(HttpStatus.resolve(201));
+            StatusResponseDto status = roleService.destroy(id);
+            return new ResponseEntity<>(status,HttpStatus.resolve(201));
         }
         catch (NegativeIdException e){
             return new ResponseEntity<>(new ErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
@@ -121,14 +121,17 @@ public class RoleRestController {
     @PostMapping("roles/{id}/permissions")
     public ResponseEntity<? extends ResponseDto> storePermission(@PathVariable ("id") Long id, @RequestBody PermissionRequestDto permission){
         try {
-            roleService.storePermission(id,permission);
-            return new ResponseEntity<>(HttpStatus.resolve(200));
+            StatusResponseDto status = roleService.storePermission(id,permission);
+            return new ResponseEntity<>(status,HttpStatus.resolve(200));
         }
         catch (InvalidInputException e){
             return new ResponseEntity<>(new ErrorResponseDto("Invalid data"), HttpStatus.BAD_REQUEST);
         }
         catch (IdNotFoundException e){
             return new ResponseEntity<>(new ErrorResponseDto("Role not found"), HttpStatus.NOT_FOUND);
+        }
+        catch (PermissionIdNotFoundException e){
+            return new ResponseEntity<>(new ErrorResponseDto("Permission not found"),HttpStatus.NOT_FOUND);
         }
         catch (UnknownErrorException e){
             return new ResponseEntity<>(new ErrorResponseDto("Unknown error"), HttpStatus.INTERNAL_SERVER_ERROR);
