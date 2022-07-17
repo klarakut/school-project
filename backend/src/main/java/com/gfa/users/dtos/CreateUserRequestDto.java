@@ -1,4 +1,4 @@
-package com.gfa.common.dtos;
+package com.gfa.users.dtos;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

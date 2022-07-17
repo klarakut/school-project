@@ -1,25 +1,25 @@
-package com.gfa.users.services;
+package com.gfa.common.services;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import com.gfa.common.exceptions.InvalidEmailException;
+import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EmailValidatorTest {
 
   @ParameterizedTest(name = "#{index} - Run test with email = {0}")
   @MethodSource("validEmailProvider")
   void test_email_valid(String email) {
-    assertTrue(EmailValidator.isValid(email));
+    assertDoesNotThrow(() -> EmailValidator.validate(email));
   }
 
   @ParameterizedTest(name = "#{index} - Run test with email = {0}")
   @MethodSource("invalidEmailProvider")
   void test_email_invalid(String email) {
-    assertFalse(EmailValidator.isValid(email));
+    assertThrows(InvalidEmailException.class, () -> EmailValidator.validate(email));
   }
 
   // Valid email addresses
