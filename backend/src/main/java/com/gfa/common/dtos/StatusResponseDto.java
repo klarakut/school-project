@@ -1,11 +1,15 @@
 package com.gfa.common.dtos;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+public class StatusResponseDto extends ResponseDto {
 
+<<<<<<< HEAD
 public class StatusResponseDto extends ResponseDto{
     public String status;
+=======
+  public final String status;
+>>>>>>> develop
 
-    public StatusResponseDto(String status) {
-        this.status = status;
-    }
+  public StatusResponseDto(String status) {
+    this.status = status;
+  }
 }

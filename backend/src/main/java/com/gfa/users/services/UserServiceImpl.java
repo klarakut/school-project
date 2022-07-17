@@ -1,40 +1,46 @@
 package com.gfa.users.services;
 
+<<<<<<< HEAD
 import com.gfa.common.dtos.*;
 import com.gfa.users.Exceptions.*;
+=======
+import com.gfa.common.dtos.EmailRequestDto;
+import com.gfa.common.dtos.ErrorResponseDto;
+import com.gfa.common.dtos.StatusResponseDto;
+import com.gfa.common.exceptions.InvalidTokenException;
+import com.gfa.common.exceptions.TokenExpiredException;
+import com.gfa.common.services.EmailValidator;
+import com.gfa.users.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.PasswordResetRequestDto;
+import com.gfa.users.dtos.UserResponseDto;
+import com.gfa.users.exceptions.InvalidPasswordException;
+import com.gfa.users.exceptions.PasswordTooShortException;
+import com.gfa.users.exceptions.UnverifiedEmailException;
+import com.gfa.users.exceptions.UserNotFoundException;
+>>>>>>> develop
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
+import java.time.LocalDateTime;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
-
-import static sun.security.timestamp.TSResponse.BAD_REQUEST;
 
 @Service
 public class UserServiceImpl implements UserService {
 
- private final EmailValidator emailValidator;
+  private static final String DEFAULT_TOKEN_EXPIRATION = "600";
   private final UserRepository userRepository;
-  private final Long tokenExpiration;
 
-  public UserServiceImpl(
-      EmailValidator emailValidator,
-      UserRepository userRepository,
-      @Value("${token_expiration}") Long tokenExpiration) {
-    this.emailValidator = emailValidator;
+  private final Environment environment;
+
+  @Autowired
+  public UserServiceImpl(UserRepository userRepository, Environment environment) {
     this.userRepository = userRepository;
-    this.tokenExpiration = tokenExpiration;
+    this.environment = environment;
   }
 
+<<<<<<< HEAD
 
   @Override
   public StatusResponseDto resetPasswords(EmailRequestDto emailDto) {
@@ -56,6 +62,9 @@ public class UserServiceImpl implements UserService {
  
 
   public ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto) {
+=======
+  public UserResponseDto store(CreateUserRequestDto dto) {
+>>>>>>> develop
 
     if (dto.username.isEmpty()) {
       throw new RuntimeException();
@@ -83,12 +92,22 @@ public class UserServiceImpl implements UserService {
       throw new RuntimeException();
     }
 
-    boolean isValidEmail = emailValidator.isValid(dto.email);
-    if (!isValidEmail) {
-      ErrorResponseDto error = new ErrorResponseDto("Invalid email");
-      throw new RuntimeException();
+    EmailValidator.validate(dto.email);
 
+    Long tokenExpiration =
+        Long.parseLong(
+            environment.getProperty(
+                "config.security.token.expiration.email_verification", DEFAULT_TOKEN_EXPIRATION));
+    User user = new User(dto, tokenExpiration);
+    userRepository.save(user);
+    UserResponseDto userResponseDto = new UserResponseDto(user);
+
+    boolean userCreated = userRepository.findByUsername(dto.username).isPresent();
+    if (!userCreated) {
+      ErrorResponseDto error = new ErrorResponseDto("Unknown error");
+      throw new RuntimeException();
     }
+<<<<<<< HEAD
     //if (user.getEmail().equals(emailDto.email) && user.getVerifiedAt() != null) {
       /*
        emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
@@ -100,15 +119,45 @@ public class UserServiceImpl implements UserService {
     //}
     //return new InvalidRequestException();
       return null;
+=======
+    return userResponseDto;
   }
 
+  @Override
+  public List<UserResponseDto> index() {
+    return null;
+  }
 
+  @Override
+  public UserResponseDto show(Long id) {
+    return null;
+  }
+
+  @Override
+  public StatusResponseDto resetPasswords(EmailRequestDto emailDto) {
+
+    EmailValidator.validate(emailDto.email);
+
+    User user = userRepository.findByEmail(emailDto.email).orElseThrow(UserNotFoundException::new);
+    if (user == null) {
+      return new StatusResponseDto("ok");
+    }
+    if (user.getVerifiedAt() == null) {
+      throw new UnverifiedEmailException();
+    }
+    return null;
+>>>>>>> develop
+  }
+
+  @Override
   public StatusResponseDto resetPassword(String token, PasswordResetRequestDto resetPassword) {
-    User user = userRepository.findByForgottenPasswordToken(token);
-    Date currentDate = new Date(System.currentTimeMillis());
+
+    User user =
+        userRepository.findByForgottenPasswordToken(token).orElseThrow(InvalidTokenException::new);
 
     if (resetPassword.password.isEmpty()) {
       throw new InvalidPasswordException();
+<<<<<<< HEAD
     }
     if (!user.getForgottenPasswordToken().equals(token)) {
       throw new InvalidTokenException();
@@ -118,21 +167,27 @@ public class UserServiceImpl implements UserService {
     }
     if (resetPassword.password.length() <= 8) {
       throw new InvalidPasswordLongException();
+=======
+    }
+    LocalDateTime expiration = user.getForgottenPasswordTokenExpiresAt();
+    if (expiration == null || LocalDateTime.now().isAfter(expiration)) {
+      throw new TokenExpiredException();
+    }
+    if (resetPassword.password.length() <= 8) {
+      throw new PasswordTooShortException();
+>>>>>>> develop
       /*
          emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
                  + "http://localhost:3036/email/reset-password"
          + "/reset?token="
                  + user.getForgottenPasswordToken());
-
       */
     }
-    if (user.getForgottenPasswordToken().equals(token)
-        && currentDate.before(user.getForgottenPasswordTokenExpiresAt())) {
-      user.setPassword(resetPassword.password);
-      user.setForgottenPasswordToken(null);
-      userRepository.save(user);
-      return new StatusResponseDto("ok");
+    String forgottenPasswordToken = user.getForgottenPasswordToken();
+    if (forgottenPasswordToken == null || !forgottenPasswordToken.equals(token)) {
+      throw new InvalidTokenException();
     }
+<<<<<<< HEAD
     throw new InvalidRequestException();
 
   }
@@ -140,19 +195,12 @@ public class UserServiceImpl implements UserService {
   @Override
   public ResponseEntity<ResponseDto> index() {
     return null;
+=======
+    user.setPassword(resetPassword.password);
+    user.setForgottenPasswordToken(null);
+    userRepository.save(user);
+    return new StatusResponseDto("ok");
+>>>>>>> develop
   }
-
-  @Override
-  public ResponseEntity<ResponseDto> show(Long id) {
-    return null;
-  }
-
-
-  /*@Override
-  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-      return userRepository.findByEmail(email)
-              .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-  }*/
-
 }
 
