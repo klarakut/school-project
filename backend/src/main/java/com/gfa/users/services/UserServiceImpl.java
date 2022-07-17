@@ -1,6 +1,7 @@
 package com.gfa.users.services;
 
 import com.gfa.common.dtos.*;
+import com.gfa.users.Exceptions.*;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +50,7 @@ public class UserServiceImpl implements UserService {
     if (user.getVerifiedAt() == null) {
       throw new UnverifiedEmailExeption();
       }
+    return null;
     }
 
  
@@ -87,16 +89,17 @@ public class UserServiceImpl implements UserService {
       throw new RuntimeException();
 
     }
-    if (user.getEmail().equals(emailDto.email) && user.getVerifiedAt() != null) {
+    //if (user.getEmail().equals(emailDto.email) && user.getVerifiedAt() != null) {
       /*
        emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
              + "http://localhost:3036/email/reset-password"
              + "/reset?token="
              + user.getForgottenPasswordToken());
       */
-      return new StatusResponseDto("ok");
-    }
-    return new InvalidRequestException();
+     // return new StatusResponseDto("ok");
+    //}
+    //return new InvalidRequestException();
+      return null;
   }
 
 
@@ -105,16 +108,16 @@ public class UserServiceImpl implements UserService {
     Date currentDate = new Date(System.currentTimeMillis());
 
     if (resetPassword.password.isEmpty()) {
-      throw new InvalidPasswordExeption();
+      throw new InvalidPasswordException();
     }
     if (!user.getForgottenPasswordToken().equals(token)) {
-      throw new InvalidTokenExeption();
+      throw new InvalidTokenException();
     }
     if (currentDate.after(user.getForgottenPasswordTokenExpiresAt())) {
-      throw new InvalidTokenExeption();
+      throw new InvalidExpiredToken();
     }
     if (resetPassword.password.length() <= 8) {
-      throw new InvalidPasswordExeption();
+      throw new InvalidPasswordLongException();
       /*
          emailUtils.sendHtmlEmail(user.getEmail(), "support@demo", "Password Reset Request", "To reset your password, click the link below:\n"
                  + "http://localhost:3036/email/reset-password"
@@ -130,7 +133,7 @@ public class UserServiceImpl implements UserService {
       userRepository.save(user);
       return new StatusResponseDto("ok");
     }
-    return new InvalidRequestException();
+    throw new InvalidRequestException();
 
   }
 

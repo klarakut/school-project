@@ -1,6 +1,7 @@
 package com.gfa.users.controllers;
 
 import com.gfa.common.dtos.*;
+import com.gfa.users.Exceptions.*;
 import com.gfa.users.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,7 @@ public class TeamsRestController {
     try {
       TeamResponseDto dtoRespone = teamService.show(id);
       return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
-    } catch (InvalidEmptyException e) {
+    } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (InvalidTeamNotFoundException e) {
       return new ResponseEntity<>(
@@ -95,7 +96,7 @@ public class TeamsRestController {
     try {
       StatusResponseDto dtoRespone = teamService.addUserToTeam(id, userRequestDto);
       return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
-    } catch (InvalidEmptyException e) {
+    } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (InvalidTeamNotFoundException e) {
       return new ResponseEntity<>(
@@ -112,7 +113,7 @@ public class TeamsRestController {
       EmptyResponseDto dtoRespone = teamService.deleteUserFromTeam(id, user_id);
       return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
       //
-    } catch (InvalidEmptyException e) {
+    } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (InvalidTeamAndUserNotFoundException e) {
       return new ResponseEntity<>(
@@ -129,7 +130,7 @@ public class TeamsRestController {
     try {
       StatusResponseDto dtoRespone = teamService.addPermissionsToTeam(id, permissionRequestDto);
       return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
-    } catch (InvalidEmptyException e) {
+    } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (InvalidTeamNotFoundException e) {
       return new ResponseEntity<>(
@@ -147,7 +148,7 @@ public class TeamsRestController {
       EmptyResponseDto dtoRespone = teamService.deletePermissionFromTeam(id, permission_id);
       return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
 
-    } catch (InvalidEmptyException e) {
+    } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (InvalidTeamAndPermissionNotFoundException e) {
       return new ResponseEntity<>(
@@ -164,7 +165,7 @@ public class TeamsRestController {
     try {
       StatusResponseDto dtoRespone = teamService.addRoleToTeam(id, roleRequestDto);
       return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
-    } catch (InvalidEmptyException e) {
+    } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (InvalidTeamNotFoundException e) {
       return new ResponseEntity<>(
@@ -177,13 +178,12 @@ public class TeamsRestController {
   @DeleteMapping("/teams/{id}/roles/{role_id}")
   public ResponseEntity<? extends ResponseDto> deleteRoleFromTeam(
       @PathVariable Long id, @PathVariable Long role_id) {
-    EmptyResponseDto dtoRespone = teamService.deleteRoleFromTeam(id, role_id); // ????????
-    return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
+
     try {
-      teamService.deleteRoleFromTeam(id, role_id);
-      return null;
+      EmptyResponseDto dtoRespone = teamService.deleteRoleFromTeam(id, role_id);
+      return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
       //
-    } catch (InvalidEmptyException e) {
+    } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (InvalidTeamAndRoleNotFoundException e) {
       return new ResponseEntity<>(

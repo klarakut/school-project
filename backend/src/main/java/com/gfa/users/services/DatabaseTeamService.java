@@ -1,6 +1,7 @@
 package com.gfa.users.services;
 
 import com.gfa.common.dtos.*;
+import com.gfa.users.Exceptions.*;
 import com.gfa.users.models.Permission;
 import com.gfa.users.models.Role;
 import com.gfa.users.models.Team;
@@ -17,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+/**
+ * This class is a service that provides access to the database.
+ */
 public class DatabaseTeamService implements TeamService {
   public final TeamRepository teamRepository;
   public final UserRepository userRepository;
@@ -41,7 +45,7 @@ public class DatabaseTeamService implements TeamService {
     List<TeamResponseDto> findAllTeamResponse = new ArrayList<>();
 
     for (Team team : findAllTeam) {
-      TeamResponseDto response = new TeamResponseDto(team.getId(), team.getName());
+      TeamResponseDto response = new TeamResponseDto(team);
       findAllTeamResponse.add(response);
     }
     return findAllTeamResponse;
@@ -54,14 +58,11 @@ public class DatabaseTeamService implements TeamService {
       throw new InvalidRequestException();
     }
     // #Already exist
-    boolean team = teamRepository.existByName(teamCreateRequestDto.getName());
-    if (team) {
-      throw new InvalidTeamExsistException();
-    }
+    Team team = teamRepository.findByName(teamCreateRequestDto.getName()).orElseThrow(() -> new InvalidTeamNotFoundException());
     try {
       Team teamCreate = new Team(teamCreateRequestDto.getName());
-      teamRepository.save(teamCreate);
-      return new TeamResponseDto(teamCreate.getId(), teamCreate.getName());
+      //teamRepository.save(teamCreate);
+      return new TeamResponseDto(teamRepository.save(teamCreate));
     } catch (Exception e) {
       throw new UnknownErrorException();
     }
@@ -74,12 +75,8 @@ public class DatabaseTeamService implements TeamService {
       throw new InvalidIdException();
     }
     // #Team doesnt exist
-    boolean team = teamRepository.existsById(id);
-    if (!team) {
-      throw new InvalidTeamNotFoundException();
-    }
-    Team teamFound = teamRepository.findById(id).get();
-    return new TeamResponseDto(teamFound.getId(), teamFound.getName());
+    Team teamFound = teamRepository.findById(id).orElseThrow(() -> new InvalidTeamNotFoundException());
+    return new TeamResponseDto(teamFound);
   }
 
   @Override
@@ -93,15 +90,11 @@ public class DatabaseTeamService implements TeamService {
       throw new InvalidRequestException();
     }
     // #Team was not found
-    boolean team = teamRepository.existsById(id);
-    if (!team) {
-      throw new InvalidTeamNotFoundException();
-    }
     try {
-      Team teamUpdate = teamRepository.findById(id).get();
+      Team teamUpdate = teamRepository.findById(id).orElseThrow(() -> new InvalidTeamNotFoundException());
       teamUpdate.setName(teamPatchRequestDto.getName());
-      teamRepository.save(teamUpdate);
-      return new TeamResponseDto(teamUpdate.getId(), teamUpdate.getName());
+      //teamRepository.save(teamUpdate);
+      return new TeamResponseDto(teamRepository.save(teamUpdate));
     } catch (Exception e) {
       throw new UnknownErrorException();
     }
@@ -114,40 +107,29 @@ public class DatabaseTeamService implements TeamService {
     if (id <= 0) {
       throw new InvalidIdException();
     }
-    // #Team was not found
-    boolean team = teamRepository.existsById(id);
-    if (!team) {
-      throw new InvalidTeamNotFoundException();
-    }
     try {
-      Team teamDestroy = teamRepository.findById(id).get();
+      Team teamDestroy = teamRepository.findById(id).orElseThrow( () -> new InvalidTeamNotFoundException());
       teamRepository.delete(teamDestroy);
-      return new EmptyResponseDto();
-    } catch (Exception e) {
-      throw new UnknownErrorException();
+      return new EmptyResponseDto("ok");
+   } catch (Exception e) {
+     throw new UnknownErrorException();
     }
   }
 
   @Override
   public StatusResponseDto addUserToTeam(Long id, UserRequestDto userRequestDto) {
     // #Invalid Id input
-    if (id <= 0) {
-      throw new InvalidEmptyException();
-    }
-    // #Team was not found
-    boolean team = teamRepository.existsById(id);
-    if (!team) {
-      throw new InvalidTeamNotFoundException();
+    if (id <= 0 || userRequestDto.getId() <= 0) {
+      throw new InvalidIdException();
     }
     try {
-      Team teamFound = teamRepository.findById(id).get();
-      User user = userRepository.findById(userRequestDto.getId()).get();
+      Team teamFound = teamRepository.findById(id).orElseThrow( () -> new InvalidTeamNotFoundException());
+      User user = userRepository.findById(userRequestDto.getId()).orElseThrow( () -> new InvalidUserNotFoundException());
       if (teamFound.addUser(user)) {
         teamRepository.save(teamFound);
         return new StatusResponseDto("ok");
       }
       return null;
-
     } catch (Exception e) {
       throw new UnknownErrorException();
     }
@@ -160,17 +142,12 @@ public class DatabaseTeamService implements TeamService {
       throw new InvalidIdException();
     }
     // #Team or User not found
-    boolean team = teamRepository.existsById(id);
-    boolean user = userRepository.existsById(user_id);
-    if (!team || !user) {
-      throw new InvalidTeamAndUserNotFoundException();
-    }
     try {
-      Team teamFound = teamRepository.findById(id).get();
-      User userFound = userRepository.findById(user_id).get();
+      Team teamFound = teamRepository.findById(id).orElseThrow( () -> new InvalidTeamNotFoundException());
+      User userFound = userRepository.findById(user_id).orElseThrow( () -> new InvalidUserNotFoundException());
       if (teamFound.removeUser(userFound)) {
         teamRepository.save(teamFound);
-        return new EmptyResponseDto();
+        return new EmptyResponseDto("ok");
       }
       return null;
     } catch (Exception e) {
@@ -182,17 +159,12 @@ public class DatabaseTeamService implements TeamService {
   public StatusResponseDto addPermissionsToTeam(
       Long id, PermissionRequestDto permissionRequestDto) {
     // #Invalid Id input
-    if (id < 0) {
-      throw new InvalidEmptyException();
-    }
-    // #Team was not found
-    boolean team = teamRepository.existsById(id);
-    if (!team) {
-      throw new InvalidTeamNotFoundException();
+    if (id < 0 || permissionRequestDto.getId() < 0) {
+      throw new InvalidIdException();
     }
     try {
-      Team teamFound = teamRepository.findById(id).get();
-      Permission permission = permissionRepository.findById(id).get();
+      Team teamFound = teamRepository.findById(id).orElseThrow( () -> new InvalidTeamNotFoundException());
+      Permission permission = permissionRepository.findById(id).orElseThrow( () -> new InvalidPermissionNotFoundException());
       if (teamFound.addPermision(permission)) {
         teamRepository.save(teamFound);
         return new StatusResponseDto("ok");
@@ -209,18 +181,12 @@ public class DatabaseTeamService implements TeamService {
     if (permission_id <= 0 || id <= 0) {
       throw new InvalidIdException();
     }
-    // #Team or Permission not found
-    boolean team = teamRepository.existsById(id);
-    boolean permission = permissionRepository.existsById(permission_id);
-    if (!team || !permission) {
-      throw new InvalidTeamAndPermissionNotFoundException();
-    }
     try {
-      Team teamFound = teamRepository.findById(id).get();
-      Permission permissionDelete = permissionRepository.findById(permission_id).get();
+      Team teamFound = teamRepository.findById(id).orElseThrow( () -> new InvalidTeamNotFoundException());
+      Permission permissionDelete = permissionRepository.findById(permission_id).orElseThrow( () -> new InvalidPermissionNotFoundException());
       if (teamFound.removePermission(permissionDelete)) {
         teamRepository.save(teamFound);
-        return new EmptyResponseDto();
+        return new EmptyResponseDto("ok");
       }
       return null;
     } catch (Exception e) {
@@ -232,16 +198,11 @@ public class DatabaseTeamService implements TeamService {
   public StatusResponseDto addRoleToTeam(Long id, RoleRequestDto roleRequestDto) {
     // #Invalid Id input
     if (id < 0) {
-      throw new InvalidEmptyException();
-    }
-    // #Team was not found
-    boolean team = teamRepository.existsById(id);
-    if (!team) {
-      throw new InvalidTeamNotFoundException();
+      throw new InvalidIdException();
     }
     try {
-      Team teamFound = teamRepository.findById(id).get();
-      Role role = roleRepository.findById(roleRequestDto.getId()).get();
+      Team teamFound = teamRepository.findById(id).orElseThrow( () -> new InvalidTeamNotFoundException());
+      Role role = roleRepository.findById(roleRequestDto.getId()).orElseThrow( () -> new InvalidRoleNotFoundException());
       if (teamFound.addRole(role)) {
         teamRepository.save(teamFound);
         return new StatusResponseDto("ok");
@@ -258,18 +219,13 @@ public class DatabaseTeamService implements TeamService {
     if (role_id <= 0 || id <= 0) {
       throw new InvalidIdException();
     }
-    // #Team or Role not found
-    boolean team = teamRepository.existsById(id);
-    boolean role = roleRepository.existsById(role_id);
-    if (!team || !role) {
-      throw new InvalidTeamAndRoleNotFoundException();
-    }
+
     try {
-      Team teamFound = teamRepository.findById(id).get();
-      Role roleDelete = roleRepository.findById(role_id).get();
+      Team teamFound = teamRepository.findById(id).orElseThrow( () -> new InvalidTeamNotFoundException());
+      Role roleDelete = roleRepository.findById(role_id).orElseThrow( () -> new InvalidRoleNotFoundException());
       if (teamFound.removeRole(roleDelete)) {
         teamRepository.save(teamFound);
-        return new EmptyResponseDto();
+        return new EmptyResponseDto("ok");
       }
       return null;
     } catch (Exception e) {

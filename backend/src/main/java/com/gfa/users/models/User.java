@@ -106,7 +106,7 @@ public class User {
 
 
   public User(CreateUserRequestDto dto, Long expirationTime){
-    this(dto.username, dto.email, dto.password);
+    //this(dto.username, dto.email, dto.password);
     this.verifiedAt = null;
     this.verificationToken = String.valueOf(randomSecureValue);
     this.verificationTokenExpiresAt = new Date(System.currentTimeMillis() + expirationTime);
