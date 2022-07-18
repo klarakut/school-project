@@ -11,6 +11,7 @@ import com.gfa.common.exceptions.UnknownErrorException;
 import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
+import com.gfa.users.exceptions.AlreadyVerifiedException;
 import com.gfa.users.exceptions.InvalidPasswordException;
 import com.gfa.users.exceptions.PasswordTooShortException;
 import com.gfa.users.exceptions.UnverifiedEmailException;
