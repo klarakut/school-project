@@ -1,12 +1,13 @@
 package com.gfa.users.models;
 
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 class UserTest {
 
@@ -16,25 +17,22 @@ class UserTest {
   Permission per;
   Permission mission;
   User user;
-  Date verifiedAt = new Date(0L);
-  Date verificationTokenExpiresAt = new Date(0L);
-  Date forgottenPasswordTokenExpiresAt = new Date(0L);
-  Date createdAt = new Date(0L);
+  LocalDateTime verifiedAt;
+  LocalDateTime verificationTokenExpiresAt;
+  LocalDateTime forgottenPasswordTokenExpiresAt;
+  LocalDateTime createdAt;
 
   @BeforeEach
   public void beforeEach() {
-
     team = new Team("team");
     role = new Role("role");
     permission = new Permission("permission");
     per = new Permission("per");
     mission = new Permission("mission");
-
-    verifiedAt = new Date(0L);
-    verificationTokenExpiresAt = new Date(0L);
-    forgottenPasswordTokenExpiresAt = new Date(0L);
-    createdAt = new Date(0L);
-
+    verifiedAt = LocalDateTime.of(2021, Month.APRIL, 24, 14,30);
+    verificationTokenExpiresAt = LocalDateTime.of(2021, Month.APRIL, 24, 14,30);
+    forgottenPasswordTokenExpiresAt = LocalDateTime.of(2021, Month.APRIL, 24, 14,30);
+    createdAt = LocalDateTime.now();
     user =
         new User(
             1L,
@@ -125,7 +123,7 @@ class UserTest {
 
   @Test
   void get_created_at_returns_the_correct_date_and_time() {
-    assertEquals(verifiedAt, user.getCreatedAt());
+    assertEquals(createdAt, user.getCreatedAt());
   }
 
   @Test
@@ -145,7 +143,7 @@ class UserTest {
   void can_remove_added_permission() {
     user.addPermission(permission);
     assertTrue(user.removePermission(permission));
-    assertTrue(user.can(permission));
+    assertFalse(user.can(permission));
     assertFalse(user.removePermission(permission));
   }
 
@@ -216,4 +214,6 @@ class UserTest {
     team.addPermission(mission);
     assertTrue(user.can("mission"));
   }
+
+
 }

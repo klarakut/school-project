@@ -3,8 +3,6 @@ package com.gfa.users.models;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Date;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class TeamTest {
@@ -13,14 +11,13 @@ class TeamTest {
   Role role;
   Team team;
   User user;
-  Date date;
 
   @BeforeEach
   public void beforeEach() {
     permission = new Permission("permission");
     role = new Role("role");
     team = new Team("team");
-    user = new User("user","xx","x", date = new Date(0L));
+    user = new User("user","xx","x");
   }
 
   @Test
@@ -45,7 +42,7 @@ class TeamTest {
   void can_remove_added_permission() {
     team.addPermission(permission);
     assertTrue(team.removePermission(permission));
-    assertTrue(team.can(permission));
+    assertFalse(team.can(permission));
     assertFalse(team.removePermission(permission));
   }
 

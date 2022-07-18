@@ -1,7 +1,6 @@
 package com.gfa.users.models;
 
 import java.util.HashSet;
-import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import org.jetbrains.annotations.NotNull;
 
 @Entity
 @Table(name = "teams")
@@ -32,25 +32,25 @@ public class Team {
       name = "team_role",
       joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
-  Set<Role> roles;
+  private Set<Role> roles;
 
   @ManyToMany
   @JoinTable(
       name = "team_permission",
       joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "permission_id"))
-  Set<Permission> permissions;
+  private Set<Permission> permissions;
 
   @ManyToMany(mappedBy = "teams")
-  Set<User> users;
+  private Set<User> users;
 
   public Team() {
     permissions = new HashSet<>();
     roles = new HashSet<>();
+    users = new HashSet<>();
   }
 
   public Team(@NotNull String name) {
-
     this();
     this.name = name;
   }
@@ -94,7 +94,7 @@ public class Team {
 
   public boolean can(String ability) {
     for (Permission permission : permissions) {
-      if (ability.equals(permission.getAbility())) {
+      if (permission.can(ability)) {
         return true;
       }
     }
