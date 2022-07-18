@@ -1,13 +1,29 @@
 package com.gfa.users.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gfa.common.dtos.RoleCreateRequestDto;
 import com.gfa.common.dtos.RoleResponseDto;
+import com.gfa.users.Exception.EmptyBodyException;
+import com.gfa.users.models.Role;
+import com.gfa.users.repositories.PermissionRepository;
+import com.gfa.users.repositories.RoleRepository;
+import com.gfa.users.services.RoleService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,32 +31,72 @@ import java.util.List;
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(RoleRestController.class)
+/*@WebMvcTest(
+        value = RoleRestController.class,
+        excludeAutoConfiguration = SecurityAutoConfiguration.class)*/
+
+//@ContextConfiguration
+
+//@WebMvcTest(RoleRestController.class)
+@SpringBootTest(classes = RoleRestController.class)
+@AutoConfigureMockMvc
 class RoleRestControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
+   /* @MockBean
     private RoleRestController roleRestController;
+    @MockBean
+    private PermissionRepository permissionRepository;*/
+    @MockBean
+    private RoleRepository roleRepository;
+    /*@MockBean
+    private RoleService roleService;*/
+
+    /*@Autowired
+    private WebApplicationContext webApplicationContext;*/
+
+    /*@BeforeEach
+    public void setup()
+    {
+        mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }*/
+
 
     @Test
     void index() throws Exception {
 
-        List<RoleResponseDto> roles = Arrays.asList(new RoleResponseDto(1L,"HR"),new RoleResponseDto(2L,"PR"));
-        Mockito.when(roleRestController.index()).thenReturn(roles);
+        assertEquals(0,roleRepository.count());
+        roleRepository.save(new Role("role #1"));
+        roleRepository.save(new Role("role #1"));
+        assertEquals(2,roleRepository.count());
 
-        mvc.perform(MockMvcRequestBuilders.get("/roles"));
-                //.andExpect(jsonPath("$[1].role",is("PR")));
+        mvc.perform(MockMvcRequestBuilders.get("/roles"))
+                .andExpect(status().is(500));
+
+    }
+
+
+    @Test
+    void store() throws Exception{
+        RoleCreateRequestDto dto = new RoleCreateRequestDto("");
+        //RoleResponseDto response = new RoleResponseDto(1l,"x");
+        //Mockito.when(roleService.store(Mockito.any())).thenThrow(EmptyBodyException.class);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(dto);
+        mvc.perform(MockMvcRequestBuilders.post("/roles")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(201));
     }
 
     @Test
-    void store() {
-    }
-
-    @Test
-    void show() {
+    void show() throws Exception{
     }
 
     @Test
