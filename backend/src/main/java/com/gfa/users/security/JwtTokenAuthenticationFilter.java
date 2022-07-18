@@ -16,51 +16,50 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
+  private final JwtConfiguration jwtConfiguration;
+  private JwtTokenManager tokenProvider;
+  private UserService userService;
 
-    private final JwtConfiguration jwtConfiguration;
-    private JwtTokenManager tokenProvider;
-    private UserService userService;
+  public JwtTokenAuthenticationFilter(JwtConfiguration jwtConfiguration, JwtTokenManager tokenProvider, UserService userService) {
+    this.jwtConfiguration = jwtConfiguration;
+    this.tokenProvider = tokenProvider;
+    this.userService = userService;
+  }
 
-    public JwtTokenAuthenticationFilter(JwtConfiguration jwtConfiguration, JwtTokenManager tokenProvider, UserService userService) {
-        this.jwtConfiguration = jwtConfiguration;
-        this.tokenProvider = tokenProvider;
-        this.userService = userService;
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+    String header = request.getHeader(jwtConfiguration.getHeader());
+
+    if (header == null || !header.startsWith(jwtConfiguration.getPrefix())) {
+      filterChain.doFilter(request, response);
+      return;
     }
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    String token = header.replace(jwtConfiguration.getPrefix(), "");
 
-        String header = request.getHeader(jwtConfiguration.getHeader());
+    if (tokenProvider.validateToken(token)) {
+      Claims claims = tokenProvider.getClaimsFromJwt(token);
+      String username = claims.getSubject();
 
-        if(header == null || !header.startsWith(jwtConfiguration.getPrefix())) {
-            filterChain.doFilter(request,response);
-            return;
-        }
-
-        String token = header.replace(jwtConfiguration.getPrefix(),"");
-
-        if(tokenProvider.validateToken(token)){
-            Claims claims = tokenProvider.getClaimsFromJWT(token);
-            String username = claims.getSubject();
-
-            UsernamePasswordAuthenticationToken auth =
+      UsernamePasswordAuthenticationToken auth =
                     userService.findByUsername(username)
                             .map(UserDetailsEntity::new)
                             .map(userDetails -> {
-                                UsernamePasswordAuthenticationToken authenticationToken =
+                              UsernamePasswordAuthenticationToken authenticationToken =
                                         new UsernamePasswordAuthenticationToken(
-                                                userDetails,null,userDetails.getAuthorities());
-                                authenticationToken
+                                                userDetails, null, userDetails.getAuthorities());
+                              authenticationToken
                                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                                return authenticationToken;
+                              return authenticationToken;
                             })
                             .orElse(null);
 
-            SecurityContextHolder.getContext().setAuthentication(auth);
-        } else {
-            SecurityContextHolder.clearContext();
-        }
-        filterChain.doFilter(request,response);
+      SecurityContextHolder.getContext().setAuthentication(auth);
+    } else {
+      SecurityContextHolder.clearContext();
     }
+    filterChain.doFilter(request, response);
+  }
 }

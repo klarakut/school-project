@@ -8,8 +8,18 @@ import com.gfa.common.services.EmailValidator;
 import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
-import com.gfa.users.exceptions.*;
 
+import com.gfa.users.exceptions.InvalidPasswordException;
+import com.gfa.users.exceptions.PasswordTooShortException;
+import com.gfa.users.exceptions.ShortPasswordException;
+import com.gfa.users.exceptions.UserNotFoundException;
+import com.gfa.users.exceptions.PasswordMissingException;
+import com.gfa.users.exceptions.UsernameTakenException;
+import com.gfa.users.exceptions.ShortUsernameException;
+import com.gfa.users.exceptions.EmailMissingException;
+import com.gfa.users.exceptions.UnverifiedEmailException;
+import com.gfa.users.exceptions.UnexpectedErrorException;
+import com.gfa.users.exceptions.UsernameMissingException;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
 import java.time.LocalDateTime;
@@ -41,24 +51,24 @@ public class UserServiceImpl implements UserService {
 
   public UserResponseDto store(CreateUserRequestDto dto) {
 
-        if (dto.username.isEmpty()) {
-            throw new UsernameMissingException();
-        }
-        if (dto.password.isEmpty()) {
-            throw new PasswordMissingException();
-        }
-        if (dto.email.isEmpty()) {
-            throw new EmailMissingException();
-        }
+    if (dto.username.isEmpty()) {
+      throw new UsernameMissingException();
+    }
+    if (dto.password.isEmpty()) {
+      throw new PasswordMissingException();
+    }
+    if (dto.email.isEmpty()) {
+      throw new EmailMissingException();
+    }
 
-        boolean usernameExist = userRepository.findByUsername(dto.username).isPresent();
-        if (usernameExist) {
-            throw new UsernameTakenException();
-        }
+    boolean usernameExist = userRepository.findByUsername(dto.username).isPresent();
+    if (usernameExist) {
+      throw new UsernameTakenException();
+    }
 
-        if (dto.username.length() < 4) {
-            throw new ShortUsernameException();
-        }
+    if (dto.username.length() < 4) {
+      throw new ShortUsernameException();
+    }
 
     if (dto.password.length() < 8) {
       throw new ShortPasswordException();
@@ -83,10 +93,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Optional <User> findByUsername(String username) {
+  public Optional<User> findByUsername(String username) {
     return userRepository.findByUsername(username);
 
   }
+
   @Override
   public List<UserResponseDto> index() {
     return null;

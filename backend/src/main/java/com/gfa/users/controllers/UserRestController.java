@@ -11,7 +11,16 @@ import com.gfa.common.exceptions.UnknownErrorException;
 import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
-import com.gfa.users.exceptions.*;
+import com.gfa.users.exceptions.InvalidPasswordException;
+import com.gfa.users.exceptions.PasswordTooShortException;
+import com.gfa.users.exceptions.ShortPasswordException;
+import com.gfa.users.exceptions.PasswordMissingException;
+import com.gfa.users.exceptions.UsernameTakenException;
+import com.gfa.users.exceptions.ShortUsernameException;
+import com.gfa.users.exceptions.EmailMissingException;
+import com.gfa.users.exceptions.UnverifiedEmailException;
+import com.gfa.users.exceptions.UnexpectedErrorException;
+import com.gfa.users.exceptions.UsernameMissingException;
 import com.gfa.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +45,7 @@ public class UserRestController {
     try {
       UserResponseDto userResponse = userService.store(dto);
 
-         /* URI location = ServletUriComponentsBuilder
+      /* URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/register/{username}")
                 .buildAndExpand(userResponse.username).toUri();
 
@@ -45,29 +54,21 @@ public class UserRestController {
                   .body(userResponse);*/
 
       return new ResponseEntity<>(userResponse,HttpStatus.CREATED);
-    }
-    catch (UsernameMissingException e){
+    } catch (UsernameMissingException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Username is required"),HttpStatus.BAD_REQUEST);
-    }
-    catch (PasswordMissingException e){
+    } catch (PasswordMissingException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Password is required"),HttpStatus.BAD_REQUEST);
-    }
-    catch (EmailMissingException e){
+    } catch (EmailMissingException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Email is required"),HttpStatus.BAD_REQUEST);
-    }
-    catch (com.gfa.users.exceptions.InvalidEmailException e){
+    } catch (com.gfa.users.exceptions.InvalidEmailException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Invalid email"),HttpStatus.BAD_REQUEST);
-    }
-    catch (UsernameTakenException e){
+    } catch (UsernameTakenException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Username is already taken"),HttpStatus.CONFLICT);
-    }
-    catch (ShortUsernameException e){
+    } catch (ShortUsernameException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Username must be at least 4 characters long"),HttpStatus.BAD_REQUEST);
-    }
-    catch (ShortPasswordException e){
+    } catch (ShortPasswordException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Password must be at least 8 characters long"),HttpStatus.BAD_REQUEST);
-    }
-    catch (UnexpectedErrorException e){
+    } catch (UnexpectedErrorException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Unknown error"),HttpStatus.BAD_REQUEST);
     }
   }

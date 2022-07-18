@@ -1,6 +1,10 @@
 package com.gfa.users.services;
 
-import dev.samstevens.totp.code.*;
+import dev.samstevens.totp.code.CodeVerifier;
+import dev.samstevens.totp.code.CodeGenerator;
+import dev.samstevens.totp.code.DefaultCodeGenerator;
+import dev.samstevens.totp.code.DefaultCodeVerifier;
+import dev.samstevens.totp.code.HashingAlgorithm;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import dev.samstevens.totp.qr.QrData;
 import dev.samstevens.totp.qr.QrGenerator;
@@ -16,14 +20,14 @@ import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 @Service
 public class TotpManager {
 
-    public String generateSecret(){
-        SecretGenerator generator = new DefaultSecretGenerator();
-        return generator.generate();
-    }
+  public String generateSecret() {
+    SecretGenerator generator = new DefaultSecretGenerator();
+    return generator.generate();
+  }
 
 
-    public String getUriForImage(String secret){
-        QrData data = new QrData.Builder()
+  public String getUriForImage(String secret) {
+    QrData data = new QrData.Builder()
                 .label("Two-factor-authentication")
                 .secret(secret)
                 .issuer("DinningApp")
@@ -32,25 +36,24 @@ public class TotpManager {
                 .period(30)
                 .build();
 
-        QrGenerator generator = new ZxingPngQrGenerator();
-        byte[] imageData = new byte[0];
+    QrGenerator generator = new ZxingPngQrGenerator();
+    byte[] imageData = new byte[0];
 
-        try {
-            imageData = generator.generate(data);
-        } catch (QrGenerationException e){
-            throw new RuntimeException("Unable to generate QrCode");
-            //log.error("unable to generate QrCode");
-        }
-
-        String mimeType = generator.getImageMimeType();
-
-        return getDataUriForImage(imageData,mimeType);
+    try {
+      imageData = generator.generate(data);
+    } catch (QrGenerationException e) {
+      throw new RuntimeException("Unable to generate QrCode");
     }
 
-    public boolean verifyCode(String code, String secret){
-        TimeProvider timeProvider = new SystemTimeProvider();
-        CodeGenerator codeGenerator = new DefaultCodeGenerator();
-        CodeVerifier codeVerifier = new DefaultCodeVerifier(codeGenerator,timeProvider);
-        return codeVerifier.isValidCode(secret,code);
-    }
+    String mimeType = generator.getImageMimeType();
+
+    return getDataUriForImage(imageData,mimeType);
+  }
+
+  public boolean verifyCode(String code, String secret) {
+    TimeProvider timeProvider = new SystemTimeProvider();
+    CodeGenerator codeGenerator = new DefaultCodeGenerator();
+    CodeVerifier codeVerifier = new DefaultCodeVerifier(codeGenerator,timeProvider);
+    return codeVerifier.isValidCode(secret,code);
+  }
 }

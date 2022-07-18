@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class CreateUserRequestDto {
 
-    public final String username;
-    public final String email;
-    public final String password;
-    public Boolean mfa;
+  public final String username;
+  public final String email;
+  public final String password;
+  public Boolean mfa;
 
   @JsonCreator
   public CreateUserRequestDto(String username, String email, String password) {
