@@ -1,29 +1,29 @@
 package com.gfa.users.models;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.Date;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.time.LocalDateTime;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 class UserTest {
 
   User user;
-  Date verifiedAt = new Date(0L);
-  Date verificationTokenExpiresAt = new Date(0L);
-  Date forgottenPasswordTokenExpiresAt = new Date(0L);
-  Date createdAt = new Date(0L);
+  LocalDateTime verifiedAt;
+  LocalDateTime verificationTokenExpiresAt;
+  LocalDateTime forgottenPasswordTokenExpiresAt;
+  LocalDateTime createdAt;
 
   @BeforeEach
   public void beforeEach() {
 
-    verifiedAt = new Date(0L);
-    verificationTokenExpiresAt = new Date(0L);
-    forgottenPasswordTokenExpiresAt = new Date(0L);
-    createdAt = new Date(0L);
+    verifiedAt = LocalDateTime.now();
+    verificationTokenExpiresAt = LocalDateTime.now();
+    forgottenPasswordTokenExpiresAt = LocalDateTime.now();
+    createdAt = LocalDateTime.now();
 
     user =
         new User(
