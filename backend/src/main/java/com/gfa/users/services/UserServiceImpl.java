@@ -3,7 +3,6 @@ package com.gfa.users.services;
 import com.gfa.common.dtos.EmailRequestDto;
 import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.dtos.StatusResponseDto;
-import com.gfa.common.exceptions.InvalidEmailException;
 import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.common.exceptions.UnknownErrorException;
@@ -11,7 +10,11 @@ import com.gfa.common.services.EmailValidator;
 import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
-import com.gfa.users.exceptions.*;
+import com.gfa.users.exceptions.PasswordTooShortException;
+import com.gfa.users.exceptions.InvalidPasswordException;
+import com.gfa.users.exceptions.UnverifiedEmailException;
+import com.gfa.users.exceptions.UserNotFoundException;
+import com.gfa.users.exceptions.AlreadyVerifiedException;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
 import java.time.LocalDateTime;
@@ -135,39 +138,35 @@ public class UserServiceImpl implements UserService {
     user.setForgottenPasswordToken(null);
     userRepository.save(user);
     return new StatusResponseDto("ok");
-    }
+  }
 
-    @Override
-    public StatusResponseDto resendVerificationEmail(EmailRequestDto emailRequestDto) {
-      //#1
-      EmailValidator.validate(emailRequestDto.email);
+  @Override
+  public StatusResponseDto resendVerificationEmail(EmailRequestDto emailRequestDto) {
+    EmailValidator.validate(emailRequestDto.email);
 
-      //#2
-      boolean existingUser = userRepository.findByEmail(emailRequestDto.email).isPresent();
-      if (!existingUser){
-       /* emailUtils.sendHtmlEmail("#", "support@demo.com", "Resend verification email", "To verify your email address, click the link below:\n"
+    boolean existingUser = userRepository.findByEmail(emailRequestDto.email).isPresent();
+    if (!existingUser) {
+      /* emailUtils.sendHtmlEmail("#", "support@demo.com", "Resend verification email", "To verify your email address, click the link below:\n"
                     + "http://localhost:3036/email/resend-verification-email"
                     + "/reset?token="
                     + user.getVerificationToken());*/
-        return new StatusResponseDto("ok");
-      }
+      return new StatusResponseDto("ok");
+    }
 
-      User user = userRepository.findByEmail(emailRequestDto.email).get();
+    User user = userRepository.findByEmail(emailRequestDto.email).get();
 
-      //#3
-      if(user.getVerifiedAt() != null){
-        throw new AlreadyVerifiedException();
-      }
+    if (user.getVerifiedAt() != null) {
+      throw new AlreadyVerifiedException();
+    }
 
-      try {
-        //#4
-        /*emailUtils.sendHtmlEmail(user.getEmail(), "support@demo.com", "Resend verification email", "To verify your email address, click the link below:\n"
+    try {
+      /*emailUtils.sendHtmlEmail(user.getEmail(), "support@demo.com", "Resend verification email", "To verify your email address, click the link below:\n"
                 + "http://localhost:3036/email/resend-verification-email"
                 + "/reset?token="
                 + user.getVerificationToken());*/
-        return new StatusResponseDto("ok");
-      } catch (UnknownErrorException e){
-          throw  new UnknownErrorException();
-      }
+      return new StatusResponseDto("ok");
+    } catch (UnknownErrorException e) {
+      throw  new UnknownErrorException();
     }
+  }
 }
