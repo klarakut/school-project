@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @ContextConfiguration
 @AutoConfigureMockMvc
-class UserRestControllerTestEndpointRegister {
+class UserRestControllerEndpointRegisterTests {
 
     @Autowired
     private MockMvc mvc;
@@ -56,7 +56,6 @@ class UserRestControllerTestEndpointRegister {
         CreateUserRequestDto request = new CreateUserRequestDto("johny","john@gmail.com","123456789");
         User user = new User(request, 10L,"");
         UserResponseDto response = new UserResponseDto(user,"");
-        //Mockito.when(userService.store(Mockito.any())).thenReturn(response);
 
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(request);
