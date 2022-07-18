@@ -8,10 +8,7 @@ import com.gfa.common.services.EmailValidator;
 import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
-import com.gfa.users.exceptions.InvalidPasswordException;
-import com.gfa.users.exceptions.PasswordTooShortException;
-import com.gfa.users.exceptions.UnverifiedEmailException;
-import com.gfa.users.exceptions.UserNotFoundException;
+import com.gfa.users.exceptions.*;
 
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
@@ -76,7 +73,7 @@ public class UserServiceImpl implements UserService {
                             "config.security.token.expiration.email_verification", DEFAULT_TOKEN_EXPIRATION));
     User user = new User(dto, tokenExpiration, secret);
     userRepository.save(user);
-    UserResponseDto userResponseDto = new UserResponseDto(user);
+    UserResponseDto userResponseDto = new UserResponseDto(user, totpManager.getUriForImage(user.getSecret()));
 
     boolean userCreated = userRepository.findByUsername(dto.username).isPresent();
     if (!userCreated) {
@@ -86,10 +83,10 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Optional<User> findByUsername(String username) {
+  public Optional <User> findByUsername(String username) {
     return userRepository.findByUsername(username);
-  }
 
+  }
   @Override
   public List<UserResponseDto> index() {
     return null;
