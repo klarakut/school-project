@@ -17,6 +17,7 @@ import java.util.Set;
 @Entity
 public class User {
 
+  //test
   @Id
   @Column(unique = true)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
