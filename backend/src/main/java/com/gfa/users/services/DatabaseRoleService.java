@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DatabaseRoleService implements RoleService{
@@ -25,12 +26,7 @@ public class DatabaseRoleService implements RoleService{
     @Override
     public List<RoleResponseDto> index() {
         List<Role> roles = roleRepository.findAll();
-        List<RoleResponseDto> rolesDto = new ArrayList<>();
-        for (Role role : roles){
-            RoleResponseDto dto = new RoleResponseDto(role.getId(),role.getRole());
-            rolesDto.add(dto);
-        }
-        return rolesDto;
+        return roles.stream().map(RoleResponseDto::new).collect(Collectors.toList());
     }
 
     @Override
@@ -83,7 +79,6 @@ public class DatabaseRoleService implements RoleService{
         // TODO -> insufficient rights to create roles => 403
 
         Role role = roleRepository.findById(id).orElseThrow(() -> new IdNotFoundException());
-
         try {
             role.setRole(dto.role);
             roleRepository.save(role);
