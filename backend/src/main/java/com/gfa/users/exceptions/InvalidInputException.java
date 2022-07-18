@@ -1,4 +1,4 @@
-package com.gfa.users.Exception;
+package com.gfa.users.exceptions;
 
 public class InvalidInputException extends RuntimeException{
 }

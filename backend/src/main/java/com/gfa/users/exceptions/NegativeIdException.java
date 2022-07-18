@@ -1,4 +1,4 @@
-package com.gfa.users.Exception;
+package com.gfa.users.exceptions;
 
 public class NegativeIdException extends RuntimeException{
 }

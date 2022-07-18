@@ -1,14 +1,13 @@
 package com.gfa.users.services;
 
 import com.gfa.common.dtos.*;
-import com.gfa.users.Exception.*;
+import com.gfa.users.exceptions.*;
 import com.gfa.users.models.Permission;
 import com.gfa.users.models.Role;
 import com.gfa.users.repositories.PermissionRepository;
 import com.gfa.users.repositories.RoleRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

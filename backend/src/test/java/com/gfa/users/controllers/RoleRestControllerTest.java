@@ -2,31 +2,16 @@ package com.gfa.users.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gfa.common.dtos.RoleCreateRequestDto;
-import com.gfa.common.dtos.RoleResponseDto;
-import com.gfa.users.Exception.EmptyBodyException;
 import com.gfa.users.models.Role;
-import com.gfa.users.repositories.PermissionRepository;
 import com.gfa.users.repositories.RoleRepository;
-import com.gfa.users.services.RoleService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
