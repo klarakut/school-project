@@ -65,7 +65,7 @@ class DatabaseRoleServiceTest {
         List<Role> roles = Arrays.asList(new Role("x"),new Role("y"));
         Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(IdNotFoundException.class,() -> roleService.show(-1L));
+        assertThrows(IdNotFoundException.class,() -> roleService.show(1L));
     }
 
     // STORE method unit tests
