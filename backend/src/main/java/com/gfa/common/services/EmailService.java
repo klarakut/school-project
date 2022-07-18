@@ -1,7 +1,7 @@
-package com.gfa.users.services;
+package com.gfa.common.services;
 
 import org.springframework.mail.SimpleMailMessage;
 
 public interface EmailService {
-    public void sendEmail(SimpleMailMessage email);
+  void send(SimpleMailMessage email);
 }

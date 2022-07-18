@@ -43,14 +43,14 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.8
+                minimum = 0.5
             }
         }
         rule {
             limit {
                 counter = 'BRANCH'
                 value = 'COVEREDRATIO'
-                minimum = 0.8
+                minimum = 0.2
             }
         }
     }
@@ -101,4 +101,8 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+}
+
+springBoot {
+    mainClass = "com.gfa.ProjectApplication"
 }
