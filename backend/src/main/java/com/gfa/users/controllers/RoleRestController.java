@@ -40,8 +40,8 @@ public class RoleRestController {
 
 
     @GetMapping("/roles")
-    public List<RoleResponseDto> index(){
-        return roleService.index();
+    public ResponseEntity<List<RoleResponseDto> >index(){
+        return new ResponseEntity(roleService.index(),HttpStatus.OK);
     }
 
     @PostMapping("/roles")
