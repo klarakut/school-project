@@ -1,8 +1,8 @@
 package com.gfa.users.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gfa.common.dtos.CreateUserRequestDto;
-import com.gfa.common.dtos.UserResponseDto;
+import com.gfa.users.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.UserResponseDto;
 import com.gfa.users.exceptions.*;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
@@ -23,8 +23,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -54,11 +52,11 @@ class UserRestControllerTestEndpointRegister {
     }
 
     @Test
-    void register_new_user_test() throws Exception{
+    void can_register_new_user_test() throws Exception{
         CreateUserRequestDto request = new CreateUserRequestDto("johny","john@gmail.com","123456789");
         User user = new User(request, 10L,"");
         UserResponseDto response = new UserResponseDto(user,"");
-        Mockito.when(userService.store(Mockito.any())).thenReturn(response);
+        //Mockito.when(userService.store(Mockito.any())).thenReturn(response);
 
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(request);
@@ -70,7 +68,7 @@ class UserRestControllerTestEndpointRegister {
     }
 
     @Test
-    void register_user_empty_username() throws Exception{
+    void throws_exception_if_the_username_is_empty() throws Exception{
         CreateUserRequestDto user = new CreateUserRequestDto("","john@gmail.com","123456789");
         Mockito.when(userService.store(Mockito.any())).thenThrow(UsernameMissingException.class);
 
@@ -84,7 +82,7 @@ class UserRestControllerTestEndpointRegister {
     }
 
     @Test
-    void register_user_empty_password() throws Exception{
+    void endpoint_throws_exception_if_the_password_is_empty() throws Exception{
         CreateUserRequestDto user = new CreateUserRequestDto("john","john@gmail.com","");
         Mockito.when(userService.store(Mockito.any())).thenThrow(EmailMissingException.class);
 
@@ -98,7 +96,7 @@ class UserRestControllerTestEndpointRegister {
     }
 
     @Test
-    void register_user_empty_email() throws Exception{
+    void endpoint_throws_exception_if_the_email_is_empty() throws Exception{
         CreateUserRequestDto user = new CreateUserRequestDto("john","","123456789");
         Mockito.when(userService.store(Mockito.any())).thenThrow(EmailMissingException.class);
 
@@ -112,7 +110,7 @@ class UserRestControllerTestEndpointRegister {
     }
 
     @Test
-    void register_user_wrong_email() throws Exception{
+    void endpoint_throws_exception_if_the_email_is_invalid() throws Exception{
         CreateUserRequestDto user = new CreateUserRequestDto("johny","johngmail.com","123456789");
         Mockito.when(userService.store(Mockito.any())).thenThrow(InvalidEmailException.class);
 
@@ -125,7 +123,7 @@ class UserRestControllerTestEndpointRegister {
                 .andExpect(status().is(400));
     }
     @Test
-    void register_user_taken_username() throws Exception{
+    void endpoint_throws_exception_if_the_username_is_already_taken() throws Exception{
         //List<User> users = Arrays.asList(new User(new CreateUserRequestDto("johny","john@gmail.com","123456789"),10L,""));
         CreateUserRequestDto user = new CreateUserRequestDto("johny","john@gmail.com","123456789");
         Mockito.when(userService.store(Mockito.any())).thenThrow(UsernameTakenException.class);
@@ -140,7 +138,7 @@ class UserRestControllerTestEndpointRegister {
     }
 
     @Test
-    void register_user_short_username() throws Exception{
+    void endpoint_throws_exception_if_the_username_is_short() throws Exception{
         CreateUserRequestDto user = new CreateUserRequestDto("jo","john@gmail.com","123456789");
         Mockito.when(userService.store(Mockito.any())).thenThrow(ShortUsernameException.class);
 
@@ -154,7 +152,7 @@ class UserRestControllerTestEndpointRegister {
     }
 
     @Test
-    void register_user_short_password() throws Exception{
+    void endpoint_throws_exception_if_the_password_is_short() throws Exception{
         CreateUserRequestDto user = new CreateUserRequestDto("johny","john@gmail.com","1234");
         Mockito.when(userService.store(Mockito.any())).thenThrow(ShortPasswordException.class);
 
