@@ -115,6 +115,6 @@ class UserTest {
 
   @Test
   void get_created_at_returns_the_correct_date_and_time() {
-    assertEquals(verifiedAt, user.getCreatedAt());
+    assertEquals(verifiedAt, user.getVerifiedAt());
   }
 }
