@@ -50,8 +50,6 @@ public class User {
   private boolean mfa;
   private String secret;
 
-  @ManyToMany(mappedBy = "users")
-  Set<Permission> permissions;
   @ManyToMany
   @JoinTable(
       name = "user_permission",
@@ -112,7 +110,7 @@ public class User {
   SecureRandom random = new SecureRandom();
   Integer randomSecureValue = random.nextInt();
 
-  public User(CreateUserRequestDto dto, Long expirationTime) {
+  public User(CreateUserRequestDto dto, Long expirationTime, String secret) {
     this(dto.username, dto.email, dto.password);
     this.verifiedAt = null;
     this.verificationToken = String.valueOf(randomSecureValue);
