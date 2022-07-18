@@ -11,20 +11,6 @@ public interface UserService { // extends UserDetailsService {
 
   List<UserResponseDto> index();
 
-<<<<<<< HEAD
- // ResponseEntity<ResponseDto> index();
-
-
-        ResponseEntity<ResponseDto> index();
-        ResponseEntity<ResponseDto> show(Long id);
-        ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto);
-
-        StatusResponseDto resetPasswords(EmailRequestDto emailDto);
-        StatusResponseDto resetPassword(String token, PasswordResetRequestDto resetPassword);
-=======
-  UserResponseDto show(Long id);
->>>>>>> develop
-
   UserResponseDto store(CreateUserRequestDto dto);
 
   StatusResponseDto resetPasswords(EmailRequestDto emailDto);

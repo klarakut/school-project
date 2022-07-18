@@ -1,10 +1,7 @@
 package com.gfa.users.services;
 
 import com.gfa.common.dtos.*;
-import com.gfa.users.Exceptions.InvalidIdException;
-import com.gfa.users.Exceptions.InvalidPermissionNotFoundException;
-import com.gfa.users.Exceptions.InvalidRequestException;
-import com.gfa.users.Exceptions.InvalidTeamNotFoundException;
+import com.gfa.users.Exceptions.*;
 import com.gfa.users.models.Permission;
 import com.gfa.users.models.Role;
 import com.gfa.users.models.Team;
@@ -46,10 +43,10 @@ class DatabaseTeamServiceTest {
     TeamCreateRequestDto teamDto = new TeamCreateRequestDto("Gregor");
     Team team = new Team(teamDto.getName());
 
+    Mockito.when(mockedTeamRepository.findByName(Mockito.anyString())).thenReturn(Optional.empty());
     Mockito.when(mockedTeamRepository.save(Mockito.any())).thenReturn(team);
 
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
-
     // Act
     TeamResponseDto result = teamService.store(teamDto);
     // Assert
@@ -78,16 +75,11 @@ class DatabaseTeamServiceTest {
     Team team = new Team(teamDto.getName());
 
     Mockito.when(mockedTeamRepository.findByName(Mockito.any())).thenReturn(Optional.of(team));
-
-    //Mockito.when(mockedTeamRepository.save(Mockito.any())).thenReturn(team);
-
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
 
     // Act
-    //TeamResponseDto result = teamService.store(teamDto);
     // Assert
-    //assertEquals("Gregor", result.team);
-    assertThrows(InvalidTeamNotFoundException.class, ()-> {teamService.store(teamDto);});
+    assertThrows(InvalidTeamExsistException.class, ()-> {teamService.store(teamDto);});
   }
 
   @Test
@@ -95,7 +87,6 @@ class DatabaseTeamServiceTest {
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
 
     List<Team> teams = Arrays.asList(new Team("Gregor"), new Team("Gregorovic"));
-    // Mockito.when(mockedTeamRepository.existsById(anyLong())).thenReturn(true);
     Mockito.when(mockedTeamRepository.findById(anyLong())).thenReturn(teams.stream().findFirst());
 
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
@@ -160,6 +151,21 @@ class DatabaseTeamServiceTest {
   }
 
   @Test
+  void update_cannotFindTeam(){
+    //AAA
+    //Arange
+    TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
+    TeamPatchRequestDto teamDto = new TeamPatchRequestDto("Greg");
+    Mockito.when(mockedTeamRepository.findById(anyLong())).thenReturn(Optional.empty());
+    TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
+
+    //Act
+    //Assert
+    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.update(1L,teamDto);});
+
+  }
+
+  @Test
   void destroy_negative_id() {
 
     //AAA
@@ -173,70 +179,46 @@ class DatabaseTeamServiceTest {
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
 
     //Act
-    //EmptyResponseDto result = teamService.destroy(-2L);
     //Assert
     assertThrows(InvalidIdException.class, () -> {teamService.destroy(-1L);});
 
-    //assertEquals(InvalidIdException.class, result);
-    /*
 
-    /*
-    TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
-    Team team1 = new Team("Gregor");
-    List<Team> teams = new ArrayList<>(Arrays.asList(team1, new Team("Gregorovic")));
-
-    Mockito.when(mockedTeamRepository.findById(anyLong())).thenReturn(Optional.of(team1));
-    Mockito.doAnswer(
-            i -> {teams.remove(0);return null;
-            })
-        .when(mockedTeamRepository)
-        .delete(Mockito.any());
-    Mockito.when(mockedTeamRepository.count()).thenReturn((long) teams.size()).thenReturn((long) teams.size());
-
-    TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
-    assertEquals(2, mockedTeamRepository.count());
-
-    // Act
-    EmptyResponseDto result = teamService.destroy(1L);
-    // Assert
-    assertEquals(1, mockedTeamRepository.count());
-
-     */
   }
 
   @Test
-  void destroy_invalidId() {      //ToDo nefunguje !!!
+  void destroy_invalidId() {
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
-    //TeamPatchRequestDto teamDto = new TeamPatchRequestDto("Gregor");
-    //Team team1 = new Team("Gregooor");
-    //mockedTeamRepository.save(team1);
-
     Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
-
     //Act
-    EmptyResponseDto result = teamService.destroy(5L);
     //Assert
     assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.destroy(5L);});
-
   }
 
   @Test
   void destroy() {
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
-    //TeamPatchRequestDto teamDto = new TeamPatchRequestDto("Gregor");
     Team team1 = new Team("Gregooor");
-    mockedTeamRepository.save(team1);
-
     Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(team1));
-
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
-
     //Act
     EmptyResponseDto result = teamService.destroy(1L);
     //Assert
     assertEquals("ok",result.status);
+  }
+
+  @Test
+  void destroy_cannotFindTeam(){
+    //AAA
+    //Arange
+    TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
+    Mockito.when(mockedTeamRepository.findById(anyLong())).thenReturn(Optional.empty());
+    TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
+
+    //Act
+    //Assert
+    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.destroy(1L);});
+
   }
 
   @Test
@@ -255,6 +237,7 @@ class DatabaseTeamServiceTest {
 
     Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(team));
     Mockito.when(mockedUserRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
+    Mockito.when(mockedTeamRepository.existByUsername(Mockito.anyString())).thenReturn(false);
 
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, mockedUserRepository, null, null);
 
@@ -262,6 +245,32 @@ class DatabaseTeamServiceTest {
     StatusResponseDto result = teamService.addUserToTeam(1L,userRequestDto);
     //Assert
     assertEquals("ok", result.status);
+  }
+
+  @Test
+  void addUserToTeam_UserAlreadyExistInTeam(){
+    //AAA
+    //Arange
+    TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
+    UserRepository mockedUserRepository = Mockito.mock(UserRepository.class);
+
+    UserRequestDto userRequestDto = new UserRequestDto(1l, "Gregorovic");
+    Team team = new Team("team");
+    User user = new User();
+    team.addUser(user);
+
+    mockedTeamRepository.save(team);
+
+    Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(team));
+    Mockito.when(mockedUserRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
+
+
+    TeamService teamService = new DatabaseTeamService(mockedTeamRepository, mockedUserRepository, null, null);
+
+    //Act
+    //StatusResponseDto result = teamService.addUserToTeam(1L,userRequestDto);
+    //Assert
+    assertThrows(InvalidUserExistsException.class,() -> {teamService.addUserToTeam(1L,userRequestDto);});
   }
 
   @Test
@@ -274,21 +283,17 @@ class DatabaseTeamServiceTest {
     UserRequestDto userRequestDto = new UserRequestDto(1l, "Gregorovic");
     Team team = new Team("team");
     User user = new User();
-
-    mockedTeamRepository.save(team);
-
     Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(team));
     Mockito.when(mockedUserRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
 
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, mockedUserRepository, null, null);
     //Act
-    //StatusResponseDto result = teamService.addUserToTeam(1L,userRequestDto);
     //Assert
     assertThrows(InvalidIdException.class,() -> {teamService.addUserToTeam(-1L,userRequestDto);});
   }
 
   @Test
-  void addUserToTeam_cannotFindTeam() {   //ToDo nefunguje!!
+  void addUserToTeam_cannotFindTeam() {
     //AAA
     //Arange
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
@@ -298,21 +303,18 @@ class DatabaseTeamServiceTest {
     Team team = new Team("team");
     User user = new User();
 
-    mockedTeamRepository.save(team);
-
     Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
     Mockito.when(mockedUserRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
 
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, mockedUserRepository, null, null);
     //Act
-   // StatusResponseDto result = teamService.addUserToTeam(1L,userRequestDto);
     //Assert
     assertThrows(InvalidTeamNotFoundException.class,() -> {teamService.addUserToTeam(1L,userRequestDto);});
   }
 
   @Test
 
-  void addUserToTeam_cannotFindUser() {   //ToDo nefunguje!!
+  void addUserToTeam_cannotFindUser() {
     //AAA
     //Arange
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
@@ -329,9 +331,8 @@ class DatabaseTeamServiceTest {
 
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, mockedUserRepository, null, null);
     //Act
-    //StatusResponseDto result = teamService.addUserToTeam(1L,userRequestDto);
     //Assert
-    assertThrows(InvalidTeamNotFoundException.class,() -> {teamService.addUserToTeam(1L,userRequestDto);});
+    assertThrows(InvalidUserNotFoundException.class,() -> {teamService.addUserToTeam(1L,userRequestDto);});
   }
 
   @Test
@@ -344,6 +345,7 @@ class DatabaseTeamServiceTest {
     UserRequestDto userRequestDto = new UserRequestDto(1l, "Gregorovic");
     Team team = new Team("team");
     User user = new User();
+    team.addUser(user);
 
     Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(team));
     Mockito.when(mockedUserRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
@@ -371,7 +373,7 @@ class DatabaseTeamServiceTest {
   }
 
   @Test
-  void deleteUserFromTeam_cannotFindTeam() {      //ToDo nefunguje!!
+  void deleteUserFromTeam_cannotFindTeam() {
     //AAA
     //Arange
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
@@ -390,7 +392,7 @@ class DatabaseTeamServiceTest {
     assertThrows(InvalidTeamNotFoundException.class,() -> {teamService.deleteUserFromTeam(1L,1L);});
   }
   @Test
-  void deleteUserFromTeam_cannotFindUser() {      //ToDo nefunguje!!
+  void deleteUserFromTeam_cannotFindUser() {
     //AAA
     //Arange
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
@@ -406,7 +408,7 @@ class DatabaseTeamServiceTest {
     //Act
     //EmptyResponseDto result = teamService.deleteUserFromTeam(1L,1L);
     //Assert
-    assertThrows(InvalidTeamNotFoundException.class,() -> {teamService.deleteUserFromTeam(1L,1L);});
+    assertThrows(InvalidUserNotFoundException.class,() -> {teamService.deleteUserFromTeam(1L,1L);});
   }
 
   @Test
@@ -448,7 +450,7 @@ class DatabaseTeamServiceTest {
     assertThrows(InvalidIdException.class, () -> {teamService.addPermissionsToTeam(1L,permissionRequestDto);});
   }
   @Test
-  void addPermissionsToTeam_cannotFindTeam(){   //ToDo nefunguje!!
+  void addPermissionsToTeam_cannotFindTeam(){
 
       //AAA
       //Arange
@@ -473,7 +475,7 @@ class DatabaseTeamServiceTest {
   }
 
   @Test
-  void addPermissionsToTeam_cannotFindPermissions(){    //ToDo nefunguje
+  void addPermissionsToTeam_cannotFindPermissions(){
     //AAA
     //Arange
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
@@ -491,9 +493,34 @@ class DatabaseTeamServiceTest {
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, mockedPermissionRepository, null);
 
     //Act
-    //StatusResponseDto result = teamService.addPermissionsToTeam(1L,permissionRequestDto);
     //Assert
     assertThrows(InvalidPermissionNotFoundException.class, () -> {teamService.addPermissionsToTeam(1L,permissionRequestDto);});
+  }
+
+  @Test
+  void addPermissionsToTeam_permissionsAlreadyExists() {
+    //AAA
+    //Arange
+    TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
+    PermissionRepository mockedPermissionRepository = Mockito.mock(PermissionRepository.class);
+
+    PermissionRequestDto permissionRequest = new PermissionRequestDto(1l, "something");
+    Team team = new Team("team");
+    Permission permission = new Permission("something");
+    team.addPermission(permission);
+
+    mockedTeamRepository.save(team);
+
+    Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(team));
+    Mockito.when(mockedPermissionRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(permission));
+
+
+    TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, mockedPermissionRepository, null);
+
+    //Act
+    //StatusResponseDto result = teamService.addUserToTeam(1L,userRequestDto);
+    //Assert
+    assertThrows(InvalidPermissionExistsException.class,() -> {teamService.addPermissionsToTeam(1L,permissionRequest);});
   }
 
   @Test
@@ -507,6 +534,7 @@ class DatabaseTeamServiceTest {
 
     Team team = new Team("team");
     Permission permission = new Permission("do something");
+    team.addPermission(permission);
 
 
     Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(team));
@@ -532,17 +560,16 @@ class DatabaseTeamServiceTest {
   }
 
   @Test
-  void deletePermissionFromTeam_cannotFindTeam(){       //ToDo nefunguje!!
+  void deletePermissionFromTeam_cannotFindTeam(){
 
     //AAA
     //Arange
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
     PermissionRepository mockedPermissionRepository = Mockito.mock(PermissionRepository.class);
 
-    PermissionRequestDto permissionRequestDto = new PermissionRequestDto(1l, null);
-
     Team team = new Team("team");
     Permission permission = new Permission("do something");
+    team.addPermission(permission);
 
 
     Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
@@ -552,20 +579,19 @@ class DatabaseTeamServiceTest {
 
     //Act
     // Assert
-    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.deletePermissionFromTeam(null,1L);});
+    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.deletePermissionFromTeam(1L,1L);});
   }
 
   @Test
-  void deletePermissionFromTeam_cannotFindPermission(){   //ToDo nefunguje
+  void deletePermissionFromTeam_cannotFindPermission(){
     //AAA
     //Arange
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
     PermissionRepository mockedPermissionRepository = Mockito.mock(PermissionRepository.class);
 
-    PermissionRequestDto permissionRequestDto = new PermissionRequestDto(1l, null);
-
     Team team = new Team("team");
     Permission permission = new Permission("do something");
+    team.addPermission(permission);
 
 
     Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(team));
@@ -574,9 +600,8 @@ class DatabaseTeamServiceTest {
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, mockedPermissionRepository, null);
 
     //Act
-    //StatusResponseDto result = teamService.addPermissionsToTeam(1L,permissionRequestDto);
     //Assert
-    assertThrows(InvalidPermissionNotFoundException.class, () -> {teamService.deletePermissionFromTeam(1L,null);});
+    assertThrows(InvalidPermissionNotFoundException.class, () -> {teamService.deletePermissionFromTeam(1L,1L);});
   }
 
 
@@ -615,11 +640,11 @@ class DatabaseTeamServiceTest {
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, mockedRoleRepository);
     //Act
     //Assert
-    assertThrows(InvalidIdException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
+    assertThrows(InvalidIdException.class, () -> {teamService.addRoleToTeam(-1L,roleRequestDto);});
   }
 
   @Test
-  void addRoleToTeam_cannotFindTeam(){     //ToDo nefunguje!!
+  void addRoleToTeam_cannotFindTeam(){
 
     //AAA
     //Arange
@@ -642,7 +667,7 @@ class DatabaseTeamServiceTest {
   }
 
   @Test
-  void addRoleToTeam_cannotFindRole(){    //ToDo nefunguje!!
+  void addRoleToTeam_cannotFindRole(){
 
     //AAA
     //Arange
@@ -661,7 +686,33 @@ class DatabaseTeamServiceTest {
 
     //Act
     // Assert
-    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
+    assertThrows(InvalidRoleNotFoundException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
+  }
+
+  @Test
+  void addRoleToTeam_RoleAlreadyExists() {
+    //AAA
+    //Arange
+    TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
+    RoleRepository mockedRoleRepository = Mockito.mock(RoleRepository.class);
+
+    RoleRequestDto roleRequestDto = new RoleRequestDto(1l, "something");
+    Team team = new Team("team");
+    Role role = new Role("something");
+    team.addRole(role);
+
+    mockedTeamRepository.save(team);
+
+    Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(team));
+    Mockito.when(mockedRoleRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(role));
+
+
+    TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null,mockedRoleRepository );
+
+    //Act
+    //StatusResponseDto result = teamService.addUserToTeam(1L,userRequestDto);
+    //Assert
+    assertThrows(InvalidRoleExistsException.class,() -> {teamService.addRoleToTeam(1L,roleRequestDto);});
   }
 
 
@@ -671,9 +722,10 @@ class DatabaseTeamServiceTest {
     //Arange
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
     RoleRepository mockedRoleRepository = Mockito.mock(RoleRepository.class);
-    RoleRequestDto roleRequestDto = new RoleRequestDto(1l, null);
+    //RoleRequestDto roleRequestDto = new RoleRequestDto(1l, null);
     Team team = new Team("team");
     Role role = new Role("something");
+    team.addRole(role);
 
 
     Mockito.when(mockedTeamRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(team));
@@ -697,7 +749,7 @@ class DatabaseTeamServiceTest {
     assertThrows(InvalidIdException.class, () -> {teamService.deleteRoleFromTeam(1L,-1L);});
   }
   @Test
-  void deleteRoleFromTeam_cannotFindTeam(){ //ToDo nefunguje!!
+  void deleteRoleFromTeam_cannotFindTeam(){
 
     //AAA
     //Arange
@@ -720,7 +772,7 @@ class DatabaseTeamServiceTest {
   }
 
   @Test
-  void deleteRoleFromTeam_cannotFindRole(){//ToDo nefunguje!!
+  void deleteRoleFromTeam_cannotFindRole(){
 
     //AAA
     //Arange
@@ -739,6 +791,6 @@ class DatabaseTeamServiceTest {
 
     //Act
     // Assert
-    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
+    assertThrows(InvalidRoleNotFoundException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
   }
 }

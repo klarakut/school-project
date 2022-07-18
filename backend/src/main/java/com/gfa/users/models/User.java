@@ -107,14 +107,9 @@ public class User {
   SecureRandom random = new SecureRandom();
   Integer randomSecureValue = random.nextInt();
 
-<<<<<<< HEAD
 
-  public User(CreateUserRequestDto dto, Long expirationTime){
-    //this(dto.username, dto.email, dto.password);
-=======
   public User(CreateUserRequestDto dto, Long expirationTime) {
     this(dto.username, dto.email, dto.password);
->>>>>>> develop
     this.verifiedAt = null;
     this.verificationToken = String.valueOf(randomSecureValue);
     this.verificationTokenExpiresAt = LocalDateTime.now().plusSeconds(expirationTime);

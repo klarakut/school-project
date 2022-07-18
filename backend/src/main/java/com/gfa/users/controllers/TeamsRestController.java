@@ -35,7 +35,7 @@ public class TeamsRestController {
     } catch (InvalidRequestException e) {
       return new ResponseEntity<>(
           new TeamErrorResponseDto("Team is required"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidTeamExsistException e) {
+    } catch (InvalidTeamIsAlreadyExist e) {
       return new ResponseEntity<>(
           new TeamErrorResponseDto("Team is alredy exist"), HttpStatus.BAD_REQUEST);
     }

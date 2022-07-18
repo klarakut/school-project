@@ -1,9 +1,5 @@
 package com.gfa.users.controllers;
 
-<<<<<<< HEAD
-import com.gfa.common.dtos.*;
-import com.gfa.users.Exceptions.*;
-=======
 import com.gfa.common.dtos.EmailRequestDto;
 import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.dtos.ResponseDto;
@@ -18,7 +14,6 @@ import com.gfa.users.dtos.UserResponseDto;
 import com.gfa.users.exceptions.InvalidPasswordException;
 import com.gfa.users.exceptions.PasswordTooShortException;
 import com.gfa.users.exceptions.UnverifiedEmailException;
->>>>>>> develop
 import com.gfa.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,19 +66,13 @@ public class UserRestController {
           new ErrorResponseDto("Invalid password!"), HttpStatus.BAD_REQUEST);
     } catch (InvalidTokenException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Invalid token!"), HttpStatus.BAD_REQUEST);
-<<<<<<< HEAD
-    } catch (InvalidExpiredToken e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Expired token!"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidPasswordLongException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Password must be at leat 8 characters long"), HttpStatus.BAD_REQUEST);
-=======
     } catch (TokenExpiredException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Expired token!"), HttpStatus.BAD_REQUEST);
     } catch (PasswordTooShortException e) {
       return new ResponseEntity<>(
           new ErrorResponseDto("Password must be at least 8 characters long"),
           HttpStatus.BAD_REQUEST);
->>>>>>> develop
+
     }
   }
 }

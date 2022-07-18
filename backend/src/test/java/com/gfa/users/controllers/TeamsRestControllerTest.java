@@ -2,7 +2,10 @@ package com.gfa.users.controllers;
 
 import com.gfa.common.dtos.TeamResponseDto;
 import com.gfa.users.models.Team;
+import com.gfa.users.repositories.PermissionRepository;
+import com.gfa.users.repositories.RoleRepository;
 import com.gfa.users.repositories.TeamRepository;
+import com.gfa.users.repositories.UserRepository;
 import com.gfa.users.services.TeamService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @SpringBootTest
@@ -27,62 +31,32 @@ class TeamsRestControllerTest {
 
   @Autowired private MockMvc mvc;
 
-  private  TeamService teamService;
+  @Autowired
   private TeamRepository teamRepository;
+  private RoleRepository roleRepository;
+  private PermissionRepository permissionRepository;
+  private UserRepository userRepository;
 
-/*
   @Test
-  void index() throws Exception {
-    List<TeamResponseDto> teams = Arrays.asList(new TeamResponseDto(1l,"Gregorovic"));
-    Mockito.when(teamService.index()).thenReturn(teams);
+  void get_index_shows_list_of_teams() throws Exception {
+    //AAA
+    //Arange
+    assertEquals(0,teamRepository.count());
+    teamRepository.save(new Team("Gregor"));
+    teamRepository.save(new Team("Yeagor"));
+    assertEquals(2,teamRepository.count());
 
-    mvc.perform(MockMvcRequestBuilders.get("/teams"))
-    .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].id", is(1l)))      /////??????
-            .andExpect(jsonPath("$[0].team", is("Gregorovic")));
+    mvc.perform(MockMvcRequestBuilders.get("/teams")).andExpect(status().is2xxSuccessful());
   }
 
   @Test
-  void store() throws Exception {
-
-    // create a post request to /api/foods
-    // check the response is 200 (status ok)
-    mvc.perform(MockMvcRequestBuilders.post("/teams")
-                    .content("{\"name\":\"Gregorovic\"}")
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].id", is(1l)))
-            .andExpect(jsonPath("$[0].team", is("Gregorovic")));
-  }
+  void store() {}
 
   @Test
-  void show() throws Exception {
-    Team team = new Team("Gregorovic");
-    teamRepository.save(team);
-
-    mvc.perform(MockMvcRequestBuilders.post("/teams/{id}")
-            .content("{\"id\":\"1\"}")
-            .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].id", is(1)))
-            .andExpect(jsonPath("$[0].team", is("Gregorovic")));
-  }
+  void show() {}
 
   @Test
-  void update() throws Exception {
-    Team team = new Team("Gregorovic");
-    teamRepository.save(team);
-
-    mvc.perform(MockMvcRequestBuilders.patch("/teams/{id}")
-                    .content("{\"name\":\"Janukovic\"}")
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].id", is(1)))
-            .andExpect(jsonPath("$[0].team", is("Janukovic")));
-  }
+  void update() {}
 
   @Test
   void destroy() {}
@@ -105,5 +79,4 @@ class TeamsRestControllerTest {
   @Test
   void deleteRoleFromTeam() {}
 
- */
 }

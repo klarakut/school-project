@@ -1,14 +1,10 @@
 package com.gfa.users.models;
 
 import java.util.HashSet;
-<<<<<<< HEAD
-
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.jetbrains.annotations.NotNull;
 
-=======
->>>>>>> develop
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -83,6 +79,17 @@ public class Team {
     this.name = name;
   }
 
+  public Set<User> getUsers() {
+    return users;
+  }
+
+  public Set<Permission> getPermissions() {
+    return permissions;
+  }
+
+  public Set<Role> getRoles() {
+    return roles;
+  }
 
   @NotNull
   public Long getId() {
@@ -90,37 +97,11 @@ public class Team {
   }
 
   public boolean addUser(User user) {
-<<<<<<< HEAD
     users.add(user);
     return true;
   }
 
-  public boolean removeUser(User user) {
-    users.remove(user);
-    return true;
-  }
 
-  public boolean addPermision(Permission permission) {
-    permissions.add(permission);
-    return true;
-  }
-
-  public boolean removePermission(Permission permission) {
-    permissions.remove(permission);
-    return true;
-  }
-
-  public boolean addRole(Role role) {
-    roles.add(role);
-    return true;
-  }
-
-  public boolean removeRole(Role role) {
-    roles.remove(role);
-    return true;
-=======
-    return users.add(user);
-  }
 
   public boolean removeUser(User user) {
     return users.remove(user);
@@ -136,7 +117,6 @@ public class Team {
 
   public boolean addRole(Role role) {
     return roles.add(role);
->>>>>>> develop
   }
 
   public boolean removeRole(Role role) {
