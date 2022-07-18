@@ -1,144 +1,73 @@
 package com.gfa.users.services;
 
 import com.gfa.common.dtos.EmailRequestDto;
+import com.gfa.common.dtos.StatusResponseDto;
+import com.gfa.common.exceptions.InvalidEmailException;
+import com.gfa.common.exceptions.UnknownErrorException;
+import com.gfa.users.exceptions.AlreadyVerifiedException;
 import com.gfa.users.models.User;
-import com.gfa.users.repository.UserRepository;
+import com.gfa.users.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ResendVerificationEmailTest {
 
     @Test
-    void resend_Verification_Email_OK() {
-        // AAA
-        // Arrange
+    void can_resend_the_verification_email() {
         UserRepository mockedUserRepository = Mockito.mock(UserRepository.class);
-        UserService mockedUserService = Mockito.mock(UserService.class);
-        EmailValidator mockedEmailValidator = Mockito.mock(EmailValidator.class);
-        EmailUtils emailUtils = Mockito.mock(EmailUtils.class);
+        UserService userService = new UserServiceImpl(mockedUserRepository,null);
 
         EmailRequestDto emailDto = new EmailRequestDto("alex@gmail.com");
-        User user =
-                new User(
-                        1L,
-                        "alex",
-                        emailDto.email,
-                        "abc", null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null);
+        User user = Mockito.mock(User.class);
 
-        Mockito.when(mockedEmailValidator.isValid(Mockito.anyString())).thenReturn(true);
-        Mockito.when(mockedUserRepository.findUserByEmail(Mockito.anyString())).thenReturn(user);
-        Mockito.when(mockedUserService.resendVerificationEmail(emailDto)).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        Mockito.when(mockedUserRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
 
-        UserService userService = new UserServiceImpl(mockedUserRepository,mockedEmailValidator,emailUtils);
-
-        // Act
-        ResponseEntity result = userService.resendVerificationEmail(emailDto);
-
-        // Assert
-        assertEquals(HttpStatus.OK,result.getStatusCode());
+        StatusResponseDto result = userService.resendVerificationEmail(emailDto);
+        assertEquals("ok",result.status);
     }
 
     @Test
-    void resend_verification_email_to_already_verified_user() {
-        // AAA
-        // Arrange
+    void resend_to_an_already_verified_user_throw_an_exception() {
         UserRepository mockedUserRepository = Mockito.mock(UserRepository.class);
-        UserService mockedUserService = Mockito.mock(UserService.class);
-        EmailValidator mockedEmailValidator = Mockito.mock(EmailValidator.class);
-        EmailUtils emailUtils = Mockito.mock(EmailUtils.class);
+        UserService userService = new UserServiceImpl(mockedUserRepository,null);
 
-        Date date = new Date(1000L);
         EmailRequestDto emailDto = new EmailRequestDto("alex@gmail.com");
-        User user =
-                new User(
-                        1L,
-                        "alex",
-                        emailDto.email,
-                        "abc", date,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null);
+        User user = Mockito.mock(User.class);
+        LocalDateTime time = LocalDateTime.now();
 
-        Mockito.when(mockedEmailValidator.isValid(Mockito.anyString())).thenReturn(true);
-        Mockito.when(mockedUserRepository.findUserByEmail(Mockito.anyString())).thenReturn(user);
-        Mockito.when(mockedUserService.resendVerificationEmail(emailDto)).thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+        Mockito.when(mockedUserRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
+        Mockito.when(user.getVerifiedAt()).thenReturn(time);
 
-        UserService userService = new UserServiceImpl(mockedUserRepository,mockedEmailValidator,emailUtils);
 
-        // Act
-        ResponseEntity result = userService.resendVerificationEmail(emailDto);
-
-        // Assert
-        assertEquals(HttpStatus.BAD_REQUEST,result.getStatusCode());
+        assertThrows(AlreadyVerifiedException.class,()-> userService.resendVerificationEmail(emailDto));
     }
 
     @Test
-    void resend_verification_email_invalid_email() {
-        // AAA
-        // Arrange
-        UserRepository fakeRepo = Mockito.mock(UserRepository.class);
-        UserService fakeService = Mockito.mock(UserService.class);
-        EmailValidator mockedEmailValidator = Mockito.mock(EmailValidator.class);
-        EmailUtils emailUtils = Mockito.mock(EmailUtils.class);
+    void resend_with_an_invalid_email_throw_an_exception() {
+        UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
+        UserService userService = new UserServiceImpl(mockedUserRepo,null);
 
-        Date date = new Date(1000L);
         EmailRequestDto emailDto = new EmailRequestDto("alexgmail.com");
-        User user = new User(
-                        1L,
-                        "alex",
-                        emailDto.email,
-                        "abc", null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null);
 
-        Mockito.when(mockedEmailValidator.isValid(Mockito.anyString())).thenReturn(false);
-        Mockito.when(fakeService.resendVerificationEmail(emailDto)).thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
-
-        UserService userService = new UserServiceImpl(fakeRepo,mockedEmailValidator,emailUtils);
-
-        // Act
-        ResponseEntity result = userService.resendVerificationEmail(emailDto);
-
-        // Assert
-        assertEquals(HttpStatus.BAD_REQUEST,result.getStatusCode());
+        assertThrows(InvalidEmailException.class,()-> userService.resendVerificationEmail(emailDto));
     }
 
     @Test
-    void resend_verification_email_non_existent_user() {
-            //supposed to get OK status for security reasons
-        // AAA
-        // Arrange
+    void resend_to_an_non_existent_user_fails_silenty() {
         UserRepository mockedUserRepository = Mockito.mock(UserRepository.class);
-        UserService mockedUserService = Mockito.mock(UserService.class);
-        EmailValidator mockedEmailValidator = Mockito.mock(EmailValidator.class);
-        EmailUtils emailUtils = Mockito.mock(EmailUtils.class);
-
+        UserService userService = new UserServiceImpl(mockedUserRepository,null);
         EmailRequestDto emailDto = new EmailRequestDto("alex@gmail.com");
-        Mockito.when(mockedEmailValidator.isValid(Mockito.anyString())).thenReturn(true);
-        Mockito.when(mockedUserService.resendVerificationEmail(emailDto)).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        User user = Mockito.mock(User.class);
 
-        UserService userService = new UserServiceImpl(mockedUserRepository,mockedEmailValidator,emailUtils);
+        Mockito.when(mockedUserRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
 
-        // Act
-        ResponseEntity result = userService.resendVerificationEmail(emailDto);
-
-        // Assert
-        assertEquals(HttpStatus.OK,result.getStatusCode());
+        StatusResponseDto result = userService.resendVerificationEmail(emailDto);
+        assertEquals("ok",result.status);
     }
 }
