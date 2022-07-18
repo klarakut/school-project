@@ -1,5 +1,6 @@
 package com.gfa.common.dtos;
 
+import com.gfa.users.dtos.CreateUserRequestDto;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

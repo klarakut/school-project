@@ -1,20 +1,24 @@
 package com.gfa.users.services;
 
-import com.gfa.common.dtos.CreateUserRequestDto;
-import com.gfa.common.dtos.ResponseDto;
-import com.gfa.common.dtos.UserResponseDto;
-import com.gfa.users.models.User;
-import org.springframework.http.ResponseEntity;
-
-import java.util.Optional;
+import com.gfa.common.dtos.EmailRequestDto;
+import com.gfa.common.dtos.StatusResponseDto;
+import com.gfa.users.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.PasswordResetRequestDto;
+import com.gfa.users.dtos.UserResponseDto;
+import java.util.List;
 
 public interface UserService {
 
-        ResponseEntity<ResponseDto> index();
-        ResponseEntity<ResponseDto> show(Long id);
-        //ResponseEntity<? extends ResponseDto> store(CreateUserRequestDto dto);
-        UserResponseDto store(CreateUserRequestDto dto);
+  List<UserResponseDto> index();
 
-        Optional<User> findByUsername(String username);
+  UserResponseDto show(Long id);
+
+  UserResponseDto store(CreateUserRequestDto dto);
+
+  StatusResponseDto resetPasswords(EmailRequestDto emailDto);
+
+  StatusResponseDto resetPassword(String token, PasswordResetRequestDto resetPassword);
+
+  Optional<User> findByUsername(String username);
 
 }
