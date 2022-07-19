@@ -7,8 +7,7 @@ import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
 import java.util.List;
 
-public interface UserService { // extends UserDetailsService {
-
+public interface UserService {
   List<UserResponseDto> index();
 
   UserResponseDto show(Long id);
@@ -18,4 +17,6 @@ public interface UserService { // extends UserDetailsService {
   StatusResponseDto resetPasswords(EmailRequestDto emailDto);
 
   StatusResponseDto resetPassword(String token, PasswordResetRequestDto resetPassword);
+
+  StatusResponseDto resendVerificationEmail(EmailRequestDto emailRequestDto);
 }
