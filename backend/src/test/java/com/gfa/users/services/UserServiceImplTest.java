@@ -40,7 +40,7 @@ class UserServiceImplTest {
     Mockito.when(userRepository.findByEmail(Mockito.anyString()))
         .thenThrow(new UserNotFoundException());
 
-    UserService userService = new UserServiceImpl(userRepository, null, null ,null);
+    UserService userService = new UserServiceImpl(userRepository, null, null,null);
     assertThrows(
         UserNotFoundException.class,
         () -> userService.resetPasswords(new EmailRequestDto("milarda@milarda.sk")));
@@ -89,7 +89,7 @@ class UserServiceImplTest {
     Mockito.when(userRepository.findByForgottenPasswordToken(Mockito.anyString()))
         .thenReturn(Optional.of(user));
 
-    UserService userService = new UserServiceImpl(userRepository, null,null ,null);
+    UserService userService = new UserServiceImpl(userRepository, null,null,null);
     assertThrows(
         InvalidTokenException.class,
         () -> userService.resetPassword("22", new PasswordResetRequestDto("DVAVVVAAA")));
