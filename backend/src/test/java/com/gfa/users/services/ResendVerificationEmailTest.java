@@ -3,7 +3,6 @@ package com.gfa.users.services;
 import com.gfa.common.dtos.EmailRequestDto;
 import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.common.exceptions.InvalidEmailException;
-import com.gfa.common.exceptions.UnknownErrorException;
 import com.gfa.users.exceptions.AlreadyVerifiedException;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
