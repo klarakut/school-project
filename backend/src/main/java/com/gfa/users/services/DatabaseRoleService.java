@@ -6,6 +6,7 @@ import com.gfa.users.models.Permission;
 import com.gfa.users.models.Role;
 import com.gfa.users.repositories.PermissionRepository;
 import com.gfa.users.repositories.RoleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class DatabaseRoleService implements RoleService{
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
 
+    @Autowired
     public DatabaseRoleService(RoleRepository roleRepository, PermissionRepository permissionRepository) {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
