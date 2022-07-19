@@ -118,7 +118,7 @@ public class DatabaseRoleService implements RoleService{
         Permission permission = permissionRepository.findById(permissionRequestDto.id).orElseThrow(() -> new PermissionIdNotFoundException());
         Role role = roleRepository.findById(id).orElseThrow(() -> new IdNotFoundException());
 
-        Boolean hasPermission = role.can(permission);
+        boolean hasPermission = role.can(permission);
         if(hasPermission){
             throw new InvalidInputException();
         }
@@ -142,7 +142,7 @@ public class DatabaseRoleService implements RoleService{
         Role role = roleRepository.findById(id).orElseThrow(() -> new IdNotFoundException());
         Permission permission = permissionRepository.findById(permissionId).orElseThrow(() -> new PermissionIdNotFoundException());
 
-        Boolean hasPermission = role.can(permission);
+        boolean hasPermission = role.can(permission);
         if(!hasPermission){
             throw new InvalidInputException();
         }
