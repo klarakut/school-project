@@ -32,11 +32,13 @@ class RoleRestControllerTest {
     @Autowired
     private MockMvc mvc;
 
-   /* @MockBean
+    @MockBean
     private RoleRestController roleRestController;
-    @MockBean
+    /*@MockBean
     private PermissionRepository permissionRepository;*/
+
     @MockBean
+    //@Autowired
     private RoleRepository roleRepository;
     /*@MockBean
     private RoleService roleService;*/
@@ -54,13 +56,14 @@ class RoleRestControllerTest {
     @Test
     void index() throws Exception {
 
-        assertEquals(0,roleRepository.count());
+        //assertEquals(0,roleRepository.count());
         roleRepository.save(new Role("role #1"));
         roleRepository.save(new Role("role #1"));
         assertEquals(2,roleRepository.count());
 
+
         mvc.perform(MockMvcRequestBuilders.get("/roles"))
-                .andExpect(status().is(500));
+                .andExpect(status().is(201));
 
     }
 
