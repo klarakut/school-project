@@ -1,10 +1,7 @@
 package com.gfa.users.models;
 
 import java.util.HashSet;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,12 +12,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import org.jetbrains.annotations.NotNull;
 
 @Entity
 @Table(name = "teams")
-@SQLDelete(sql = "update soft_delete_jpa_example set deleted = 0 where id =?")
-@Where(clause = "deleted = 1")
+// @SQLDelete(sql = "update soft_delete_jpa_example set deleted = 0 where id =?")
+// @Where(clause = "deleted = 1")
 public class Team {
 
   @Id
@@ -33,7 +29,7 @@ public class Team {
   @NotNull
   private String name;
 
-  private boolean deleted = Boolean.FALSE;
+  // private boolean deleted = Boolean.FALSE;
 
   @ManyToMany
   @JoinTable(
@@ -63,13 +59,13 @@ public class Team {
     this.name = name;
   }
 
-  public boolean isDeleted() {
-    return deleted;
-  }
+  // public boolean isDeleted() {
+  // return deleted;
+  // }
 
-  public void setDeleted(boolean deleted) {
-    this.deleted = deleted;
-  }
+  // public void setDeleted(boolean deleted) {
+  // this.deleted = deleted;
+  // }
 
   public String getName() {
     return this.name;
@@ -79,18 +75,6 @@ public class Team {
     this.name = name;
   }
 
-  public Set<User> getUsers() {
-    return users;
-  }
-
-  public Set<Permission> getPermissions() {
-    return permissions;
-  }
-
-  public Set<Role> getRoles() {
-    return roles;
-  }
-
   @NotNull
   public Long getId() {
     return id;
@@ -98,10 +82,9 @@ public class Team {
 
   public boolean addUser(User user) {
     users.add(user);
+
     return true;
   }
-
-
 
   public boolean removeUser(User user) {
     return users.remove(user);

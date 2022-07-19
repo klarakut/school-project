@@ -1,8 +1,8 @@
 package com.gfa.users.models;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class TeamTest {
 
@@ -12,4 +12,13 @@ class TeamTest {
     Team team2 = new Team("Gregor Gregorovic");
     assertEquals("Gregor Gregorovic", team.getName());
   }
+  @Test
+  void can_add_the_same_user_only_once(){
+    Team team = new Team("team");
+    assertTrue(team.addUser(new User("username", "email", "password")));
+    assertFalse(team.addUser(new User("username", "email", "password")));
+  }
+
+
+
 }

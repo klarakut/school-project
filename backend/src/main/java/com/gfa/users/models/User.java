@@ -107,7 +107,6 @@ public class User {
   SecureRandom random = new SecureRandom();
   Integer randomSecureValue = random.nextInt();
 
-
   public User(CreateUserRequestDto dto, Long expirationTime) {
     this(dto.username, dto.email, dto.password);
     this.verifiedAt = null;
@@ -196,6 +195,10 @@ public class User {
 
   public boolean removeRole(Role role) {
     return roles.remove(role);
+  }
+
+  public int hashCode() {
+    return username.hashCode();
   }
 
   public boolean can(Permission permission) {

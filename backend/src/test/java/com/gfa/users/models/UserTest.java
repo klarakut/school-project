@@ -89,10 +89,13 @@ class UserTest {
     assertNotEquals("token", user.getVerificationToken());
   }
 
+
   @Test
   void get_verification_token_expires_at_returns_the_correct_date_and_time() {
     assertEquals(forgottenPasswordTokenExpiresAt, user.getVerificationTokenExpiresAt());
   }
+
+
 
   @Test
   void get_forgotten_password_token_returns_the_correct_token() {
@@ -117,4 +120,6 @@ class UserTest {
   void get_created_at_returns_the_correct_date_and_time() {
     assertEquals(verifiedAt, user.getCreatedAt());
   }
+
+
 }

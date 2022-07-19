@@ -1,32 +1,21 @@
 package com.gfa.users.controllers;
 
-import com.gfa.common.dtos.TeamResponseDto;
-import com.gfa.users.models.Team;
 import com.gfa.users.repositories.PermissionRepository;
 import com.gfa.users.repositories.RoleRepository;
 import com.gfa.users.repositories.TeamRepository;
 import com.gfa.users.repositories.UserRepository;
-import com.gfa.users.services.TeamService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @SpringBootTest
-@AutoConfigureMockMvc
-@WebMvcTest(TeamsRestController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class TeamsRestControllerTest {
 
   @Autowired private MockMvc mvc;
@@ -38,23 +27,18 @@ class TeamsRestControllerTest {
   private UserRepository userRepository;
 
   @Test
-  void get_index_shows_list_of_teams() throws Exception {
-    //AAA
-    //Arange
-    assertEquals(0,teamRepository.count());
-    teamRepository.save(new Team("Gregor"));
-    teamRepository.save(new Team("Yeagor"));
-    assertEquals(2,teamRepository.count());
+  void get_index_shows_list_of_teams() {
 
-    mvc.perform(MockMvcRequestBuilders.get("/teams")).andExpect(status().is2xxSuccessful());
   }
 
-  @Test
+  @Test  void get_index_shows_list_of_team() {
+  }
+
   void store() {}
 
   @Test
-  void show() {}
-
+  void show(){
+  }
   @Test
   void update() {}
 

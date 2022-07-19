@@ -3,16 +3,17 @@ package com.gfa.users.controllers;
 import com.gfa.common.dtos.EmailRequestDto;
 import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.dtos.ResponseDto;
-import com.gfa.common.dtos.StatusResponseDto;
+import com.gfa.users.dtos.StatusResponseDto;
 import com.gfa.common.exceptions.InvalidEmailException;
 import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.common.exceptions.UnknownErrorException;
+import com.gfa.users.exceptions.InvalidPasswordException;
+import com.gfa.users.exceptions.UnverifiedEmailException;
 import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
 import com.gfa.users.exceptions.PasswordTooShortException;
-import com.gfa.users.exceptions.UnverifiedEmailException;
 import com.gfa.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,7 +72,6 @@ public class UserRestController {
       return new ResponseEntity<>(
           new ErrorResponseDto("Password must be at least 8 characters long"),
           HttpStatus.BAD_REQUEST);
-
     }
   }
 }
