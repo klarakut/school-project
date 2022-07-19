@@ -1,14 +1,13 @@
 package com.gfa.users.controllers;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.gfa.users.dtos.UserResponseDto;
 import com.gfa.users.models.User;
-import com.gfa.users.repositories.UserRepository;
 import com.gfa.users.services.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(
         value = UserRestController.class,
@@ -29,6 +30,14 @@ class UserRestControllerTest {
 
   @MockBean UserService userService;
   @MockBean UserDetailsService userDetailsService;
+
+  @Autowired
+  private WebApplicationContext webApplicationContext;
+
+  @BeforeEach
+  public void setup() {
+    mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+  }
 
   @Test
   void can_register() throws Exception {
