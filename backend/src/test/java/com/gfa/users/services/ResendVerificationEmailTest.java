@@ -58,7 +58,7 @@ class ResendVerificationEmailTest {
     }
 
     @Test
-    void resend_to_an_non_existent_user_fails_silenty() {
+    void resend_to_an_non_existent_user_fails_silently() {
         UserRepository mockedUserRepository = Mockito.mock(UserRepository.class);
         UserService userService = new UserServiceImpl(mockedUserRepository,null);
         EmailRequestDto emailDto = new EmailRequestDto("alex@gmail.com");
