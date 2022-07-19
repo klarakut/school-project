@@ -42,8 +42,8 @@ class ResendVerificationEmailTest {
 
     Mockito.when(mockedUserRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
     Mockito.when(user.getVerifiedAt()).thenReturn(time);
-    
-    assertThrows(AlreadyVerifiedException.class,()-> userService.resendVerificationEmail(emailDto));
+
+    assertThrows(AlreadyVerifiedException.class,() -> userService.resendVerificationEmail(emailDto));
   }
 
   @Test
