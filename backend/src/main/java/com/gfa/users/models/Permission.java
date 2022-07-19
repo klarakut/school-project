@@ -1,12 +1,12 @@
 package com.gfa.users.models;
 
+import org.jetbrains.annotations.NotNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.jetbrains.annotations.NotNull;
 
 @Entity
 @Table(name = "permissions")
@@ -37,8 +37,8 @@ public class Permission {
     return ability;
   }
 
-  public boolean can(Permission p) {
-    return can(p.getAbility());
+  public boolean can(Permission permission) {
+    return this.can(permission.getAbility());
   }
 
   public boolean can(String ability) {

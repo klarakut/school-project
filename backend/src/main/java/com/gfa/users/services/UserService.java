@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-
   List<UserResponseDto> index();
 
   UserResponseDto show(Long id);
@@ -21,6 +20,8 @@ public interface UserService {
   StatusResponseDto resetPasswords(EmailRequestDto emailDto);
 
   StatusResponseDto resetPassword(String token, PasswordResetRequestDto resetPassword);
+
+  StatusResponseDto resendVerificationEmail(EmailRequestDto emailRequestDto);
 
   Optional<User> findByUsername(String username);
 }

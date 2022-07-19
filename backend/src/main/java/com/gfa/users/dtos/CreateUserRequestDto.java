@@ -3,11 +3,10 @@ package com.gfa.users.dtos;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class CreateUserRequestDto {
-
   public final String username;
   public final String email;
   public final String password;
-  public Boolean mfa;
+  public boolean mfa;
 
   @JsonCreator
   public CreateUserRequestDto(String username, String email, String password) {
