@@ -4,35 +4,42 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gfa.common.dtos.RoleCreateRequestDto;
 import com.gfa.users.models.Role;
 import com.gfa.users.repositories.RoleRepository;
+import com.gfa.users.services.RoleService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.List;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/*@WebMvcTest(
+@WebMvcTest(
         value = RoleRestController.class,
-        excludeAutoConfiguration = SecurityAutoConfiguration.class)*/
-
-//@ContextConfiguration
+        excludeAutoConfiguration = SecurityAutoConfiguration.class)
+@ContextConfiguration
 
 //@WebMvcTest(RoleRestController.class)
-@SpringBootTest(classes = RoleRestController.class)
+//@SpringBootTest(classes = RoleRestController.class)
 @AutoConfigureMockMvc
 class RoleRestControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
+    //@MockBean
+    @Autowired
     private RoleRestController roleRestController;
     /*@MockBean
     private PermissionRepository permissionRepository;*/
@@ -40,8 +47,9 @@ class RoleRestControllerTest {
     @MockBean
     //@Autowired
     private RoleRepository roleRepository;
-    /*@MockBean
-    private RoleService roleService;*/
+    @MockBean
+    //@Autowired
+    private RoleService roleService;
 
     /*@Autowired
     private WebApplicationContext webApplicationContext;*/
@@ -59,18 +67,21 @@ class RoleRestControllerTest {
         //assertEquals(0,roleRepository.count());
         roleRepository.save(new Role("role #1"));
         roleRepository.save(new Role("role #1"));
+        //List<Role> roles = roleRepository.findAll();
+        //Mockito.when(roleRepository.findAll()).thenReturn(roles);
         assertEquals(2,roleRepository.count());
 
 
+
         mvc.perform(MockMvcRequestBuilders.get("/roles"))
-                .andExpect(status().is(201));
+                .andExpect(status().is(200));
 
     }
 
 
     @Test
     void store() throws Exception{
-        RoleCreateRequestDto dto = new RoleCreateRequestDto("");
+        RoleCreateRequestDto dto = new RoleCreateRequestDto("hr");
         //RoleResponseDto response = new RoleResponseDto(1l,"x");
         //Mockito.when(roleService.store(Mockito.any())).thenThrow(EmptyBodyException.class);
 
