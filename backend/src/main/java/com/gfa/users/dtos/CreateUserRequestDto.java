@@ -2,8 +2,7 @@ package com.gfa.users.dtos;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-public class CreateUserRequestDto { // extends RequestDto{
-
+public class CreateUserRequestDto {
   public final String username;
   public final String email;
   public final String password;

@@ -92,6 +92,7 @@ public class User {
       @Nullable String forgottenPasswordToken,
       @Nullable LocalDateTime forgottenPasswordTokenExpiresAt,
       @NotNull LocalDateTime createdAt) {
+    this(); // I don't know why, but the add, remove tests don't work without this
     this.id = id;
     this.username = username;
     this.email = email;
@@ -169,6 +170,7 @@ public class User {
     return forgottenPasswordTokenExpiresAt;
   }
 
+  @NotNull
   public LocalDateTime getCreatedAt() {
     return createdAt;
   }
@@ -202,6 +204,11 @@ public class User {
   }
 
   public boolean can(String ability) {
+
+    if (this.getUsername().equals("root")) {
+      return true;
+    } // root permissions
+
     for (Permission permission : permissions) {
       if (permission.can(ability)) {
         return true;

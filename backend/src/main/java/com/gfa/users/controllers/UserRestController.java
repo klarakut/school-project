@@ -11,6 +11,7 @@ import com.gfa.common.exceptions.UnknownErrorException;
 import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
+import com.gfa.users.exceptions.AlreadyVerifiedException;
 import com.gfa.users.exceptions.InvalidPasswordException;
 import com.gfa.users.exceptions.PasswordTooShortException;
 import com.gfa.users.exceptions.UnverifiedEmailException;
@@ -36,6 +37,20 @@ public class UserRestController {
   @PostMapping("/register")
   public ResponseEntity<UserResponseDto> store(@RequestBody CreateUserRequestDto dto) {
     return new ResponseEntity<>(userService.store(dto), HttpStatus.CREATED);
+  }
+
+  @PostMapping("/email/verify/resend")
+  public ResponseEntity<? extends ResponseDto> resendVerificationEmail(@RequestBody EmailRequestDto emailRequestDto) {
+    try {
+      StatusResponseDto dtoStatus = userService.resendVerificationEmail(emailRequestDto);
+      return new ResponseEntity<>(dtoStatus, HttpStatus.OK);
+    } catch (InvalidEmailException e) {
+      return new ResponseEntity<>(new ErrorResponseDto("Invalid email"),HttpStatus.BAD_REQUEST);
+    } catch (AlreadyVerifiedException e) {
+      return new ResponseEntity<>(new ErrorResponseDto("Email already verified!"),HttpStatus.BAD_REQUEST);
+    } finally {
+      return new ResponseEntity<>(new ErrorResponseDto("Unknown error"),HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @PostMapping("/reset-password")

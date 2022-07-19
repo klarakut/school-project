@@ -1,16 +1,26 @@
 package com.gfa.users.models;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.Month;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+
 class UserTest {
 
+  Team team;
+  Role role;
+  Permission permission;
+  Permission per;
+  Permission mission;
   User user;
   LocalDateTime verifiedAt;
   LocalDateTime verificationTokenExpiresAt;
@@ -19,12 +29,15 @@ class UserTest {
 
   @BeforeEach
   public void beforeEach() {
-
-    verifiedAt = LocalDateTime.now();
-    verificationTokenExpiresAt = LocalDateTime.now();
-    forgottenPasswordTokenExpiresAt = LocalDateTime.now();
+    team = new Team("team");
+    role = new Role("role");
+    permission = new Permission("permission");
+    per = new Permission("per");
+    mission = new Permission("mission");
+    verifiedAt = LocalDateTime.of(2021, Month.APRIL, 24, 14, 30);
+    verificationTokenExpiresAt = LocalDateTime.of(2021, Month.APRIL, 24, 14, 30);
+    forgottenPasswordTokenExpiresAt = LocalDateTime.of(2021, Month.APRIL, 24, 14, 30);
     createdAt = LocalDateTime.now();
-
     user =
         new User(
             1L,
@@ -115,6 +128,95 @@ class UserTest {
 
   @Test
   void get_created_at_returns_the_correct_date_and_time() {
-    assertEquals(verifiedAt, user.getCreatedAt());
+    assertEquals(createdAt, user.getCreatedAt());
+  }
+
+  @Test
+  void can_is_true_for_added_permission() {
+    assertFalse(user.can(permission));
+    assertTrue(user.addPermission(permission));
+    assertTrue(user.can(permission));
+  }
+
+  @Test
+  void can_is_false_for_add_same_permission_twice() {
+    user.addPermission(permission);
+    assertFalse(user.addPermission(permission));
+  }
+
+  @Test
+  void can_remove_added_permission() {
+    user.addPermission(permission);
+    assertTrue(user.removePermission(permission));
+    assertFalse(user.can(permission));
+    assertFalse(user.removePermission(permission));
+  }
+
+  @Test
+  void add_role_is_true() {
+    assertTrue(user.addRole(role));
+  }
+
+  @Test
+  void add_role_is_false_for_add_same_role_twice() {
+    assertTrue(user.addRole(role));
+    assertFalse(user.addRole(role));
+  }
+
+  @Test
+  void can_remove_added_role() {
+    assertFalse(user.removeRole(role));
+    assertTrue(user.addRole(role));
+    assertTrue(user.removeRole(role));
+    assertFalse(user.removeRole(role));
+  }
+
+  @Test
+  void add_team_is_true() {
+    assertTrue(user.addTeam(team));
+  }
+
+  @Test
+  void add_team_is_false_for_add_same_team_twice() {
+    assertTrue(user.addTeam(team));
+    assertFalse(user.addTeam(team));
+  }
+
+  @Test
+  void can_remove_added_team() {
+    assertFalse(user.removeTeam(team));
+    assertTrue(user.addTeam(team));
+    assertTrue(user.removeTeam(team));
+    assertFalse(user.removeTeam(team));
+  }
+
+  @Test
+  void can_is_true_through_team_role_user_classes_with_permission() {
+    user.addRole(role);
+    user.addTeam(team);
+    assertFalse(user.can(permission));
+    assertTrue(user.addPermission(permission));
+    assertTrue(user.can(permission));
+    assertFalse(user.can(per));
+    role.addPermission(per);
+    assertTrue(user.can(per));
+    assertFalse(user.can(mission));
+    team.addPermission(mission);
+    assertTrue(user.can(mission));
+  }
+
+  @Test
+  void can_is_true_through_team_role_user_classes_with_string() {
+    user.addRole(role);
+    user.addTeam(team);
+    assertFalse(user.can("permission"));
+    assertTrue(user.addPermission(permission));
+    assertTrue(user.can("permission"));
+    assertFalse(user.can("per"));
+    role.addPermission(per);
+    assertTrue(user.can("per"));
+    assertFalse(user.can("mission"));
+    team.addPermission(mission);
+    assertTrue(user.can("mission"));
   }
 }
