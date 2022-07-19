@@ -3,7 +3,10 @@ package com.gfa.users.models;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 class TeamTest {
 
@@ -85,7 +88,7 @@ class TeamTest {
   }
 
   @Test
-  void can_is_true_through_TEAM_ROLE_classes_with_string() {
+  void can_is_true_through_team_role_classes_with_string() {
     assertFalse(team.can("permission"));
     team.addPermission(permission);
     assertTrue(team.can("permission"));
@@ -97,7 +100,7 @@ class TeamTest {
   }
 
   @Test
-  void can_is_true_through_TEAM_ROLE_classes_with_permission() {
+  void can_is_true_through_team_role_classes_with_permission() {
     assertFalse(team.can(permission));
     team.addPermission(permission);
     assertTrue(team.can(permission));

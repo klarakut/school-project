@@ -6,7 +6,13 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.time.Month;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 class UserTest {
 
@@ -185,7 +191,7 @@ class UserTest {
   }
 
   @Test
-  void can_is_true_through_TEAM_ROLE_USER_classes_with_permission() {
+  void can_is_true_through_team_role_user_classes_with_permission() {
     user.addRole(role);
     user.addTeam(team);
     assertFalse(user.can(permission));
@@ -200,7 +206,7 @@ class UserTest {
   }
 
   @Test
-  void can_is_true_through_TEAM_ROLE_USER_classes_with_string() {
+  void can_is_true_through_team_role_user_classes_with_string() {
     user.addRole(role);
     user.addTeam(team);
     assertFalse(user.can("permission"));
