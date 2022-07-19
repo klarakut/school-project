@@ -17,7 +17,7 @@ class TeamTest {
     permission = new Permission("permission");
     role = new Role("role");
     team = new Team("team");
-    user = new User("user","xx","x");
+    user = new User("user", "xx", "x");
   }
 
   @Test
@@ -58,7 +58,7 @@ class TeamTest {
   }
 
   @Test
-  void can_remove_added_user(){
+  void can_remove_added_user() {
     assertFalse(team.removeUser(user));
     assertTrue(team.addUser(user));
     assertTrue(team.removeUser(user));

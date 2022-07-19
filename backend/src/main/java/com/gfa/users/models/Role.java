@@ -1,10 +1,16 @@
 package com.gfa.users.models;
 
-import java.util.HashSet;
-import javax.persistence.*;
-
 import org.jetbrains.annotations.NotNull;
-
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity

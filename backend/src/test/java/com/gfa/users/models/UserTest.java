@@ -1,13 +1,12 @@
 package com.gfa.users.models;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.time.LocalDateTime;
 import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 class UserTest {
 
@@ -29,9 +28,9 @@ class UserTest {
     permission = new Permission("permission");
     per = new Permission("per");
     mission = new Permission("mission");
-    verifiedAt = LocalDateTime.of(2021, Month.APRIL, 24, 14,30);
-    verificationTokenExpiresAt = LocalDateTime.of(2021, Month.APRIL, 24, 14,30);
-    forgottenPasswordTokenExpiresAt = LocalDateTime.of(2021, Month.APRIL, 24, 14,30);
+    verifiedAt = LocalDateTime.of(2021, Month.APRIL, 24, 14, 30);
+    verificationTokenExpiresAt = LocalDateTime.of(2021, Month.APRIL, 24, 14, 30);
+    forgottenPasswordTokenExpiresAt = LocalDateTime.of(2021, Month.APRIL, 24, 14, 30);
     createdAt = LocalDateTime.now();
     user =
         new User(
@@ -214,6 +213,4 @@ class UserTest {
     team.addPermission(mission);
     assertTrue(user.can("mission"));
   }
-
-
 }

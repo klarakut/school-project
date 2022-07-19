@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 class PermissionTest {
-
 
   @Test
   void can_create_permission() {
