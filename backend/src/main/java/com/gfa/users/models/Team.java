@@ -33,17 +33,17 @@ public class Team {
 
   @ManyToMany
   @JoinTable(
-      name = "team_permission",
-      joinColumns = @JoinColumn(name = "team_id"),
-      inverseJoinColumns = @JoinColumn(name = "permission_id"))
-  private Set<Permission> permissions;
-
-  @ManyToMany
-  @JoinTable(
       name = "team_role",
       joinColumns = @JoinColumn(name = "team_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles;
+
+  @ManyToMany
+  @JoinTable(
+      name = "team_permission",
+      joinColumns = @JoinColumn(name = "team_id"),
+      inverseJoinColumns = @JoinColumn(name = "permission_id"))
+  private Set<Permission> permissions;
 
   @ManyToMany(mappedBy = "teams")
   private Set<User> users;

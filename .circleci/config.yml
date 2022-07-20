@@ -32,8 +32,7 @@ jobs:
     environment:
       SMTP_HOST: smtp.mailtrap.io
       SMTP_PORT: 2525
-      SMTP_USERNAME: $MAILTRAP_PASSWORD
-      SMTP_PASSWORD: $MAILTRAP_USERNAME
+
     working_directory: ~/project-fox-dining/backend
     steps:
       - checkout:
@@ -65,8 +64,7 @@ jobs:
     environment:
       SMTP_HOST: smtp.mailtrap.io
       SMTP_PORT: 2525
-      SMTP_USERNAME: $MAILTRAP_PASSWORD
-      SMTP_PASSWORD: $MAILTRAP_USERNAME
+
     working_directory: ~/project-fox-dining/backend
     steps:
       - checkout:
@@ -98,7 +96,7 @@ workflows:
           requires:
             - build
 
-# The values for MAILTRAP_USERNAME and MAILTRAP_USERNAME
+# The values for SMTP_USERNAME and SMTP_PASSWORD
 # are provided in the `mailtrap` context under
 # Organization Settings > Contexts on app.circleci.com
 # see: https://circleci.com/docs/contexts

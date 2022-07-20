@@ -1,17 +1,17 @@
 package com.gfa.users.models;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.jetbrains.annotations.NotNull;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.Entity;
 import javax.persistence.Table;
-import org.jetbrains.annotations.NotNull;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -27,7 +27,7 @@ public class Role {
 
   @ManyToMany
   @JoinTable(
-      name = "role_permission",
+      name = "roles_permission",
       joinColumns = @JoinColumn(name = "role_id"),
       inverseJoinColumns = @JoinColumn(name = "permission_id"))
   private Set<Permission> permissions;
@@ -50,12 +50,12 @@ public class Role {
     return role;
   }
 
-  public boolean addPermission(Permission p) {
-    return permissions.add(p);
+  public boolean addPermission(Permission permission) {
+    return permissions.add(permission);
   }
 
-  public boolean removePermission(Permission p) {
-    return permissions.remove(p);
+  public boolean removePermission(Permission permission) {
+    return permissions.remove(permission);
   }
 
   public boolean can(Permission permission) {

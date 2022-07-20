@@ -160,7 +160,7 @@ class DatabaseTeamServiceTest {
 
     //Act
     //Assert
-    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.update(1L,teamDto);});
+    assertThrows(TeamNotFoundException.class, () -> {teamService.update(1L,teamDto);});
 
   }
 
@@ -191,7 +191,7 @@ class DatabaseTeamServiceTest {
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
     //Act
     //Assert
-    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.destroy(5L);});
+    assertThrows(TeamNotFoundException.class, () -> {teamService.destroy(5L);});
   }
 
   @Test
@@ -216,7 +216,7 @@ class DatabaseTeamServiceTest {
 
     //Act
     //Assert
-    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.destroy(1L);});
+    assertThrows(TeamNotFoundException.class, () -> {teamService.destroy(1L);});
 
   }
 /*
@@ -315,7 +315,7 @@ class DatabaseTeamServiceTest {
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, mockedUserRepository, null, null);
     //Act
     //Assert
-    assertThrows(InvalidTeamNotFoundException.class,() -> {teamService.addUserToTeam(1L,userRequestDto);});
+    assertThrows(TeamNotFoundException.class,() -> {teamService.addUserToTeam(1L,userRequestDto);});
   }
 
   @Test
@@ -338,7 +338,7 @@ class DatabaseTeamServiceTest {
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, mockedUserRepository, null, null);
     //Act
     //Assert
-    assertThrows(InvalidUserNotFoundException.class,() -> {teamService.addUserToTeam(1L,userRequestDto);});
+    assertThrows(TeamNotFoundException.class,() -> {teamService.addUserToTeam(1L,userRequestDto);});
   }
 
   /*
@@ -398,7 +398,7 @@ class DatabaseTeamServiceTest {
     //Act
     //EmptyResponseDto result = teamService.deleteUserFromTeam(1L,1L);
     //Assert
-    assertThrows(InvalidTeamNotFoundException.class,() -> {teamService.deleteUserFromTeam(1L,1L);});
+    assertThrows(TeamNotFoundException.class,() -> {teamService.deleteUserFromTeam(1L,1L);});
   }
   @Test
   void deleteUserFromTeam_cannotFindUser() {
@@ -417,7 +417,7 @@ class DatabaseTeamServiceTest {
     //Act
     //EmptyResponseDto result = teamService.deleteUserFromTeam(1L,1L);
     //Assert
-    assertThrows(InvalidUserNotFoundException.class,() -> {teamService.deleteUserFromTeam(1L,1L);});
+    assertThrows(UserNotFoundException.class,() -> {teamService.deleteUserFromTeam(1L,1L);});
   }
 
   @Test
@@ -480,7 +480,7 @@ class DatabaseTeamServiceTest {
     //Act
     //StatusResponseDto result = teamService.addPermissionsToTeam(1L,permissionRequestDto);
     //Assert
-    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.addPermissionsToTeam(1L,permissionRequestDto);});
+    assertThrows(TeamNotFoundException.class, () -> {teamService.addPermissionsToTeam(1L,permissionRequestDto);});
   }
 
   @Test
@@ -503,7 +503,7 @@ class DatabaseTeamServiceTest {
 
     //Act
     //Assert
-    assertThrows(InvalidPermissionNotFoundException.class, () -> {teamService.addPermissionsToTeam(1L,permissionRequestDto);});
+    assertThrows(PermissionNotFoundException.class, () -> {teamService.addPermissionsToTeam(1L,permissionRequestDto);});
   }
 
   @Test
@@ -529,7 +529,7 @@ class DatabaseTeamServiceTest {
     //Act
     //StatusResponseDto result = teamService.addUserToTeam(1L,userRequestDto);
     //Assert
-    assertThrows(InvalidPermissionExistsException.class,() -> {teamService.addPermissionsToTeam(1L,permissionRequest);});
+    assertThrows(PermissionExistsException.class,() -> {teamService.addPermissionsToTeam(1L,permissionRequest);});
   }
 
   @Test
@@ -588,7 +588,7 @@ class DatabaseTeamServiceTest {
 
     //Act
     // Assert
-    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.deletePermissionFromTeam(1L,1L);});
+    assertThrows(TeamNotFoundException.class, () -> {teamService.deletePermissionFromTeam(1L,1L);});
   }
 
   @Test
@@ -610,7 +610,7 @@ class DatabaseTeamServiceTest {
 
     //Act
     //Assert
-    assertThrows(InvalidPermissionNotFoundException.class, () -> {teamService.deletePermissionFromTeam(1L,1L);});
+    assertThrows(PermissionNotFoundException.class, () -> {teamService.deletePermissionFromTeam(1L,1L);});
   }
 
 
@@ -672,7 +672,7 @@ class DatabaseTeamServiceTest {
 
     //Act
     // Assert
-    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
+    assertThrows(TeamNotFoundException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
   }
 
   @Test
@@ -695,7 +695,7 @@ class DatabaseTeamServiceTest {
 
     //Act
     // Assert
-    assertThrows(InvalidRoleNotFoundException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
+    assertThrows(RoleNotFoundException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
   }
 
   @Test
@@ -721,7 +721,7 @@ class DatabaseTeamServiceTest {
     //Act
     //StatusResponseDto result = teamService.addUserToTeam(1L,userRequestDto);
     //Assert
-    assertThrows(InvalidRoleExistsException.class,() -> {teamService.addRoleToTeam(1L,roleRequestDto);});
+    assertThrows(RoleExistsException.class,() -> {teamService.addRoleToTeam(1L,roleRequestDto);});
   }
 
 
@@ -777,7 +777,7 @@ class DatabaseTeamServiceTest {
 
     //Act
     // Assert
-    assertThrows(InvalidTeamNotFoundException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
+    assertThrows(TeamNotFoundException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
   }
 
   @Test
@@ -800,6 +800,6 @@ class DatabaseTeamServiceTest {
 
     //Act
     // Assert
-    assertThrows(InvalidRoleNotFoundException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
+    assertThrows(RoleNotFoundException.class, () -> {teamService.addRoleToTeam(1L,roleRequestDto);});
   }
 }
