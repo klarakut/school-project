@@ -78,7 +78,7 @@ class DatabaseTeamServiceTest {
 
     // Act
     // Assert
-    assertThrows(InvalidTeamExsistException.class, ()-> {teamService.store(teamDto);});
+    assertThrows(TeamExistsException.class, ()-> {teamService.store(teamDto);});
   }
 
   @Test

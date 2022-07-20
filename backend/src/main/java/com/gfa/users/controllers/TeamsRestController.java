@@ -12,13 +12,16 @@ import com.gfa.common.dtos.ResponseDto;
 import com.gfa.users.dtos.TeamErrorResponseDto;
 
 import com.gfa.users.exceptions.InvalidRequestException;
-import com.gfa.users.exceptions.InvalidTeamExsistException;
-import com.gfa.users.exceptions.InvalidIdException;
-import com.gfa.users.exceptions.InvalidTeamNotFoundException;
+import com.gfa.users.exceptions.TeamExistsException;
 import com.gfa.users.exceptions.UnknownErrorException;
-import com.gfa.users.exceptions.InvalidTeamAndUserNotFoundException;
-import com.gfa.users.exceptions.InvalidTeamAndPermissionNotFoundException;
-import com.gfa.users.exceptions.InvalidTeamAndRoleNotFoundException;
+import com.gfa.users.exceptions.InvalidIdException;
+import com.gfa.users.exceptions.TeamNotFoundException;
+import com.gfa.users.exceptions.UserNotFoundException;
+import com.gfa.users.exceptions.UserExistsException;
+import com.gfa.users.exceptions.PermissionNotFoundException;
+import com.gfa.users.exceptions.PermissionExistsException;
+import com.gfa.users.exceptions.RoleNotFoundException;
+import com.gfa.users.exceptions.RoleExistsException;
 
 import com.gfa.users.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,9 +62,11 @@ public class TeamsRestController {
     } catch (InvalidRequestException e) {
       return new ResponseEntity<>(
           new TeamErrorResponseDto("Team is required"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidTeamExsistException e) {
+    } catch (TeamExistsException e) {
       return new ResponseEntity<>(
           new TeamErrorResponseDto("Team is alredy exist"), HttpStatus.BAD_REQUEST);
+    } catch (UnknownErrorException e) {
+      return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -73,7 +78,7 @@ public class TeamsRestController {
       return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidTeamNotFoundException e) {
+    } catch (TeamNotFoundException e) {
       return new ResponseEntity<>(
           new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
     } catch (UnknownErrorException e) {
@@ -89,7 +94,7 @@ public class TeamsRestController {
       return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidTeamNotFoundException e) {
+    } catch (TeamNotFoundException e) {
       return new ResponseEntity<>(
           new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
     } catch (InvalidRequestException e) {
@@ -106,7 +111,7 @@ public class TeamsRestController {
       return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidTeamNotFoundException e) {
+    } catch (TeamNotFoundException e) {
       return new ResponseEntity<>(
           new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
     } catch (UnknownErrorException e) {
@@ -122,11 +127,17 @@ public class TeamsRestController {
       return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidTeamNotFoundException e) {
+    } catch (TeamNotFoundException e) {
       return new ResponseEntity<>(
           new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
     } catch (UnknownErrorException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+    } catch (UserNotFoundException e) {
+      return new ResponseEntity<>(
+          new TeamErrorResponseDto("User not found"), HttpStatus.BAD_REQUEST);
+    } catch (UserExistsException e) {
+      return new ResponseEntity<>(
+          new TeamErrorResponseDto("User already exist in team"), HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -139,11 +150,14 @@ public class TeamsRestController {
       //
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidTeamAndUserNotFoundException e) {
-      return new ResponseEntity<>(
-          new TeamErrorResponseDto("Team or User not found"), HttpStatus.BAD_REQUEST);
     } catch (UnknownErrorException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+    } catch (UserNotFoundException e) {
+      return new ResponseEntity<>(
+          new TeamErrorResponseDto("User not found"), HttpStatus.BAD_REQUEST);
+    } catch (TeamNotFoundException e) {
+      return new ResponseEntity<>(
+          new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -156,11 +170,17 @@ public class TeamsRestController {
       return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidTeamNotFoundException e) {
+    } catch (TeamNotFoundException e) {
       return new ResponseEntity<>(
           new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
     } catch (UnknownErrorException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+    } catch (PermissionExistsException e) {
+      return new ResponseEntity<>(
+          new TeamErrorResponseDto("Permission already exist"), HttpStatus.BAD_REQUEST);
+    } catch (PermissionNotFoundException e) {
+      return new ResponseEntity<>(
+          new TeamErrorResponseDto("Permission not exist"), HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -174,9 +194,12 @@ public class TeamsRestController {
 
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidTeamAndPermissionNotFoundException e) {
+    } catch (TeamNotFoundException e) {
       return new ResponseEntity<>(
-          new TeamErrorResponseDto("Team or Permission not found"), HttpStatus.BAD_REQUEST);
+          new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
+    } catch (PermissionNotFoundException e) {
+      return new ResponseEntity<>(
+          new TeamErrorResponseDto("Permission not found"), HttpStatus.BAD_REQUEST);
     } catch (UnknownErrorException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
     }
@@ -191,9 +214,15 @@ public class TeamsRestController {
       return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidTeamNotFoundException e) {
+    } catch (TeamNotFoundException e) {
       return new ResponseEntity<>(
           new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
+    } catch (RoleNotFoundException e) {
+      return new ResponseEntity<>(
+          new TeamErrorResponseDto("Role not found"), HttpStatus.BAD_REQUEST);
+    } catch (RoleExistsException e) {
+      return new ResponseEntity<>(
+          new TeamErrorResponseDto("Role exist in team"), HttpStatus.BAD_REQUEST);
     } catch (UnknownErrorException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
     }
@@ -209,9 +238,12 @@ public class TeamsRestController {
       //
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidTeamAndRoleNotFoundException e) {
+    } catch (TeamNotFoundException e) {
       return new ResponseEntity<>(
-          new TeamErrorResponseDto("Team or Role not found"), HttpStatus.BAD_REQUEST);
+          new TeamErrorResponseDto("Team not found"), HttpStatus.BAD_REQUEST);
+    } catch (RoleNotFoundException e) {
+      return new ResponseEntity<>(
+          new TeamErrorResponseDto("Role not found"), HttpStatus.BAD_REQUEST);
     } catch (UnknownErrorException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
     }
