@@ -1,17 +1,16 @@
 package com.gfa.users.models;
 
-import java.util.HashSet;
+import org.jetbrains.annotations.NotNull;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.Entity;
 import javax.persistence.Table;
-import org.jetbrains.annotations.NotNull;
-
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -28,24 +27,10 @@ public class Role {
 
   @ManyToMany
   @JoinTable(
-      name = "role_permission",
+      name = "roles_permission",
       joinColumns = @JoinColumn(name = "role_id"),
       inverseJoinColumns = @JoinColumn(name = "permission_id"))
-  Set<Permission> permissions;
-
-  @ManyToMany
-  @JoinTable(
-      name = "user_role",
-      joinColumns = @JoinColumn(name = "role_id"),
-      inverseJoinColumns = @JoinColumn(name = "user_id"))
-  Set<User> users;
-
-  @ManyToMany
-  @JoinTable(
-      name = "team_role",
-      joinColumns = @JoinColumn(name = "role_id"),
-      inverseJoinColumns = @JoinColumn(name = "team_id"))
-  Set<Team> teams;
+  private Set<Permission> permissions;
 
   public Role() {
     permissions = new HashSet<>();
@@ -65,25 +50,21 @@ public class Role {
     return role;
   }
 
-  public void addPermission(Permission p) {
-    permissions.add(p);
+  public boolean addPermission(Permission permission) {
+    return permissions.add(permission);
   }
 
-  public void removePermission(Permission p) {
-    permissions.remove(p);
+  public boolean removePermission(Permission permission) {
+    return permissions.remove(permission);
   }
 
-  public Boolean is(Role r) {
-    return (role.equals(r.role));
-  }
-
-  public Boolean can(Permission permission) {
+  public boolean can(Permission permission) {
     return can(permission.getAbility());
   }
 
-  public Boolean can(String ability) {
+  public boolean can(String ability) {
     for (Permission permission : permissions) {
-      if (ability.equals(permission.getAbility())) {
+      if (permission.can(ability)) {
         return true;
       }
     }

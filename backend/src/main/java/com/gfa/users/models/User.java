@@ -1,20 +1,24 @@
 package com.gfa.users.models;
 
-import com.gfa.common.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.CreateUserRequestDto;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.HashSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import java.util.Date;
-import java.util.Set;
+import javax.persistence.Table;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Entity
+@Table(name = "users")
 public class User {
 
   @Id
@@ -28,29 +32,41 @@ public class User {
   private String email;
 
   private String password;
-  private Date verifiedAt;
+  private LocalDateTime verifiedAt;
 
   @Column(unique = true)
   private String verificationToken;
 
-  private Date verificationTokenExpiresAt;
+  private LocalDateTime verificationTokenExpiresAt;
 
   @Column(unique = true)
   @Nullable
   private String forgottenPasswordToken;
 
-  @Nullable private Date forgottenPasswordTokenExpiresAt;
+  @Nullable private LocalDateTime forgottenPasswordTokenExpiresAt;
 
-  private Date createdAt;
+  private LocalDateTime createdAt;
 
-  @ManyToMany(mappedBy = "users")
-  Set<Permission> permissions;
+  @ManyToMany
+  @JoinTable(
+      name = "user_permission",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "permission_id"))
+  private Set<Permission> permissions;
 
-  @ManyToMany(mappedBy = "users")
-  Set<Role> roles;
+  @ManyToMany
+  @JoinTable(
+      name = "user_role",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<Role> roles;
 
-  @ManyToMany(mappedBy = "users")
-  Set<Team> teams;
+  @ManyToMany
+  @JoinTable(
+      name = "user_team",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "team_id"))
+  private Set<Team> teams;
 
   public User() {
     permissions = new HashSet<>();
@@ -58,15 +74,11 @@ public class User {
     teams = new HashSet<>();
   }
 
-  public User(
-      @NotNull String username,
-      @NotNull String email,
-      @NotNull String password,
-      @NotNull Date createdAt) {
+  public User(@NotNull String username, @NotNull String email, @NotNull String password) {
     this.username = username;
     this.email = email;
     this.password = password;
-    this.createdAt = createdAt;
+    this.createdAt = LocalDateTime.now();
   }
 
   public User(
@@ -74,12 +86,13 @@ public class User {
       @NotNull String username,
       @NotNull String email,
       @NotNull String password,
-      @NotNull Date verifiedAt,
+      @NotNull LocalDateTime verifiedAt,
       @NotNull String verificationToken,
-      @NotNull Date verificationTokenExpiresAt,
+      @NotNull LocalDateTime verificationTokenExpiresAt,
       @Nullable String forgottenPasswordToken,
-      @Nullable Date forgottenPasswordTokenExpiresAt,
-      @NotNull Date createdAt) {
+      @Nullable LocalDateTime forgottenPasswordTokenExpiresAt,
+      @NotNull LocalDateTime createdAt) {
+    this(); // I don't know why, but the add, remove tests don't work without this
     this.id = id;
     this.username = username;
     this.email = email;
@@ -96,10 +109,10 @@ public class User {
   Integer randomSecureValue = random.nextInt();
 
   public User(CreateUserRequestDto dto, Long expirationTime) {
-    this(dto.username, dto.email, dto.password, new Date());
+    this(dto.username, dto.email, dto.password);
     this.verifiedAt = null;
     this.verificationToken = String.valueOf(randomSecureValue);
-    this.verificationTokenExpiresAt = new Date(System.currentTimeMillis() + expirationTime);
+    this.verificationTokenExpiresAt = LocalDateTime.now().plusSeconds(expirationTime);
   }
 
   public String getEmail() {
@@ -126,7 +139,7 @@ public class User {
     this.password = password;
   }
 
-  public Date getVerifiedAt() {
+  public LocalDateTime getVerifiedAt() {
     return verifiedAt;
   }
 
@@ -136,9 +149,10 @@ public class User {
 
   public void setVerificationToken(@NotNull String verificationToken) {
     this.verificationToken = verificationToken;
+    this.verifiedAt = null;
   }
 
-  public Date getVerificationTokenExpiresAt() {
+  public LocalDateTime getVerificationTokenExpiresAt() {
     return verificationTokenExpiresAt;
   }
 
@@ -152,11 +166,64 @@ public class User {
   }
 
   @Nullable
-  public Date getForgottenPasswordTokenExpiresAt() {
+  public LocalDateTime getForgottenPasswordTokenExpiresAt() {
     return forgottenPasswordTokenExpiresAt;
   }
 
-  public Date getCreatedAt() {
+  @NotNull
+  public LocalDateTime getCreatedAt() {
     return createdAt;
+  }
+
+  public boolean addTeam(Team team) {
+    return teams.add(team);
+  }
+
+  public boolean removeTeam(Team team) {
+    return teams.remove(team);
+  }
+
+  public boolean addPermission(Permission permission) {
+    return permissions.add(permission);
+  }
+
+  public boolean removePermission(Permission permission) {
+    return permissions.remove(permission);
+  }
+
+  public boolean addRole(Role role) {
+    return roles.add(role);
+  }
+
+  public boolean removeRole(Role role) {
+    return roles.remove(role);
+  }
+
+  public boolean can(Permission permission) {
+    return can(permission.getAbility());
+  }
+
+  public boolean can(String ability) {
+
+    if (this.getUsername().equals("root")) {
+      return true;
+    } // root permissions
+
+    for (Permission permission : permissions) {
+      if (permission.can(ability)) {
+        return true;
+      }
+    }
+    for (Role role : roles) {
+      if (role.can(ability)) {
+        return true;
+      }
+    }
+    for (Team team : teams) {
+      if (team.can(ability)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

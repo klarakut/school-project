@@ -1,8 +1,6 @@
 package com.gfa.users.models;
 
 import java.util.HashSet;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import org.jetbrains.annotations.NotNull;
 
 @Entity
 @Table(name = "teams")
@@ -30,20 +29,20 @@ public class Team {
 
   @ManyToMany
   @JoinTable(
-      name = "team_permissions",
+      name = "team_role",
       joinColumns = @JoinColumn(name = "team_id"),
-      inverseJoinColumns = @JoinColumn(name = "permission_id"))
-  Set<Permission> permissions;
+      inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<Role> roles;
 
   @ManyToMany
   @JoinTable(
-      name = "team_user",
+      name = "team_permission",
       joinColumns = @JoinColumn(name = "team_id"),
-      inverseJoinColumns = @JoinColumn(name = "user_id"))
-  Set<User> users;
+      inverseJoinColumns = @JoinColumn(name = "permission_id"))
+  private Set<Permission> permissions;
 
   @ManyToMany(mappedBy = "teams")
-  Set<Role> roles;
+  private Set<User> users;
 
   public Team() {
     permissions = new HashSet<>();
@@ -52,7 +51,6 @@ public class Team {
   }
 
   public Team(@NotNull String name) {
-
     this();
     this.name = name;
   }
@@ -66,32 +64,28 @@ public class Team {
     return id;
   }
 
-  public void addUser(User user) {
-    users.add(user);
+  public boolean addUser(User user) {
+    return users.add(user);
   }
 
-  public void removeUser(User user) {
-    users.remove(user);
+  public boolean removeUser(User user) {
+    return users.remove(user);
   }
 
-  public void addPermision(Permission permission) {
-    permissions.add(permission);
+  public boolean addPermission(Permission permission) {
+    return permissions.add(permission);
   }
 
-  public void removePermission(Permission permission) {
-    permissions.remove(permission);
+  public boolean removePermission(Permission permission) {
+    return permissions.remove(permission);
   }
 
-  public void addRole(Role role) {
-    roles.add(role);
+  public boolean addRole(Role role) {
+    return roles.add(role);
   }
 
-  public void removeRole(Role role) {
-    roles.remove(role);
-  }
-
-  public boolean is(Team t) {
-    return (name.equals(t.name));
+  public boolean removeRole(Role role) {
+    return roles.remove(role);
   }
 
   public boolean can(Permission permission) {
@@ -100,7 +94,7 @@ public class Team {
 
   public boolean can(String ability) {
     for (Permission permission : permissions) {
-      if (ability.equals(permission.getAbility())) {
+      if (permission.can(ability)) {
         return true;
       }
     }
