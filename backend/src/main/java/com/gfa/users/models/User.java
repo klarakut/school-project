@@ -220,6 +220,10 @@ public class User {
     return roles.remove(role);
   }
 
+  public int hashCode() {
+    return username.hashCode();
+  }
+
   public boolean can(Permission permission) {
     return can(permission.getAbility());
   }

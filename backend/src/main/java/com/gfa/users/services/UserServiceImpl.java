@@ -1,36 +1,33 @@
 package com.gfa.users.services;
 
 import com.gfa.common.dtos.EmailRequestDto;
-import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.common.exceptions.UnknownErrorException;
 import com.gfa.common.services.EmailValidator;
 import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.users.dtos.PasswordResetRequestDto;
+import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.users.dtos.UserResponseDto;
-
-import com.gfa.users.exceptions.InvalidPasswordException;
-import com.gfa.users.exceptions.PasswordTooShortException;
-import com.gfa.users.exceptions.UnverifiedEmailException;
-import com.gfa.users.exceptions.ShortPasswordException;
-import com.gfa.users.exceptions.UserNotFoundException;
 import com.gfa.users.exceptions.AlreadyVerifiedException;
-import com.gfa.users.exceptions.PasswordMissingException;
-import com.gfa.users.exceptions.UsernameTakenException;
-import com.gfa.users.exceptions.ShortUsernameException;
 import com.gfa.users.exceptions.EmailMissingException;
+import com.gfa.users.exceptions.InvalidPasswordException;
+import com.gfa.users.exceptions.PasswordMissingException;
+import com.gfa.users.exceptions.PasswordTooShortException;
+import com.gfa.users.exceptions.ShortPasswordException;
+import com.gfa.users.exceptions.ShortUsernameException;
 import com.gfa.users.exceptions.UnexpectedErrorException;
+import com.gfa.users.exceptions.UnverifiedEmailException;
+import com.gfa.users.exceptions.UserNotFoundException;
 import com.gfa.users.exceptions.UsernameMissingException;
+import com.gfa.users.exceptions.UsernameTakenException;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -45,7 +42,11 @@ public class UserServiceImpl implements UserService {
   private final TotpManager totpManager;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, Environment environment,JwtTokenManager jwtTokenManager, TotpManager totpManager) {
+  public UserServiceImpl(
+      UserRepository userRepository,
+      Environment environment,
+      JwtTokenManager jwtTokenManager,
+      TotpManager totpManager) {
     this.userRepository = userRepository;
     this.environment = environment;
     this.jwtTokenManager = jwtTokenManager;
@@ -81,12 +82,13 @@ public class UserServiceImpl implements UserService {
 
     String secret = totpManager.generateSecret();
     Long tokenExpiration =
-            Long.parseLong(
-                    environment.getProperty(
-                            "config.security.token.expiration.email_verification", DEFAULT_TOKEN_EXPIRATION));
+        Long.parseLong(
+            environment.getProperty(
+                "config.security.token.expiration.email_verification", DEFAULT_TOKEN_EXPIRATION));
     User user = new User(dto, tokenExpiration, secret);
     userRepository.save(user);
-    UserResponseDto userResponseDto = new UserResponseDto(user, totpManager.getUriForImage(user.getSecret()));
+    UserResponseDto userResponseDto =
+        new UserResponseDto(user, totpManager.getUriForImage(user.getSecret()));
 
     boolean userCreated = userRepository.findByUsername(dto.username).isPresent();
     if (!userCreated) {
@@ -98,7 +100,6 @@ public class UserServiceImpl implements UserService {
   @Override
   public Optional<User> findByUsername(String username) {
     return userRepository.findByUsername(username);
-
   }
 
   @Override
@@ -131,6 +132,7 @@ public class UserServiceImpl implements UserService {
 
     User user =
         userRepository.findByForgottenPasswordToken(token).orElseThrow(InvalidTokenException::new);
+
     if (resetPassword.password.isEmpty()) {
       throw new InvalidPasswordException();
     }
@@ -164,9 +166,9 @@ public class UserServiceImpl implements UserService {
     boolean existingUser = userRepository.findByEmail(emailRequestDto.email).isPresent();
     if (!existingUser) {
       /* emailUtils.sendHtmlEmail("#", "support@demo.com", "Resend verification email", "To verify your email address, click the link below:\n"
-                    + "http://localhost:3036/email/resend-verification-email"
-                    + "/reset?token="
-                    + user.getVerificationToken());*/
+      + "http://localhost:3036/email/resend-verification-email"
+      + "/reset?token="
+      + user.getVerificationToken());*/
       return new StatusResponseDto("ok");
     }
 
@@ -178,12 +180,12 @@ public class UserServiceImpl implements UserService {
 
     try {
       /*emailUtils.sendHtmlEmail(user.getEmail(), "support@demo.com", "Resend verification email", "To verify your email address, click the link below:\n"
-                + "http://localhost:3036/email/resend-verification-email"
-                + "/reset?token="
-                + user.getVerificationToken());*/
+      + "http://localhost:3036/email/resend-verification-email"
+      + "/reset?token="
+      + user.getVerificationToken());*/
       return new StatusResponseDto("ok");
     } catch (UnknownErrorException e) {
-      throw  new UnknownErrorException();
+      throw new UnknownErrorException();
     }
   }
 }

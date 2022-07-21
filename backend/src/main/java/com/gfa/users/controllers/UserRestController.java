@@ -8,20 +8,22 @@ import com.gfa.common.exceptions.InvalidEmailException;
 import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.common.exceptions.UnknownErrorException;
+import com.gfa.users.exceptions.InvalidPasswordException;
+import com.gfa.users.exceptions.UnverifiedEmailException;
 import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
-import com.gfa.users.exceptions.AlreadyVerifiedException;
-import com.gfa.users.exceptions.InvalidPasswordException;
 import com.gfa.users.exceptions.PasswordTooShortException;
+import com.gfa.users.exceptions.AlreadyVerifiedException;
+
 import com.gfa.users.exceptions.ShortPasswordException;
 import com.gfa.users.exceptions.PasswordMissingException;
 import com.gfa.users.exceptions.UsernameTakenException;
 import com.gfa.users.exceptions.ShortUsernameException;
 import com.gfa.users.exceptions.EmailMissingException;
-import com.gfa.users.exceptions.UnverifiedEmailException;
 import com.gfa.users.exceptions.UnexpectedErrorException;
 import com.gfa.users.exceptions.UsernameMissingException;
+
 import com.gfa.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

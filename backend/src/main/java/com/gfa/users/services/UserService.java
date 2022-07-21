@@ -13,9 +13,9 @@ import java.util.Optional;
 public interface UserService {
   List<UserResponseDto> index();
 
-  UserResponseDto show(Long id);
-
   UserResponseDto store(CreateUserRequestDto dto);
+
+  UserResponseDto show(Long id);
 
   StatusResponseDto resetPasswords(EmailRequestDto emailDto);
 

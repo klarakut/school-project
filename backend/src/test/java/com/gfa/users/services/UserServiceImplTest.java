@@ -25,7 +25,7 @@ class UserServiceImplTest {
 
   @Test
   void sending_empty_email_exception() {
-    UserService userService = new UserServiceImpl(null, null,null,null);
+    UserService userService = new UserServiceImpl(null, null, null, null);
     assertThrows(
         InvalidEmailException.class,
         () -> {
@@ -40,7 +40,7 @@ class UserServiceImplTest {
     Mockito.when(userRepository.findByEmail(Mockito.anyString()))
         .thenThrow(new UserNotFoundException());
 
-    UserService userService = new UserServiceImpl(userRepository, null, null,null);
+    UserService userService = new UserServiceImpl(userRepository, null, null, null);
     assertThrows(
         UserNotFoundException.class,
         () -> userService.resetPasswords(new EmailRequestDto("milarda@milarda.sk")));
@@ -89,7 +89,7 @@ class UserServiceImplTest {
     Mockito.when(userRepository.findByForgottenPasswordToken(Mockito.anyString()))
         .thenReturn(Optional.of(user));
 
-    UserService userService = new UserServiceImpl(userRepository, null,null,null);
+    UserService userService = new UserServiceImpl(userRepository, null, null, null);
     assertThrows(
         InvalidTokenException.class,
         () -> userService.resetPassword("22", new PasswordResetRequestDto("DVAVVVAAA")));
@@ -106,7 +106,7 @@ class UserServiceImplTest {
     Mockito.when(userRepository.findByForgottenPasswordToken(Mockito.anyString()))
         .thenReturn(Optional.of(user));
 
-    UserService userService = new UserServiceImpl(userRepository, null,null,null);
+    UserService userService = new UserServiceImpl(userRepository, null, null, null);
     assertThrows(
         TokenExpiredException.class,
         () -> userService.resetPassword("22", new PasswordResetRequestDto("DVAVVVAAA")));

@@ -15,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 @Entity
 @Table(name = "teams")
+// @SQLDelete(sql = "update soft_delete_jpa_example set deleted = 0 where id =?")
+// @Where(clause = "deleted = 1")
 public class Team {
 
   @Id
@@ -26,6 +28,8 @@ public class Team {
   @Column(unique = true)
   @NotNull
   private String name;
+
+  // private boolean deleted = Boolean.FALSE;
 
   @ManyToMany
   @JoinTable(
@@ -55,8 +59,20 @@ public class Team {
     this.name = name;
   }
 
+  // public boolean isDeleted() {
+  // return deleted;
+  // }
+
+  // public void setDeleted(boolean deleted) {
+  // this.deleted = deleted;
+  // }
+
   public String getName() {
     return this.name;
+  }
+
+  public void setName(@NotNull String name) {
+    this.name = name;
   }
 
   @NotNull
