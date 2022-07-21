@@ -3,6 +3,7 @@ package com.gfa.users.services;
 import com.gfa.common.dtos.EmailRequestDto;
 import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.users.dtos.StatusResponseDto;
+import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.common.exceptions.UnknownErrorException;
@@ -14,11 +15,25 @@ import com.gfa.users.dtos.CreateUserRequestDto;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
 import com.gfa.users.exceptions.PasswordTooShortException;
+
+import com.gfa.users.exceptions.InvalidPasswordException;
+import com.gfa.users.exceptions.PasswordTooShortException;
+import com.gfa.users.exceptions.UnverifiedEmailException;
+import com.gfa.users.exceptions.ShortPasswordException;
+import com.gfa.users.exceptions.UserNotFoundException;
 import com.gfa.users.exceptions.AlreadyVerifiedException;
+import com.gfa.users.exceptions.PasswordMissingException;
+import com.gfa.users.exceptions.UsernameTakenException;
+import com.gfa.users.exceptions.ShortUsernameException;
+import com.gfa.users.exceptions.EmailMissingException;
+import com.gfa.users.exceptions.UnexpectedErrorException;
+import com.gfa.users.exceptions.UsernameMissingException;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -31,56 +46,64 @@ public class UserServiceImpl implements UserService {
 
   private final Environment environment;
 
+  private final JwtTokenManager jwtTokenManager;
+  private final TotpManager totpManager;
+
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, Environment environment) {
+  public UserServiceImpl(UserRepository userRepository, Environment environment,JwtTokenManager jwtTokenManager, TotpManager totpManager) {
     this.userRepository = userRepository;
     this.environment = environment;
+    this.jwtTokenManager = jwtTokenManager;
+    this.totpManager = totpManager;
   }
 
   public UserResponseDto store(CreateUserRequestDto dto) {
 
     if (dto.username.isEmpty()) {
-      throw new RuntimeException();
+      throw new UsernameMissingException();
     }
     if (dto.password.isEmpty()) {
-      throw new RuntimeException();
+      throw new PasswordMissingException();
     }
     if (dto.email.isEmpty()) {
-      throw new RuntimeException();
+      throw new EmailMissingException();
     }
 
     boolean usernameExist = userRepository.findByUsername(dto.username).isPresent();
     if (usernameExist) {
-      ErrorResponseDto error = new ErrorResponseDto("Username is already taken");
-      throw new RuntimeException();
+      throw new UsernameTakenException();
     }
 
     if (dto.username.length() < 4) {
-      ErrorResponseDto error = new ErrorResponseDto("Username must be at least 4 characters long");
-      throw new RuntimeException();
+      throw new ShortUsernameException();
     }
 
     if (dto.password.length() < 8) {
-      ErrorResponseDto error = new ErrorResponseDto("Password must be at least 8 characters long");
-      throw new RuntimeException();
+      throw new ShortPasswordException();
     }
 
     EmailValidator.validate(dto.email);
 
+    String secret = totpManager.generateSecret();
     Long tokenExpiration =
-        Long.parseLong(
-            environment.getProperty(
-                "config.security.token.expiration.email_verification", DEFAULT_TOKEN_EXPIRATION));
-    User user = new User(dto, tokenExpiration);
+            Long.parseLong(
+                    environment.getProperty(
+                            "config.security.token.expiration.email_verification", DEFAULT_TOKEN_EXPIRATION));
+    User user = new User(dto, tokenExpiration, secret);
     userRepository.save(user);
-    UserResponseDto userResponseDto = new UserResponseDto(user);
+    UserResponseDto userResponseDto = new UserResponseDto(user, totpManager.getUriForImage(user.getSecret()));
 
     boolean userCreated = userRepository.findByUsername(dto.username).isPresent();
     if (!userCreated) {
-      ErrorResponseDto error = new ErrorResponseDto("Unknown error");
-      throw new RuntimeException();
+      throw new UnexpectedErrorException();
     }
     return userResponseDto;
+  }
+
+  @Override
+  public Optional<User> findByUsername(String username) {
+    return userRepository.findByUsername(username);
+
   }
 
   @Override

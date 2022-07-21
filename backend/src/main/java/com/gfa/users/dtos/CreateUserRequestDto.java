@@ -6,6 +6,7 @@ public class CreateUserRequestDto {
   public final String username;
   public final String email;
   public final String password;
+  public boolean mfa;
 
   @JsonCreator
   public CreateUserRequestDto(String username, String email, String password) {
