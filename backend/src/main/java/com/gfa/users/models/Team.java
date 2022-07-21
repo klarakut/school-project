@@ -1,7 +1,6 @@
 package com.gfa.users.models;
 
 import java.util.HashSet;
-import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import org.jetbrains.annotations.NotNull;
 
 @Entity
 @Table(name = "teams")
@@ -81,9 +81,7 @@ public class Team {
   }
 
   public boolean addUser(User user) {
-    users.add(user);
-
-    return true;
+    return users.add(user);
   }
 
   public boolean removeUser(User user) {

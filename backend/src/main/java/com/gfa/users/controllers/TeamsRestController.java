@@ -57,8 +57,8 @@ public class TeamsRestController {
       @RequestBody TeamCreateRequestDto teamCreateRequestDto) {
 
     try {
-      TeamResponseDto dtoRespone = teamService.store(teamCreateRequestDto);
-      return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
+      TeamResponseDto dtoResponse = teamService.store(teamCreateRequestDto);
+      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     } catch (InvalidRequestException e) {
       return new ResponseEntity<>(
           new TeamErrorResponseDto("Team is required"), HttpStatus.BAD_REQUEST);
@@ -74,8 +74,8 @@ public class TeamsRestController {
   public ResponseEntity<? extends ResponseDto> show(@PathVariable Long id) {
 
     try {
-      TeamResponseDto dtoRespone = teamService.show(id);
-      return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
+      TeamResponseDto dtoResponse = teamService.show(id);
+      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (TeamNotFoundException e) {
@@ -90,8 +90,8 @@ public class TeamsRestController {
   public ResponseEntity<? extends ResponseDto> update(
       @PathVariable Long id, @RequestBody TeamPatchRequestDto teamPatchRequestDto) {
     try {
-      TeamResponseDto dtoRespone = teamService.update(id, teamPatchRequestDto);
-      return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
+      TeamResponseDto dtoResponse = teamService.update(id, teamPatchRequestDto);
+      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (TeamNotFoundException e) {
@@ -107,8 +107,8 @@ public class TeamsRestController {
   @DeleteMapping("/teams/{id}")
   public ResponseEntity<? extends ResponseDto> destroy(@PathVariable Long id) {
     try {
-      EmptyResponseDto dtoRespone = teamService.destroy(id);
-      return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
+      EmptyResponseDto dtoResponse = teamService.destroy(id);
+      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (TeamNotFoundException e) {
@@ -123,8 +123,8 @@ public class TeamsRestController {
   public ResponseEntity<? extends ResponseDto> addUserToTeam(
       @PathVariable Long id, @RequestBody UserRequestDto userRequestDto) {
     try {
-      StatusResponseDto dtoRespone = teamService.addUserToTeam(id, userRequestDto);
-      return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
+      StatusResponseDto dtoResponse = teamService.addUserToTeam(id, userRequestDto);
+      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (TeamNotFoundException e) {
@@ -141,12 +141,12 @@ public class TeamsRestController {
     }
   }
 
-  @DeleteMapping("/teams/{id}/user/{user_id}")
+  @DeleteMapping("/teams/{id}/user/{userId}")
   public ResponseEntity<? extends ResponseDto> deleteUserFromTeam(
       @PathVariable Long id, @PathVariable Long userId) {
     try {
-      EmptyResponseDto dtoRespone = teamService.deleteUserFromTeam(id, userId);
-      return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
+      EmptyResponseDto dtoResponse = teamService.deleteUserFromTeam(id, userId);
+      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
       //
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
@@ -166,8 +166,8 @@ public class TeamsRestController {
       @PathVariable Long id, @RequestBody PermissionRequestDto permissionRequestDto) {
 
     try {
-      StatusResponseDto dtoRespone = teamService.addPermissionsToTeam(id, permissionRequestDto);
-      return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
+      StatusResponseDto dtoResponse = teamService.addPermissionsToTeam(id, permissionRequestDto);
+      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (TeamNotFoundException e) {
@@ -184,13 +184,13 @@ public class TeamsRestController {
     }
   }
 
-  @DeleteMapping("/teams/{id}/permissions/{permission_id}")
+  @DeleteMapping("/teams/{id}/permissions/{permissionId}")
   public ResponseEntity<? extends ResponseDto> deletePermissionFromTeam(
       @PathVariable Long id, @PathVariable Long permissionId) {
 
     try {
-      EmptyResponseDto dtoRespone = teamService.deletePermissionFromTeam(id, permissionId);
-      return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
+      EmptyResponseDto dtoResponse = teamService.deletePermissionFromTeam(id, permissionId);
+      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
 
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
@@ -210,8 +210,8 @@ public class TeamsRestController {
       @PathVariable Long id, @RequestBody RoleRequestDto roleRequestDto) {
 
     try {
-      StatusResponseDto dtoRespone = teamService.addRoleToTeam(id, roleRequestDto);
-      return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
+      StatusResponseDto dtoResponse = teamService.addRoleToTeam(id, roleRequestDto);
+      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (TeamNotFoundException e) {
@@ -228,13 +228,13 @@ public class TeamsRestController {
     }
   }
 
-  @DeleteMapping("/teams/{id}/roles/{role_id}")
+  @DeleteMapping("/teams/{id}/roles/{roleId}")
   public ResponseEntity<? extends ResponseDto> deleteRoleFromTeam(
       @PathVariable Long id, @PathVariable Long roleId) {
 
     try {
-      EmptyResponseDto dtoRespone = teamService.deleteRoleFromTeam(id, roleId);
-      return new ResponseEntity<>(dtoRespone, HttpStatus.OK);
+      EmptyResponseDto dtoResponse = teamService.deleteRoleFromTeam(id, roleId);
+      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
       //
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new TeamErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);

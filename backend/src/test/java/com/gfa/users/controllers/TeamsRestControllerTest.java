@@ -10,35 +10,28 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
-
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 class TeamsRestControllerTest {
 
   @Autowired private MockMvc mvc;
 
-  @Autowired
-  private TeamRepository teamRepository;
+  @Autowired private TeamRepository teamRepository;
   private RoleRepository roleRepository;
   private PermissionRepository permissionRepository;
   private UserRepository userRepository;
 
   @Test
-  void get_index_shows_list_of_teams() {
+  void get_index_shows_list_of_teams() {}
 
-  }
-
-  @Test  void get_index_shows_list_of_team() {
-  }
+  @Test
+  void get_index_shows_list_of_team() {}
 
   void store() {}
 
   @Test
-  void show(){
-  }
+  void show() {}
+
   @Test
   void update() {}
 
@@ -62,5 +55,4 @@ class TeamsRestControllerTest {
 
   @Test
   void deleteRoleFromTeam() {}
-
 }

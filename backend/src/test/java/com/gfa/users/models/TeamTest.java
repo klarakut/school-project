@@ -1,12 +1,11 @@
 package com.gfa.users.models;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class TeamTest {
 
@@ -34,13 +33,12 @@ class TeamTest {
     Team team2 = new Team("Gregor Gregorovic");
     assertEquals("Gregor Gregorovic", team.getName());
   }
+
   @Test
-  void can_add_the_same_user_only_once(){
+  void can_add_the_same_user_only_once() {
     Team team = new Team("team");
-    assertTrue(team.addUser(new User("username", "email", "password")));
-    assertFalse(team.addUser(new User("username", "email", "password")));
+    User user = new User("username", "email", "password");
+    assertTrue(team.addUser(user));
+    assertFalse(team.addUser(user));
   }
-
-
-
 }
