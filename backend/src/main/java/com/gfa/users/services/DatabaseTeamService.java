@@ -3,7 +3,7 @@ package com.gfa.users.services;
 import com.gfa.users.dtos.EmptyResponseDto;
 import com.gfa.users.dtos.PermissionRequestDto;
 import com.gfa.users.dtos.RoleRequestDto;
-import com.gfa.users.dtos.StatusResponseDto;
+import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.users.dtos.TeamCreateRequestDto;
 import com.gfa.users.dtos.TeamPatchRequestDto;
 import com.gfa.users.dtos.TeamResponseDto;

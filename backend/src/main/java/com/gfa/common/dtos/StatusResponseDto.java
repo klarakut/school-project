@@ -1,4 +1,4 @@
-package com.gfa.users.dtos;
+package com.gfa.common.dtos;
 
 import com.gfa.common.dtos.ResponseDto;
 
