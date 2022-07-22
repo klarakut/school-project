@@ -2,6 +2,8 @@ package com.gfa.users.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gfa.common.dtos.RoleCreateRequestDto;
+import com.gfa.common.dtos.RoleResponseDto;
+import com.gfa.users.exceptions.NegativeIdException;
 import com.gfa.users.models.Role;
 import com.gfa.users.repositories.PermissionRepository;
 import com.gfa.users.repositories.RoleRepository;
@@ -23,7 +25,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,13 +38,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(
         value = RoleRestController.class,
         excludeAutoConfiguration = SecurityAutoConfiguration.class)
-//@ContextConfiguration
+@ContextConfiguration
 
 //@WebMvcTest(RoleRestController.class)
 //@SpringBootTest(classes = RoleRestController.class)
 
-
-//@WebMvcTest(RoleRestController.class)
 @AutoConfigureMockMvc
 class RoleRestControllerTest {
 
@@ -48,20 +51,19 @@ class RoleRestControllerTest {
 
     @Autowired
     private RoleRestController roleRestController;
-    //@MockBean
+    @MockBean
     private RoleService roleService;
-    //@MockBean
+    @MockBean
     private RoleRepository roleRepository;
     private PermissionRepository permissionRepository;
 
-    /*@Autowired
+    @Autowired
     private WebApplicationContext webApplicationContext;
 
     @BeforeEach
-    public void setup()
-    {
+    public void setup() {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }*/
+    }
 
     @Test
     void index() throws Exception {
@@ -72,36 +74,59 @@ class RoleRestControllerTest {
         //roleRepository.saveAndFlush(new Role("role #2"));
         //List<Role> roles = roleRepository.findAll();
         //Mockito.when(roleRepository.findAll()).thenReturn(roles);
-        assertEquals(2,roleRepository.count());
+        //assertEquals(2,roleRepository.count());
+        Role r1 = new Role("role #1");
+        Role r2 = new Role("role #2");
+        List<Role> roles = Arrays.asList(r1, r2);
+        Mockito.when(roleRepository.findAll()).thenReturn(roles);
+        //assertEquals(2,roleRepository.count());
 
-       mvc.perform(MockMvcRequestBuilders.get("/roles"))
+
+        mvc.perform(MockMvcRequestBuilders.get("/roles"))
                 .andExpect(status().is(200));
-
     }
 
 
     @Test
-    void store() throws Exception{
-        //RoleCreateRequestDto dto = new RoleCreateRequestDto("hr");
-        //RoleResponseDto response = new RoleResponseDto(1l,"x");
+    void store_new_role() throws Exception{
+        RoleCreateRequestDto dto = new RoleCreateRequestDto("hr");
+        RoleResponseDto response = new RoleResponseDto(1l,"hr");
         //Mockito.when(roleService.store(Mockito.any())).thenThrow(EmptyBodyException.class);
 
 
-       /* mvc.perform(MockMvcRequestBuilders.post("/roles")
+       /*mvc.perform(MockMvcRequestBuilders.post("/roles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"role\":\"example\"}"))
                 .andExpect(status().is(201));*/
-        /*ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(dto);
         mvc.perform(MockMvcRequestBuilders.post("/roles")
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(201));*/
+                .andExpect(status().is(201));
     }
 
     @Test
     void show() throws Exception{
+        Long id = -1L;
+        /*Role r1 = new Role("role #1");
+        Role r2 = new Role("role #2");
+        List<Role> roles = Arrays.asList(r1, r2);*/
+        Mockito.when(roleService.show(Mockito.anyLong())).thenThrow(NegativeIdException.class);
+        //assertEquals(2,roleRepository.count());
+
+
+        /*mvc.perform(MockMvcRequestBuilders.get("/roles/1"))
+                .andExpect(status().is(201));*/
+
+        //ObjectMapper mapper = new ObjectMapper();
+        //String json = mapper.writeValueAsString(id);
+        mvc.perform(MockMvcRequestBuilders.get("/roles/-1"))
+                        /*.content(-1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))*/
+                .andExpect(status().is(201));
     }
 
     @Test
