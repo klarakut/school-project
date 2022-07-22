@@ -1,7 +1,16 @@
 package com.gfa.users.services;
 
-import com.gfa.common.dtos.*;
-import com.gfa.users.exceptions.*;
+import com.gfa.common.dtos.RoleCreateRequestDto;
+import com.gfa.common.dtos.RolePatchRequestDto;
+import com.gfa.common.dtos.RoleResponseDto;
+import com.gfa.common.dtos.StatusResponseDto;
+import com.gfa.common.dtos.PermissionRequestDto;
+import com.gfa.users.exceptions.EmptyBodyException;
+import com.gfa.users.exceptions.IdNotFoundException;
+import com.gfa.users.exceptions.InvalidInputException;
+import com.gfa.users.exceptions.NegativeIdException;
+import com.gfa.users.exceptions.PermissionIdNotFoundException;
+import com.gfa.users.exceptions.RoleExistException;
 import com.gfa.users.models.Permission;
 import com.gfa.users.models.Role;
 import com.gfa.users.repositories.PermissionRepository;
@@ -13,314 +22,333 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 class DatabaseRoleServiceTest {
 
-    // INDEX method unit test
-    @Test
+  // INDEX method unit test
+  @Test
     void index_method_returns_the_list_of_roles() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        List<Role> roles = Arrays.asList(new Role("x"),new Role("y"));
-        Mockito.when(mockedRoleRepo.findAll()).thenReturn(roles);
+    List<Role> roles = Arrays.asList(new Role("x"),new Role("y"));
+    Mockito.when(mockedRoleRepo.findAll()).thenReturn(roles);
 
-        List<RoleResponseDto> result = roleService.index();
-        assertEquals(2,result.size());
-    }
+    List<RoleResponseDto> result = roleService.index();
+    assertEquals(2,result.size());
+  }
 
-    // SHOW method unit tests
-    @Test
+  // SHOW method unit tests
+  @Test
     void show_method_returns_a_specific_role_by_id() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        List<Role> roles = Arrays.asList(new Role("x"),new Role("y"));
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(roles.stream().findFirst());
+    List<Role> roles = Arrays.asList(new Role("x"),new Role("y"));
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(roles.stream().findFirst());
 
-        RoleResponseDto result = roleService.show(1L);
-        assertEquals("x",result.role);
-    }
+    RoleResponseDto result = roleService.show(1L);
+    assertEquals("x",result.role);
+  }
 
-    @Test
+  @Test
     void show_method_throws_exception_due_to_a_negative_id() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        assertThrows(NegativeIdException.class,() -> roleService.show(-1L));
-    }
+    assertThrows(NegativeIdException.class,() -> roleService.show(-1L));
+  }
 
-    @Test
+  @Test
     void show_method_throws_exception_because_the_role_of_the_specified_id_does_not_exist() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        List<Role> roles = Arrays.asList(new Role("x"),new Role("y"));
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+    List<Role> roles = Arrays.asList(new Role("x"),new Role("y"));
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(IdNotFoundException.class,() -> roleService.show(1L));
-    }
+    assertThrows(IdNotFoundException.class,() -> roleService.show(1L));
+  }
 
-    // STORE method unit tests
-    @Test
+  // STORE method unit tests
+  @Test
     void can_store_new_role() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
-        RoleCreateRequestDto dto = new RoleCreateRequestDto("x");
-        Role mockedRole = Mockito.mock(Role.class);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleCreateRequestDto dto = new RoleCreateRequestDto("x");
+    Role mockedRole = Mockito.mock(Role.class);
 
-        Mockito.when(mockedRoleRepo.save(Mockito.any())).thenReturn(mockedRole);
+    Mockito.when(mockedRoleRepo.save(Mockito.any())).thenReturn(mockedRole);
 
-        RoleResponseDto result = roleService.store(dto);
-        assertEquals("x",result.role);
-    }
+    RoleResponseDto result = roleService.store(dto);
+    assertEquals("x",result.role);
+  }
 
-    @Test
+  @Test
     void store_method_throws_exception_because_parameter_role_is_empty() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
-        RoleCreateRequestDto dto = new RoleCreateRequestDto("");
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleCreateRequestDto dto = new RoleCreateRequestDto("");
 
-        assertThrows(EmptyBodyException.class,() -> roleService.store(dto));
-    }
+    assertThrows(EmptyBodyException.class,() -> roleService.store(dto));
+  }
 
-    @Test
+  @Test
     void store_method_throws_exception_because_the_role_already_exists() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
-        RoleCreateRequestDto dto = new RoleCreateRequestDto("x");
-        Role mockedRole = Mockito.mock(Role.class);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleCreateRequestDto dto = new RoleCreateRequestDto("x");
+    Role mockedRole = Mockito.mock(Role.class);
 
-        Mockito.when(mockedRoleRepo.findByRole(Mockito.anyString())).thenReturn(Optional.of(mockedRole));
+    Mockito.when(mockedRoleRepo.findByRole(Mockito.anyString())).thenReturn(Optional.of(mockedRole));
 
-        assertThrows(RoleExistException.class,() -> roleService.store(dto));
-    }
+    assertThrows(RoleExistException.class,() -> roleService.store(dto));
+  }
 
-    // UPDATE method unit tests
-    @Test
+  // UPDATE method unit tests
+  @Test
     void role_updated_successfully() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        RolePatchRequestDto dto = new RolePatchRequestDto("x");
-        Role role = new Role("y");
+    RolePatchRequestDto dto = new RolePatchRequestDto("x");
+    Role role = new Role("y");
 
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(role));
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(role));
 
-        RoleResponseDto result = roleService.update(1L,dto);
-        assertEquals("x",result.role);
-    }
+    RoleResponseDto result = roleService.update(1L,dto);
+    assertEquals("x",result.role);
+  }
 
-    @Test
+  @Test
     void update_method_throws_exception_due_to_a_negative_id() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        RolePatchRequestDto mockedDto = Mockito.mock(RolePatchRequestDto.class);
+    RolePatchRequestDto mockedDto = Mockito.mock(RolePatchRequestDto.class);
 
-        assertThrows(NegativeIdException.class,() -> roleService.update(-1L,mockedDto));
-    }
+    assertThrows(NegativeIdException.class,() -> roleService.update(-1L,mockedDto));
+  }
 
-    @Test
+  @Test
     void update_method_throws_exception_because_parameter_role_is_empty() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        RolePatchRequestDto dto = new RolePatchRequestDto("");
+    RolePatchRequestDto dto = new RolePatchRequestDto("");
 
-        assertThrows(InvalidInputException.class,() -> roleService.update(1L,dto));
-    }
+    assertThrows(InvalidInputException.class,() -> roleService.update(1L,dto));
+  }
 
-    @Test
+  @Test
     void update_method_throws_exception_because_the_role_of_the_specified_id_does_not_exist() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
-        RolePatchRequestDto dto = new RolePatchRequestDto("x");
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RolePatchRequestDto dto = new RolePatchRequestDto("x");
 
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(IdNotFoundException.class,() -> roleService.update(1L,dto));
-    }
+    assertThrows(IdNotFoundException.class,() -> roleService.update(1L,dto));
+  }
 
-    // DESTROY method unit tests
-    @Test
+  // DESTROY method unit tests
+  @Test
     void destroy_method_destroys_the_role() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
-        Role mockedRole = Mockito.mock(Role.class);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    Role mockedRole = Mockito.mock(Role.class);
 
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedRole));
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedRole));
 
-        StatusResponseDto result = roleService.destroy(1L);
-        assertEquals("ok",result.status);
-    }
+    StatusResponseDto result = roleService.destroy(1L);
+    assertEquals("ok",result.status);
+  }
 
-    @Test
+  @Test
     void destroy_method_throws_exception_due_a_negative_id() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        assertThrows(NegativeIdException.class,() -> {roleService.destroy(-1L);});
-    }
+    assertThrows(NegativeIdException.class,() -> {
+      roleService.destroy(-1L);
+    });
+  }
 
-    @Test
+  @Test
     void destroy_method_throws_exception_because_the_role_with_specified_id_does_not_exist() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(IdNotFoundException.class,() -> {roleService.destroy(7L);});
-    }
+    assertThrows(IdNotFoundException.class,() -> {
+      roleService.destroy(7L);
+    });
+  }
 
-    // STORE PERMISSION method unit tests
-    @Test
+  // STORE PERMISSION method unit tests
+  @Test
     void store_permission_returns_status_ok() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        Role role = Mockito.mock(Role.class);
-        Permission permission = Mockito.mock(Permission.class);
-        PermissionRequestDto permissionDto = new PermissionRequestDto(1L,"xy");
+    Role role = Mockito.mock(Role.class);
+    Permission permission = Mockito.mock(Permission.class);
+    PermissionRequestDto permissionDto = new PermissionRequestDto(1L,"xy");
 
-        Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(permission));
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(role));
+    Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(permission));
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(role));
 
-        StatusResponseDto result = roleService.storePermission(1L,permissionDto);
-        assertEquals("ok",result.status);
-    }
+    StatusResponseDto result = roleService.storePermission(1L,permissionDto);
+    assertEquals("ok",result.status);
+  }
 
-    @Test
+  @Test
     void store_permission_throws_exception_due_to_the_non_existent_permission() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        Role mockedRole = Mockito.mock(Role.class);
-        PermissionRequestDto dto = new PermissionRequestDto(2L,"x");
+    Role mockedRole = Mockito.mock(Role.class);
+    PermissionRequestDto dto = new PermissionRequestDto(2L,"x");
 
-        Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedRole));
+    Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedRole));
 
-        assertThrows(PermissionIdNotFoundException.class,() -> {roleService.storePermission(1L,dto);});
-    }
+    assertThrows(PermissionIdNotFoundException.class,() -> {
+      roleService.storePermission(1L,dto);
+    });
+  }
 
-    @Test
+  @Test
     void store_permission_throws_exception_due_to_the_non_existent_role() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        Permission mockedPermission = Mockito.mock(Permission.class);
-        PermissionRequestDto dto = new PermissionRequestDto(2L,"x");
+    Permission mockedPermission = Mockito.mock(Permission.class);
+    PermissionRequestDto dto = new PermissionRequestDto(2L,"x");
 
-        Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedPermission));
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+    Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedPermission));
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(IdNotFoundException.class,() -> {roleService.storePermission(1L,dto);});
-    }
+    assertThrows(IdNotFoundException.class,() -> {
+      roleService.storePermission(1L,dto);
+    });
+  }
 
-    @Test
+  @Test
     void store_permission_method_throws_exception_due_to_the_empty_parameter() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        PermissionRequestDto dto = new PermissionRequestDto(1L,"");
+    PermissionRequestDto dto = new PermissionRequestDto(1L,"");
 
-        assertThrows(InvalidInputException.class,() -> {roleService.storePermission(1L,dto);});
-    }
+    assertThrows(InvalidInputException.class,() -> {
+      roleService.storePermission(1L,dto);
+    });
+  }
 
-    @Test
+  @Test
     void store_permission_throws_exception_due_to_the_existent_permission() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        Permission mockedPermission = Mockito.mock(Permission.class);
-        Role mockedRole = Mockito.mock(Role.class);
-        PermissionRequestDto dto = new PermissionRequestDto(2L,"x");
+    Permission mockedPermission = Mockito.mock(Permission.class);
+    Role mockedRole = Mockito.mock(Role.class);
+    PermissionRequestDto dto = new PermissionRequestDto(2L,"x");
 
-        Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedPermission));
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedRole));
-        Mockito.when(mockedRole.can((Permission) Mockito.any())).thenReturn(true);
+    Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedPermission));
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedRole));
+    Mockito.when(mockedRole.can((Permission) Mockito.any())).thenReturn(true);
 
-        assertThrows(InvalidInputException.class,() -> {roleService.storePermission(1L,dto);});
-    }
+    assertThrows(InvalidInputException.class,() -> {
+      roleService.storePermission(1L,dto);
+    });
+  }
 
-    // DESTROY PERMISSION method unit tests
-    @Test
-    void can_destroy_permission_from_list(){
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
-        Role mockedRole = Mockito.mock(Role.class);
-        Permission mockedPermission = Mockito.mock(Permission.class);
+  // DESTROY PERMISSION method unit tests
+  @Test
+    void can_destroy_permission_from_list() {
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    Role mockedRole = Mockito.mock(Role.class);
+    Permission mockedPermission = Mockito.mock(Permission.class);
 
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedRole));
-        Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedPermission));
-        Mockito.when(mockedRole.can((Permission) Mockito.any())).thenReturn(true);
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedRole));
+    Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedPermission));
+    Mockito.when(mockedRole.can((Permission) Mockito.any())).thenReturn(true);
 
-        StatusResponseDto result = roleService.destroyPermission(1L,2L);
-        assertEquals("ok",result.status);
-    }
+    StatusResponseDto result = roleService.destroyPermission(1L,2L);
+    assertEquals("ok",result.status);
+  }
 
-    @Test
-    void destroy_permission_throws_exception_due_to_the_non_existent_permission(){
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
-        Role mockedRole = Mockito.mock(Role.class);
+  @Test
+    void destroy_permission_throws_exception_due_to_the_non_existent_permission() {
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    Role mockedRole = Mockito.mock(Role.class);
 
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedRole));
-        Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedRole));
+    Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(PermissionIdNotFoundException.class,() -> {roleService.destroyPermission(1L,2L);});
-    }
+    assertThrows(PermissionIdNotFoundException.class,() -> {
+      roleService.destroyPermission(1L,2L);
+    });
+  }
 
-    @Test
-    void destroy_permission_throws_exception_due_to_the_non_existent_role(){
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        Permission mockedPermission = Mockito.mock(Permission.class);
+  @Test
+    void destroy_permission_throws_exception_due_to_the_non_existent_role() {
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    Permission mockedPermission = Mockito.mock(Permission.class);
 
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-        Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedPermission));
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+    Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedPermission));
 
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-        assertThrows(IdNotFoundException.class,() -> {roleService.destroyPermission(1L,2L);});
-    }
-    @Test
+    assertThrows(IdNotFoundException.class,() -> {
+      roleService.destroyPermission(1L,2L);
+    });
+  }
+
+  @Test
     void destroy_permission_throws_exception_because_role_does_not_have_the_permission_in_the_permissions_list() {
-        RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
-        PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
-        Role mockedRole = Mockito.mock(Role.class);
-        Permission mockedPermission = Mockito.mock(Permission.class);
+    RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
+    PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
+    Role mockedRole = Mockito.mock(Role.class);
+    Permission mockedPermission = Mockito.mock(Permission.class);
 
-        Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedRole));
-        Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedPermission));
+    Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedRole));
+    Mockito.when(mockedPermissionRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(mockedPermission));
 
-        RoleService roleService = new DatabaseRoleService(mockedRoleRepo, mockedPermissionRepo);
+    RoleService roleService = new DatabaseRoleService(mockedRoleRepo, mockedPermissionRepo);
 
-        assertThrows(InvalidInputException.class, () -> {
-            roleService.destroyPermission(1L, 2L);
-        });
-    }
+    assertThrows(InvalidInputException.class, () -> {
+      roleService.destroyPermission(1L, 2L);
+    });
+  }
 }
