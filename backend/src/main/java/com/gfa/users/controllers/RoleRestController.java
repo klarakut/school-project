@@ -69,10 +69,10 @@ public class RoleRestController {
     }
 
     @GetMapping("/roles/{id}")
-    public ResponseEntity<? extends ResponseDto> show(@PathVariable("id") Long id){
+    public ResponseEntity<? extends ResponseDto> show(@PathVariable("id") Long id) {
         try {
             RoleResponseDto responseDto = roleService.show(id);
-            return new ResponseEntity<>(responseDto,HttpStatus.resolve(200));
+            return new ResponseEntity<>(responseDto,HttpStatus.OK);
         }
         catch (NegativeIdException e){
             return new ResponseEntity<>(new ErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
