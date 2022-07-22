@@ -47,6 +47,9 @@ public class User {
 
   private LocalDateTime createdAt;
 
+  private boolean mfa;
+  private String secret;
+
   @ManyToMany
   @JoinTable(
       name = "user_permission",
@@ -108,11 +111,29 @@ public class User {
   SecureRandom random = new SecureRandom();
   Integer randomSecureValue = random.nextInt();
 
-  public User(CreateUserRequestDto dto, Long expirationTime) {
+  public User(CreateUserRequestDto dto, Long expirationTime, String secret) {
     this(dto.username, dto.email, dto.password);
     this.verifiedAt = null;
     this.verificationToken = String.valueOf(randomSecureValue);
     this.verificationTokenExpiresAt = LocalDateTime.now().plusSeconds(expirationTime);
+    this.secret = secret;
+    this.mfa = true;
+  }
+
+  // constructor for use in Spring Security
+  public User(User user) {
+    this.id = user.id;
+    this.username = user.username;
+    this.email = user.email;
+    this.password = user.password;
+    this.verifiedAt = user.verifiedAt;
+    this.verificationToken = user.verificationToken;
+    this.verificationTokenExpiresAt = user.verificationTokenExpiresAt;
+    this.forgottenPasswordToken = user.forgottenPasswordToken;
+    this.forgottenPasswordTokenExpiresAt = user.forgottenPasswordTokenExpiresAt;
+    this.createdAt = user.createdAt;
+    this.mfa = user.mfa;
+    this.secret = user.secret;
   }
 
   public String getEmail() {
@@ -199,6 +220,10 @@ public class User {
     return roles.remove(role);
   }
 
+  public int hashCode() {
+    return username.hashCode();
+  }
+
   public boolean can(Permission permission) {
     return can(permission.getAbility());
   }
@@ -225,5 +250,13 @@ public class User {
       }
     }
     return false;
+  }
+
+  public Boolean isMfa() {
+    return mfa;
+  }
+
+  public String getSecret() {
+    return secret;
   }
 }

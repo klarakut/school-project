@@ -1,12 +1,11 @@
 package com.gfa.users.models;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class TeamTest {
 
@@ -29,85 +28,17 @@ class TeamTest {
   }
 
   @Test
-  void can_is_true_for_added_permission() {
-    assertFalse(team.can(permission));
-    assertTrue(team.addPermission(permission));
-    assertTrue(team.can(permission));
+  void can_create_team() {
+    Team team = new Team("Gregor Gregorovic");
+    Team team2 = new Team("Gregor Gregorovic");
+    assertEquals("Gregor Gregorovic", team.getName());
   }
 
   @Test
-  void can_is_false_for_add_same_permission_twice() {
-    team.addPermission(permission);
-    assertFalse(team.addPermission(permission));
-  }
-
-  @Test
-  void can_remove_added_permission() {
-    team.addPermission(permission);
-    assertTrue(team.removePermission(permission));
-    assertFalse(team.can(permission));
-    assertFalse(team.removePermission(permission));
-  }
-
-  @Test
-  void add_user_is_true() {
-    assertTrue(team.addUser(user));
-  }
-
-  @Test
-  void add_user_is_false_for_add_same_user_twice() {
+  void can_add_the_same_user_only_once() {
+    Team team = new Team("team");
+    User user = new User("username", "email", "password");
     assertTrue(team.addUser(user));
     assertFalse(team.addUser(user));
-  }
-
-  @Test
-  void can_remove_added_user() {
-    assertFalse(team.removeUser(user));
-    assertTrue(team.addUser(user));
-    assertTrue(team.removeUser(user));
-    assertFalse(team.removeUser(user));
-  }
-
-  @Test
-  void add_role_is_ture() {
-    assertTrue(team.addRole(role));
-  }
-
-  @Test
-  void add_role_is_false_for_add_same_role_twice() {
-    assertTrue(team.addRole(role));
-    assertFalse(team.addRole(role));
-  }
-
-  @Test
-  void can_remove_added_role() {
-    assertFalse(team.removeRole(role));
-    assertTrue(team.addRole(role));
-    assertTrue(team.removeRole(role));
-    assertFalse(team.removeRole(role));
-  }
-
-  @Test
-  void can_is_true_through_team_role_classes_with_string() {
-    assertFalse(team.can("permission"));
-    team.addPermission(permission);
-    assertTrue(team.can("permission"));
-    team.removePermission(permission);
-    role.addPermission(permission);
-    assertFalse(team.can("permission"));
-    team.addRole(role);
-    assertTrue(team.can("permission"));
-  }
-
-  @Test
-  void can_is_true_through_team_role_classes_with_permission() {
-    assertFalse(team.can(permission));
-    team.addPermission(permission);
-    assertTrue(team.can(permission));
-    team.removePermission(permission);
-    role.addPermission(permission);
-    assertFalse(team.can(permission));
-    team.addRole(role);
-    assertTrue(team.can(permission));
   }
 }
