@@ -32,7 +32,7 @@ public class DatabaseRoleService implements RoleService{
 
     @Override
     public RoleResponseDto show(Long id) {
-        if (id < 0){
+        if (id <= 0){
             throw new NegativeIdException();
         }
 
@@ -47,8 +47,8 @@ public class DatabaseRoleService implements RoleService{
             throw new EmptyBodyException();
         }
 
-        Boolean existingRole = roleRepository.findByRole(dto.role).isPresent();
-            if (existingRole){
+        boolean existingRole = roleRepository.findByRole(dto.role).isPresent();
+        if (existingRole){
             throw new RoleExistException();
         }
 
