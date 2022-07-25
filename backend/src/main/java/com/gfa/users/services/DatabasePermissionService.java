@@ -72,7 +72,7 @@ public class DatabasePermissionService implements PermissionService {
     try {
       Permission permission =
           permissionRepository.findById(id).orElseThrow(() -> new PermissionNotFoundException());
-      permission.setAbility(permission.getAbility());
+      permission.setAbility(permissionPatchRequestDto.getAbility());
       return new PermissionResponseDto(permissionRepository.save(permission));
     } catch (PermissionNotFoundException e) {
       throw new PermissionNotFoundException();
