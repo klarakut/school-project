@@ -3,7 +3,7 @@ package com.gfa.users.dtos;
 import com.gfa.common.dtos.ResponseDto;
 import com.gfa.users.models.Team;
 
-public class TeamResponseDto extends ResponseDto {
+public class TeamResponseDto implements ResponseDto {
 
   public final Long id;
   public final String team;
