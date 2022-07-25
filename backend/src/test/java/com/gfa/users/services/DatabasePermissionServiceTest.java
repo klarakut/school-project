@@ -4,11 +4,12 @@ import com.gfa.users.dtos.EmptyResponseDto;
 import com.gfa.users.dtos.PermissionCreateRequestDto;
 import com.gfa.users.dtos.PermissionPatchRequestDto;
 import com.gfa.users.dtos.PermissionResponseDto;
-import com.gfa.users.exceptions.*;
+import com.gfa.users.exceptions.InvalidRequestException;
+import com.gfa.users.exceptions.PermissionExistsException;
+import com.gfa.users.exceptions.InvalidIdException;
+import com.gfa.users.exceptions.PermissionNotFoundException;
 import com.gfa.users.models.Permission;
 import com.gfa.users.repositories.PermissionRepository;
-
-import org.assertj.core.internal.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -16,7 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 class DatabasePermissionServiceTest {
 
@@ -172,20 +175,21 @@ class DatabasePermissionServiceTest {
 
   @Test
   void update_cannotFindPermissions() {
-    //AAA
-    //Arrange
+    // AAA
+    // Arrange
     PermissionRepository fakePermissionRepository = Mockito.mock(PermissionRepository.class);
-    PermissionPatchRequestDto permissionPatchRequestDto = new PermissionPatchRequestDto("Book Table");
+    PermissionPatchRequestDto permissionPatchRequestDto =
+        new PermissionPatchRequestDto("Book Table");
 
     Mockito.when(fakePermissionRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
     PermissionService service = new DatabasePermissionService(fakePermissionRepository);
-    //Act
-    //Assert
+    // Act
+    // Assert
     assertThrows(
-            PermissionNotFoundException.class,
-            () -> {
-              service.update(1L, permissionPatchRequestDto);
-            });
+        PermissionNotFoundException.class,
+        () -> {
+          service.update(1L, permissionPatchRequestDto);
+        });
   }
 
   @Test
@@ -211,26 +215,25 @@ class DatabasePermissionServiceTest {
     PermissionService service = new DatabasePermissionService(fakePermissionRepository);
     // Assert
     assertThrows(
-            InvalidIdException.class,
-            () -> {
-              service.destroy(-1L);
-            });
+        InvalidIdException.class,
+        () -> {
+          service.destroy(-1L);
+        });
   }
 
   @Test
   void destroy_cannotFindPermission() {
-    //AAA
-    //Arrange
+    // AAA
+    // Arrange
     PermissionRepository fakePermissionRepository = Mockito.mock(PermissionRepository.class);
     Mockito.when(fakePermissionRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
     PermissionService service = new DatabasePermissionService(fakePermissionRepository);
-    //Act
-    //Assert
+    // Act
+    // Assert
     assertThrows(
-            PermissionNotFoundException.class,
-            () -> {
-              service.destroy(1L);
-            });
+        PermissionNotFoundException.class,
+        () -> {
+          service.destroy(1L);
+        });
   }
-  }
-
+}
