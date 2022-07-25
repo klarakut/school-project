@@ -6,7 +6,8 @@ public class RoleResponseDto extends RoleDto implements ResponseDto {
   public RoleResponseDto(Long id, String role) {
     super(id, role);
   }
-  public RoleResponseDto(Role role){
+
+  public RoleResponseDto(Role role) {
     super(role.getId(), role.getRole());
   }
 }
