@@ -5,13 +5,13 @@ import com.gfa.common.dtos.RoleCreateRequestDto;
 import com.gfa.common.dtos.RolePatchRequestDto;
 import com.gfa.common.dtos.RoleResponseDto;
 import com.gfa.common.dtos.StatusResponseDto;
+import com.gfa.users.exceptions.InvalidIdException;
 import com.gfa.users.exceptions.InvalidInputException;
 import com.gfa.users.exceptions.PermissionIdNotFoundException;
 import com.gfa.users.exceptions.UnknownErrorException;
-import com.gfa.users.exceptions.EmptyBodyException;
+import com.gfa.common.exceptions.EmptyBodyException;
 import com.gfa.users.exceptions.IdNotFoundException;
-import com.gfa.users.exceptions.NegativeIdException;
-import com.gfa.users.exceptions.RoleExistException;
+import com.gfa.users.exceptions.DuplicateRoleException;
 import com.gfa.users.models.Permission;
 import com.gfa.users.models.Role;
 import com.gfa.users.repositories.PermissionRepository;
@@ -43,7 +43,7 @@ public class DatabaseRoleService implements RoleService {
   @Override
     public RoleResponseDto show(Long id) {
     if (id <= 0) {
-      throw new NegativeIdException();
+      throw new InvalidIdException();
     }
 
     Role role = roleRepository.findById(id).orElseThrow(() -> new IdNotFoundException());
@@ -59,7 +59,7 @@ public class DatabaseRoleService implements RoleService {
 
     boolean existingRole = roleRepository.findByRole(dto.role).isPresent();
     if (existingRole) {
-      throw new RoleExistException();
+      throw new DuplicateRoleException();
     }
 
     // TODO -> unauthorized user => 401
@@ -78,7 +78,7 @@ public class DatabaseRoleService implements RoleService {
   @Override
     public RoleResponseDto update(Long id, RolePatchRequestDto dto) {
     if (id < 0) {
-      throw new NegativeIdException();
+      throw new InvalidIdException();
     }
 
     if (dto.role.isEmpty() || dto.role == null) {
@@ -102,7 +102,7 @@ public class DatabaseRoleService implements RoleService {
   @Override
     public StatusResponseDto destroy(Long id) {
     if (id <= 0) {
-      throw new NegativeIdException();
+      throw new InvalidIdException();
     }
 
     // TODO -> unauthorized user => 401

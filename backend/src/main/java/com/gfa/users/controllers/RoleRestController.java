@@ -7,11 +7,11 @@ import com.gfa.common.dtos.RoleResponseDto;
 import com.gfa.common.dtos.RolePatchRequestDto;
 import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.common.dtos.PermissionRequestDto;
-import com.gfa.users.exceptions.EmptyBodyException;
-import com.gfa.users.exceptions.RoleExistException;
+import com.gfa.common.exceptions.EmptyBodyException;
+import com.gfa.users.exceptions.DuplicateRoleException;
+import com.gfa.users.exceptions.InvalidIdException;
 import com.gfa.users.exceptions.UnknownErrorException;
 import com.gfa.users.exceptions.IdNotFoundException;
-import com.gfa.users.exceptions.NegativeIdException;
 import com.gfa.users.exceptions.PermissionIdNotFoundException;
 import com.gfa.users.exceptions.InvalidInputException;
 import com.gfa.users.services.RoleService;
@@ -51,7 +51,7 @@ public class RoleRestController {
       return new ResponseEntity<>(role,HttpStatus.CREATED);
     } catch (EmptyBodyException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Role is required"), HttpStatus.BAD_REQUEST);
-    } catch (RoleExistException e) {
+    } catch (DuplicateRoleException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Role already exists"),HttpStatus.CONFLICT);
     } catch (UnknownErrorException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Unknown error"), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -70,7 +70,7 @@ public class RoleRestController {
     try {
       RoleResponseDto responseDto = roleService.show(id);
       return new ResponseEntity<>(responseDto,HttpStatus.OK);
-    } catch (NegativeIdException e) {
+    } catch (InvalidIdException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (IdNotFoundException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Role not found"),HttpStatus.NOT_FOUND);
@@ -82,7 +82,7 @@ public class RoleRestController {
     try {
       RoleResponseDto responseDto = roleService.update(id,dto);
       return new ResponseEntity<>(responseDto,HttpStatus.resolve(200));
-    } catch (NegativeIdException e) {
+    } catch (InvalidIdException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (IdNotFoundException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Role not found"),HttpStatus.NOT_FOUND);
@@ -105,7 +105,7 @@ public class RoleRestController {
     try {
       StatusResponseDto status = roleService.destroy(id);
       return new ResponseEntity<>(status,HttpStatus.resolve(201));
-    } catch (NegativeIdException e) {
+    } catch (InvalidIdException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
     } catch (IdNotFoundException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Role not found"),HttpStatus.NOT_FOUND);

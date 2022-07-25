@@ -5,12 +5,12 @@ import com.gfa.common.dtos.RolePatchRequestDto;
 import com.gfa.common.dtos.RoleResponseDto;
 import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.common.dtos.PermissionRequestDto;
-import com.gfa.users.exceptions.EmptyBodyException;
+import com.gfa.common.exceptions.EmptyBodyException;
 import com.gfa.users.exceptions.IdNotFoundException;
+import com.gfa.users.exceptions.InvalidIdException;
 import com.gfa.users.exceptions.InvalidInputException;
-import com.gfa.users.exceptions.NegativeIdException;
 import com.gfa.users.exceptions.PermissionIdNotFoundException;
-import com.gfa.users.exceptions.RoleExistException;
+import com.gfa.users.exceptions.DuplicateRoleException;
 import com.gfa.users.models.Permission;
 import com.gfa.users.models.Role;
 import com.gfa.users.repositories.PermissionRepository;
@@ -62,7 +62,7 @@ class DatabaseRoleServiceTest {
     PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
     RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-    assertThrows(NegativeIdException.class,() -> roleService.show(-1L));
+    assertThrows(InvalidIdException.class,() -> roleService.show(-1L));
   }
 
   @Test
@@ -112,7 +112,7 @@ class DatabaseRoleServiceTest {
 
     Mockito.when(mockedRoleRepo.findByRole(Mockito.anyString())).thenReturn(Optional.of(mockedRole));
 
-    assertThrows(RoleExistException.class,() -> roleService.store(dto));
+    assertThrows(DuplicateRoleException.class,() -> roleService.store(dto));
   }
 
   // UPDATE method unit tests
@@ -139,7 +139,7 @@ class DatabaseRoleServiceTest {
 
     RolePatchRequestDto mockedDto = Mockito.mock(RolePatchRequestDto.class);
 
-    assertThrows(NegativeIdException.class,() -> roleService.update(-1L,mockedDto));
+    assertThrows(InvalidIdException.class,() -> roleService.update(-1L,mockedDto));
   }
 
   @Test
@@ -185,7 +185,7 @@ class DatabaseRoleServiceTest {
     PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
     RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-    assertThrows(NegativeIdException.class,() -> {
+    assertThrows(InvalidIdException.class,() -> {
       roleService.destroy(-1L);
     });
   }
