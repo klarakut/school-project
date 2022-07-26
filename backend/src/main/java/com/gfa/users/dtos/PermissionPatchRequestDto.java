@@ -2,14 +2,8 @@ package com.gfa.users.dtos;
 
 import com.gfa.common.dtos.RequestDto;
 
-public class PermissionPatchRequestDto extends RequestDto {
-  public final String ability;
-
+public class PermissionPatchRequestDto extends PermissionDto implements RequestDto {
   public PermissionPatchRequestDto(String ability) {
-    this.ability = ability;
-  }
-
-  public String getAbility() {
-    return ability;
+    super(null, ability);
   }
 }

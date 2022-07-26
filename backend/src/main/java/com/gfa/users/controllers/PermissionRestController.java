@@ -1,9 +1,9 @@
 package com.gfa.users.controllers;
 
+import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.dtos.ResponseDto;
 
 import com.gfa.users.dtos.PermissionCreateRequestDto;
-import com.gfa.users.dtos.PermissionErrorResponseDto;
 import com.gfa.users.dtos.PermissionResponseDto;
 import com.gfa.users.dtos.PermissionPatchRequestDto;
 import com.gfa.users.dtos.EmptyResponseDto;
@@ -49,13 +49,12 @@ public class PermissionRestController {
       return new ResponseEntity<>(dtoResponse, HttpStatus.valueOf(200));
     } catch (InvalidRequestException e) {
       return new ResponseEntity<>(
-          new PermissionErrorResponseDto("ability is required"), HttpStatus.valueOf(400));
+          new ErrorResponseDto("ability is required"), HttpStatus.valueOf(400));
     } catch (PermissionExistsException e) {
       return new ResponseEntity<>(
-          new PermissionErrorResponseDto("Ability already exist"), HttpStatus.valueOf(409));
+          new ErrorResponseDto("Ability already exist"), HttpStatus.valueOf(409));
     } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(
-          new PermissionErrorResponseDto("Unknow error"), HttpStatus.valueOf(410));
+      return new ResponseEntity<>(new ErrorResponseDto("Unknow error"), HttpStatus.valueOf(410));
     }
   }
 
@@ -65,14 +64,12 @@ public class PermissionRestController {
       PermissionResponseDto dtoResponse = permissionService.show(id);
       return new ResponseEntity<>(dtoResponse, HttpStatus.valueOf(200));
     } catch (InvalidIdException e) {
-      return new ResponseEntity<>(
-          new PermissionErrorResponseDto("Invalid id"), HttpStatus.valueOf(400));
+      return new ResponseEntity<>(new ErrorResponseDto("Invalid id"), HttpStatus.valueOf(400));
     } catch (PermissionNotFoundException e) {
       return new ResponseEntity<>(
-          new PermissionErrorResponseDto("Permission not found"), HttpStatus.valueOf(404));
+          new ErrorResponseDto("Permission not found"), HttpStatus.valueOf(404));
     } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(
-          new PermissionErrorResponseDto("Unknow erroe"), HttpStatus.valueOf(410));
+      return new ResponseEntity<>(new ErrorResponseDto("Unknow erroe"), HttpStatus.valueOf(410));
     }
   }
 
@@ -83,17 +80,14 @@ public class PermissionRestController {
       PermissionResponseDto dtoResponse = permissionService.update(id, permissionPatchRequestDto);
       return new ResponseEntity<>(dtoResponse, HttpStatus.valueOf(200));
     } catch (InvalidIdException e) {
-      return new ResponseEntity<>(
-          new PermissionErrorResponseDto("Invalid id"), HttpStatus.valueOf(400));
+      return new ResponseEntity<>(new ErrorResponseDto("Invalid id"), HttpStatus.valueOf(400));
     } catch (PermissionNotFoundException e) {
       return new ResponseEntity<>(
-          new PermissionErrorResponseDto("Permission not found"), HttpStatus.valueOf(404));
+          new ErrorResponseDto("Permission not found"), HttpStatus.valueOf(404));
     } catch (InvalidRequestException e) {
-      return new ResponseEntity<>(
-          new PermissionErrorResponseDto("Invalid data"), HttpStatus.valueOf(400));
+      return new ResponseEntity<>(new ErrorResponseDto("Invalid data"), HttpStatus.valueOf(400));
     } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(
-          new PermissionErrorResponseDto("Unknow error"), HttpStatus.valueOf(410));
+      return new ResponseEntity<>(new ErrorResponseDto("Unknow error"), HttpStatus.valueOf(410));
     }
   }
 
@@ -103,14 +97,12 @@ public class PermissionRestController {
       EmptyResponseDto dtoResponse = permissionService.destroy(id);
       return new ResponseEntity<>(dtoResponse, HttpStatus.valueOf(200));
     } catch (InvalidIdException e) {
-      return new ResponseEntity<>(
-          new PermissionErrorResponseDto("Invalid id"), HttpStatus.valueOf(400));
+      return new ResponseEntity<>(new ErrorResponseDto("Invalid id"), HttpStatus.valueOf(400));
     } catch (PermissionNotFoundException e) {
       return new ResponseEntity<>(
-          new PermissionErrorResponseDto("Permission not found"), HttpStatus.valueOf(404));
+          new ErrorResponseDto("Permission not found"), HttpStatus.valueOf(404));
     } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(
-          new PermissionErrorResponseDto("Unknow error"), HttpStatus.valueOf(410));
+      return new ResponseEntity<>(new ErrorResponseDto("Unknow error"), HttpStatus.valueOf(410));
     }
   }
 }

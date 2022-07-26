@@ -37,16 +37,16 @@ public class DatabasePermissionService implements PermissionService {
 
   @Override
   public PermissionResponseDto store(PermissionCreateRequestDto permissionCreateRequestDto) {
-    if (permissionCreateRequestDto.getAbility().isEmpty()) {
+    if (permissionCreateRequestDto.ability.isEmpty()) {
       throw new InvalidRequestException();
     }
     boolean permissions =
-        permissionRepository.findByAbility(permissionCreateRequestDto.getAbility()).isPresent();
+        permissionRepository.findByAbility(permissionCreateRequestDto.ability).isPresent();
     if (permissions) {
       throw new PermissionExistsException();
     }
     try {
-      Permission permission = new Permission(permissionCreateRequestDto.getAbility());
+      Permission permission = new Permission(permissionCreateRequestDto.ability);
       return new PermissionResponseDto(permissionRepository.save(permission));
     } catch (Exception e) {
       throw new UnknownErrorException();
@@ -75,13 +75,13 @@ public class DatabasePermissionService implements PermissionService {
     if (id <= 0) {
       throw new InvalidIdException();
     }
-    if (permissionPatchRequestDto.getAbility().isEmpty()) {
+    if (permissionPatchRequestDto.ability.isEmpty()) {
       throw new InvalidRequestException();
     }
     try {
       Permission permission =
           permissionRepository.findById(id).orElseThrow(() -> new PermissionNotFoundException());
-      permission.setAbility(permissionPatchRequestDto.getAbility());
+      permission.setAbility(permissionPatchRequestDto.ability);
       return new PermissionResponseDto(permissionRepository.save(permission));
     } catch (PermissionNotFoundException e) {
       throw new PermissionNotFoundException();

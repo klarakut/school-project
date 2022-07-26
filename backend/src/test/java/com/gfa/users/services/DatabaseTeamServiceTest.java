@@ -55,7 +55,7 @@ class DatabaseTeamServiceTest {
   void store() {
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
     TeamCreateRequestDto teamDto = new TeamCreateRequestDto("Gregor");
-    Team team = new Team(teamDto.getName());
+    Team team = new Team(teamDto.name);
 
     Mockito.when(mockedTeamRepository.findByName(Mockito.anyString())).thenReturn(Optional.empty());
     Mockito.when(mockedTeamRepository.save(Mockito.any())).thenReturn(team);
@@ -64,7 +64,7 @@ class DatabaseTeamServiceTest {
     // Act
     TeamResponseDto result = teamService.store(teamDto);
     // Assert
-    assertEquals("Gregor", result.team);
+    assertEquals("Gregor", result.name);
   }
 
   @Test
@@ -73,7 +73,7 @@ class DatabaseTeamServiceTest {
     // Arange
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
     TeamCreateRequestDto teamDto = new TeamCreateRequestDto("");
-    Team team = new Team(teamDto.getName());
+    Team team = new Team(teamDto.name);
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
 
     // Act
@@ -89,7 +89,7 @@ class DatabaseTeamServiceTest {
   void store_team_already_exists() {
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
     TeamCreateRequestDto teamDto = new TeamCreateRequestDto("Gregor");
-    Team team = new Team(teamDto.getName());
+    Team team = new Team(teamDto.name);
 
     Mockito.when(mockedTeamRepository.findByName(Mockito.any())).thenReturn(Optional.of(team));
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
@@ -115,7 +115,7 @@ class DatabaseTeamServiceTest {
     // Act
     TeamResponseDto result = teamService.show(1L);
     // Assert
-    assertEquals("Gregor", result.team);
+    assertEquals("Gregor", result.name);
   }
 
   @Test
@@ -147,7 +147,7 @@ class DatabaseTeamServiceTest {
     // Act
     TeamResponseDto result = teamService.update(1L, teamDto);
     // Assert
-    assertEquals("Gregor", result.team);
+    assertEquals("Gregor", result.name);
   }
 
   @Test
@@ -156,7 +156,7 @@ class DatabaseTeamServiceTest {
     // Arange
     TeamRepository mockedTeamRepository = Mockito.mock(TeamRepository.class);
     TeamPatchRequestDto teamDto = new TeamPatchRequestDto("");
-    Team team = new Team(teamDto.getName());
+    Team team = new Team(teamDto.name);
     TeamService teamService = new DatabaseTeamService(mockedTeamRepository, null, null, null);
 
     // Act

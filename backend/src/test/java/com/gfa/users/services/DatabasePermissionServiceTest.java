@@ -44,7 +44,7 @@ class DatabasePermissionServiceTest {
     PermissionRepository fakePermissionRepository = Mockito.mock(PermissionRepository.class);
     PermissionCreateRequestDto permissionCreateRequestDto =
         new PermissionCreateRequestDto("Book Table");
-    Permission permission = new Permission(permissionCreateRequestDto.getAbility());
+    Permission permission = new Permission(permissionCreateRequestDto.ability);
     Mockito.when(fakePermissionRepository.findByAbility(Mockito.anyString()))
         .thenReturn(Optional.empty());
     Mockito.when(fakePermissionRepository.save(Mockito.any())).thenReturn(permission);
@@ -61,7 +61,7 @@ class DatabasePermissionServiceTest {
     // Arrange
     PermissionRepository fakePermissionRepository = Mockito.mock(PermissionRepository.class);
     PermissionCreateRequestDto permissionCreateRequestDto = new PermissionCreateRequestDto("");
-    Permission permission = new Permission(permissionCreateRequestDto.getAbility());
+    Permission permission = new Permission(permissionCreateRequestDto.ability);
     PermissionService service = new DatabasePermissionService(fakePermissionRepository);
     // Act
     // Asserts
@@ -79,7 +79,7 @@ class DatabasePermissionServiceTest {
     PermissionRepository fakePermissionRepository = Mockito.mock(PermissionRepository.class);
     PermissionCreateRequestDto permissionCreateRequestDto =
         new PermissionCreateRequestDto("Book Table");
-    Permission permission = new Permission(permissionCreateRequestDto.getAbility());
+    Permission permission = new Permission(permissionCreateRequestDto.ability);
 
     Mockito.when(fakePermissionRepository.findByAbility(Mockito.anyString()))
         .thenReturn(Optional.of(permission));

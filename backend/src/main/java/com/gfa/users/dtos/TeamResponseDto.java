@@ -3,13 +3,9 @@ package com.gfa.users.dtos;
 import com.gfa.common.dtos.ResponseDto;
 import com.gfa.users.models.Team;
 
-public class TeamResponseDto extends ResponseDto {
-
-  public final Long id;
-  public final String team;
+public class TeamResponseDto extends TeamDto implements ResponseDto {
 
   public TeamResponseDto(Team team) {
-    this.id = team.getId();
-    this.team = team.getName();
+    super(team.getId(), team.getName());
   }
 }
