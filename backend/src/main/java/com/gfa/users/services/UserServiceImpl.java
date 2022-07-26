@@ -5,10 +5,27 @@ import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.common.exceptions.UnknownErrorException;
 import com.gfa.common.services.EmailValidator;
-import com.gfa.users.dtos.*;
+import com.gfa.users.dtos.PasswordResetRequestDto;
+import com.gfa.users.dtos.UserResponseDto;
+import com.gfa.users.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.UserPatchRequestDto;
+import com.gfa.users.dtos.EmptyResponseDto;
 import com.gfa.common.dtos.StatusResponseDto;
-import com.gfa.users.exceptions.*;
-import com.gfa.users.models.Team;
+import com.gfa.users.exceptions.AlreadyVerifiedException;
+import com.gfa.users.exceptions.EmailAlreadyExistException;
+import com.gfa.users.exceptions.EmailMissingException;
+import com.gfa.users.exceptions.InvalidIdException;
+import com.gfa.users.exceptions.InvalidPasswordException;
+import com.gfa.users.exceptions.InvalidRequestException;
+import com.gfa.users.exceptions.PasswordMissingException;
+import com.gfa.users.exceptions.PasswordTooShortException;
+import com.gfa.users.exceptions.ShortPasswordException;
+import com.gfa.users.exceptions.ShortUsernameException;
+import com.gfa.users.exceptions.UnexpectedErrorException;
+import com.gfa.users.exceptions.UnverifiedEmailException;
+import com.gfa.users.exceptions.UserNotFoundException;
+import com.gfa.users.exceptions.UsernameMissingException;
+import com.gfa.users.exceptions.UsernameTakenException;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
 import java.time.LocalDateTime;
@@ -119,11 +136,11 @@ public class UserServiceImpl implements UserService {
         userUpdate.setPassword(userPatchRequestDto.getPassword());
       }
       if (!userPatchRequestDto.getEmail().isEmpty()) {
-        if(userRepository.findByEmail(userPatchRequestDto.getEmail()).isPresent()){
+        if (userRepository.findByEmail(userPatchRequestDto.getEmail()).isPresent()) {
           throw new EmailAlreadyExistException();
         }
         EmailValidator.validate(userPatchRequestDto.getEmail());
-        userUpdate.setEmail(userPatchRequestDto.getEmail());        // send new verification email
+        userUpdate.setEmail(userPatchRequestDto.getEmail()); // send new verification email
         setNullVerificationAt = true;
       }
       return new UserResponseDto(userRepository.save(userUpdate), setNullVerificationAt);

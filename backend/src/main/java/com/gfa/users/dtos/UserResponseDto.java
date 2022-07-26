@@ -30,8 +30,7 @@ public class UserResponseDto extends ResponseDto {
     this.email = user.getEmail();
     if (setNullVerificationAt) {
       this.verifiedAt = null;
-    }
-    else {
+    } else {
       this.verifiedAt = user.getVerifiedAt();
     }
     this.createdAt = user.getCreatedAt();
