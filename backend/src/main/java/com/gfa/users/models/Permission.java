@@ -37,6 +37,10 @@ public class Permission {
     return ability;
   }
 
+  public void setAbility(@NotNull String ability) {
+    this.ability = ability;
+  }
+
   public boolean can(Permission permission) {
     return this.can(permission.getAbility());
   }
