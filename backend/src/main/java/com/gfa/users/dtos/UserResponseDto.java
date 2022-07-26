@@ -23,4 +23,19 @@ public class UserResponseDto extends ResponseDto {
     this.mfa = user.isMfa();
     this.secretImageUri = secretForImage;
   }
+
+  public UserResponseDto(User user, Boolean setNullVerificationAt) {
+    this.id = user.getId();
+    this.username = user.getUsername();
+    this.email = user.getEmail();
+    if (setNullVerificationAt) {
+      this.verifiedAt = null;
+    }
+    else {
+      this.verifiedAt = user.getVerifiedAt();
+    }
+    this.createdAt = user.getCreatedAt();
+    this.mfa = user.isMfa();
+    this.secretImageUri = user.getSecret();
+  }
 }

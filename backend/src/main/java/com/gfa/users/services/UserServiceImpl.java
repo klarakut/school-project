@@ -102,6 +102,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponseDto update(Long id, UserPatchRequestDto userPatchRequestDto) {
+    Boolean setNullVerificationAt = false;
     if (id <= 0) {
       throw new InvalidIdException();
     }
@@ -117,11 +118,15 @@ public class UserServiceImpl implements UserService {
         }
         userUpdate.setPassword(userPatchRequestDto.getPassword());
       }
-      if (!userPatchRequestDto.getEmail().isEmpty()) {            //pokud je zadán nový email tak tam nacpat ten secret a opakovat email validaci
-        userUpdate.setEmail(userPatchRequestDto.getEmail());
+      if (!userPatchRequestDto.getEmail().isEmpty()) {
+        if(userRepository.findByEmail(userPatchRequestDto.getEmail()).isPresent()){
+          throw new EmailAlreadyExistException();
+        }
+        EmailValidator.validate(userPatchRequestDto.getEmail());
+        userUpdate.setEmail(userPatchRequestDto.getEmail());        // send new verification email
+        setNullVerificationAt = true;
       }
-      String secretForImage = userUpdate.getSecret();
-      return new UserResponseDto(userRepository.save(userUpdate), secretForImage);
+      return new UserResponseDto(userRepository.save(userUpdate), setNullVerificationAt);
     } catch (UserNotFoundException e) {
       throw new UserNotFoundException();
     } catch (Exception e) {
