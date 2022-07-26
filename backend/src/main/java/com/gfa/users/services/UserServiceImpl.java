@@ -7,7 +7,7 @@ import com.gfa.common.exceptions.UnknownErrorException;
 import com.gfa.common.services.EmailValidator;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
-import com.gfa.users.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.UserCreateRequestDto;
 import com.gfa.users.dtos.UserPatchRequestDto;
 import com.gfa.users.dtos.EmptyResponseDto;
 import com.gfa.common.dtos.StatusResponseDto;
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
     this.totpManager = totpManager;
   }
 
-  public UserResponseDto store(CreateUserRequestDto dto) {
+  public UserResponseDto store(UserCreateRequestDto dto) {
 
     if (dto.username.isEmpty()) {
       throw new UsernameMissingException();

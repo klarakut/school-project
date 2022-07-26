@@ -3,7 +3,7 @@ package com.gfa.users.dtos;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.gfa.common.dtos.ResponseDto;
 
-public class UserErrorResponseDto extends ResponseDto {
+public class UserErrorResponseDto implements ResponseDto {
 
     String error;
 

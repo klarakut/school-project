@@ -1,25 +1,17 @@
 package com.gfa.users.dtos;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public class UserCreateRequestDto {
-    String username;
-    String email;
-    String password;
+  public final String username;
+  public final String email;
+  public final String password;
+  public boolean mfa;
 
-    public UserCreateRequestDto(String userName, String email, String password) {
-        this.username = userName;
-        this.email = email;
-        this.password = password;
-    }
-
-    public String getUserName() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
+  @JsonCreator
+  public UserCreateRequestDto(String username, String email, String password) {
+    this.username = username;
+    this.email = email;
+    this.password = password;
+  }
 }

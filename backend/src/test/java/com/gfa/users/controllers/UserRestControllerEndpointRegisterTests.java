@@ -2,7 +2,7 @@ package com.gfa.users.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gfa.users.exceptions.InvalidEmailException;
-import com.gfa.users.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.UserCreateRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
 import com.gfa.users.exceptions.EmailMissingException;
 import com.gfa.users.exceptions.ShortPasswordException;
@@ -57,7 +57,7 @@ class UserRestControllerEndpointRegisterTests {
 
   @Test
     void can_register_new_user_test() throws Exception {
-    CreateUserRequestDto request = new CreateUserRequestDto("johny","john@gmail.com","123456789");
+    UserCreateRequestDto request = new UserCreateRequestDto("johny","john@gmail.com","123456789");
     User user = new User(request, 10L,"");
     UserResponseDto response = new UserResponseDto(user,"");
 
@@ -72,7 +72,7 @@ class UserRestControllerEndpointRegisterTests {
 
   @Test
     void throws_exception_if_the_username_is_empty() throws Exception {
-    CreateUserRequestDto user = new CreateUserRequestDto("","john@gmail.com","123456789");
+    UserCreateRequestDto user = new UserCreateRequestDto("","john@gmail.com","123456789");
     Mockito.when(userService.store(Mockito.any())).thenThrow(UsernameMissingException.class);
 
     ObjectMapper mapper = new ObjectMapper();
@@ -86,7 +86,7 @@ class UserRestControllerEndpointRegisterTests {
 
   @Test
     void endpoint_throws_exception_if_the_password_is_empty() throws Exception {
-    CreateUserRequestDto user = new CreateUserRequestDto("john","john@gmail.com","");
+    UserCreateRequestDto user = new UserCreateRequestDto("john","john@gmail.com","");
     Mockito.when(userService.store(Mockito.any())).thenThrow(EmailMissingException.class);
 
     ObjectMapper mapper = new ObjectMapper();
@@ -100,7 +100,7 @@ class UserRestControllerEndpointRegisterTests {
 
   @Test
     void endpoint_throws_exception_if_the_email_is_empty() throws Exception {
-    CreateUserRequestDto user = new CreateUserRequestDto("john","","123456789");
+    UserCreateRequestDto user = new UserCreateRequestDto("john","","123456789");
     Mockito.when(userService.store(Mockito.any())).thenThrow(EmailMissingException.class);
 
     ObjectMapper mapper = new ObjectMapper();
@@ -114,7 +114,7 @@ class UserRestControllerEndpointRegisterTests {
 
   @Test
     void endpoint_throws_exception_if_the_email_is_invalid() throws Exception {
-    CreateUserRequestDto user = new CreateUserRequestDto("johny","johngmail.com","123456789");
+    UserCreateRequestDto user = new UserCreateRequestDto("johny","johngmail.com","123456789");
     Mockito.when(userService.store(Mockito.any())).thenThrow(InvalidEmailException.class);
 
     ObjectMapper mapper = new ObjectMapper();
@@ -128,7 +128,7 @@ class UserRestControllerEndpointRegisterTests {
 
   @Test
     void endpoint_throws_exception_if_the_username_is_already_taken() throws Exception {
-    CreateUserRequestDto user = new CreateUserRequestDto("johny","john@gmail.com","123456789");
+    UserCreateRequestDto user = new UserCreateRequestDto("johny","john@gmail.com","123456789");
     Mockito.when(userService.store(Mockito.any())).thenThrow(UsernameTakenException.class);
 
     ObjectMapper mapper = new ObjectMapper();
@@ -142,7 +142,7 @@ class UserRestControllerEndpointRegisterTests {
 
   @Test
     void endpoint_throws_exception_if_the_username_is_short() throws Exception {
-    CreateUserRequestDto user = new CreateUserRequestDto("jo","john@gmail.com","123456789");
+    UserCreateRequestDto user = new UserCreateRequestDto("jo","john@gmail.com","123456789");
     Mockito.when(userService.store(Mockito.any())).thenThrow(ShortUsernameException.class);
 
     ObjectMapper mapper = new ObjectMapper();
@@ -156,7 +156,7 @@ class UserRestControllerEndpointRegisterTests {
 
   @Test
     void endpoint_throws_exception_if_the_password_is_short() throws Exception {
-    CreateUserRequestDto user = new CreateUserRequestDto("johny","john@gmail.com","1234");
+    UserCreateRequestDto user = new UserCreateRequestDto("johny","john@gmail.com","1234");
     Mockito.when(userService.store(Mockito.any())).thenThrow(ShortPasswordException.class);
 
     ObjectMapper mapper = new ObjectMapper();

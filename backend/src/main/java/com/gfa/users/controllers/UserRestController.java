@@ -9,7 +9,7 @@ import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.common.exceptions.UnknownErrorException;
 
-import com.gfa.users.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.UserCreateRequestDto;
 import com.gfa.users.dtos.EmptyResponseDto;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserErrorResponseDto;
@@ -54,7 +54,7 @@ public class UserRestController {
   }
 
   @PostMapping({"/register", "/users"})
-  public ResponseEntity<? extends ResponseDto> store(@RequestBody CreateUserRequestDto dto) {
+  public ResponseEntity<? extends ResponseDto> store(@RequestBody UserCreateRequestDto dto) {
     try {
       UserResponseDto userResponse = userService.store(dto);
 
