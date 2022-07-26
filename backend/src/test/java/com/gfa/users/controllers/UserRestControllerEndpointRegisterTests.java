@@ -30,141 +30,143 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 @WebMvcTest(
-        value = UserRestController.class,
-        excludeAutoConfiguration = SecurityAutoConfiguration.class)
+    value = UserRestController.class,
+    excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @ContextConfiguration
 @AutoConfigureMockMvc
 class UserRestControllerEndpointRegisterTests {
 
-  @Autowired
-  private MockMvc mvc;
+  @Autowired private MockMvc mvc;
 
-  @MockBean
-    private UserService userService;
-  @MockBean
-    private UserDetailsService userDetailsService;
-  @MockBean
-    private UserRepository userRepository;
-  @Autowired
-    private WebApplicationContext webApplicationContext;
+  @MockBean private UserService userService;
+  @MockBean private UserDetailsService userDetailsService;
+  @MockBean private UserRepository userRepository;
+  @Autowired private WebApplicationContext webApplicationContext;
 
   @BeforeEach
-    public void setup() {
+  public void setup() {
     mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
   }
 
   @Test
-    void can_register_new_user_test() throws Exception {
-    UserCreateRequestDto request = new UserCreateRequestDto("johny","john@gmail.com","123456789");
-    User user = new User(request, 10L,"");
-    UserResponseDto response = new UserResponseDto(user,"");
+  void can_register_new_user_test() throws Exception {
+    UserCreateRequestDto request = new UserCreateRequestDto("johny", "john@gmail.com", "123456789");
+    User user = new User(request, 10L, "");
+    UserResponseDto response = new UserResponseDto(user, "");
 
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(request);
-    mvc.perform(MockMvcRequestBuilders.post("/register")
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(201));
+    mvc.perform(
+            MockMvcRequestBuilders.post("/register")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(201));
   }
 
   @Test
-    void throws_exception_if_the_username_is_empty() throws Exception {
-    UserCreateRequestDto user = new UserCreateRequestDto("","john@gmail.com","123456789");
+  void throws_exception_if_the_username_is_empty() throws Exception {
+    UserCreateRequestDto user = new UserCreateRequestDto("", "john@gmail.com", "123456789");
     Mockito.when(userService.store(Mockito.any())).thenThrow(UsernameMissingException.class);
 
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(user);
-    mvc.perform(MockMvcRequestBuilders.post("/register")
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
+    mvc.perform(
+            MockMvcRequestBuilders.post("/register")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(400));
   }
 
   @Test
-    void endpoint_throws_exception_if_the_password_is_empty() throws Exception {
-    UserCreateRequestDto user = new UserCreateRequestDto("john","john@gmail.com","");
+  void endpoint_throws_exception_if_the_password_is_empty() throws Exception {
+    UserCreateRequestDto user = new UserCreateRequestDto("john", "john@gmail.com", "");
     Mockito.when(userService.store(Mockito.any())).thenThrow(EmailMissingException.class);
 
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(user);
-    mvc.perform(MockMvcRequestBuilders.post("/register")
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
+    mvc.perform(
+            MockMvcRequestBuilders.post("/register")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(400));
   }
 
   @Test
-    void endpoint_throws_exception_if_the_email_is_empty() throws Exception {
-    UserCreateRequestDto user = new UserCreateRequestDto("john","","123456789");
+  void endpoint_throws_exception_if_the_email_is_empty() throws Exception {
+    UserCreateRequestDto user = new UserCreateRequestDto("john", "", "123456789");
     Mockito.when(userService.store(Mockito.any())).thenThrow(EmailMissingException.class);
 
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(user);
-    mvc.perform(MockMvcRequestBuilders.post("/register")
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
+    mvc.perform(
+            MockMvcRequestBuilders.post("/register")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(400));
   }
 
   @Test
-    void endpoint_throws_exception_if_the_email_is_invalid() throws Exception {
-    UserCreateRequestDto user = new UserCreateRequestDto("johny","johngmail.com","123456789");
+  void endpoint_throws_exception_if_the_email_is_invalid() throws Exception {
+    UserCreateRequestDto user = new UserCreateRequestDto("johny", "johngmail.com", "123456789");
     Mockito.when(userService.store(Mockito.any())).thenThrow(InvalidEmailException.class);
 
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(user);
-    mvc.perform(MockMvcRequestBuilders.post("/register")
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
+    mvc.perform(
+            MockMvcRequestBuilders.post("/register")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(400));
   }
 
   @Test
-    void endpoint_throws_exception_if_the_username_is_already_taken() throws Exception {
-    UserCreateRequestDto user = new UserCreateRequestDto("johny","john@gmail.com","123456789");
+  void endpoint_throws_exception_if_the_username_is_already_taken() throws Exception {
+    UserCreateRequestDto user = new UserCreateRequestDto("johny", "john@gmail.com", "123456789");
     Mockito.when(userService.store(Mockito.any())).thenThrow(UsernameTakenException.class);
 
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(user);
-    mvc.perform(MockMvcRequestBuilders.post("/register")
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(409));
+    mvc.perform(
+            MockMvcRequestBuilders.post("/register")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(409));
   }
 
   @Test
-    void endpoint_throws_exception_if_the_username_is_short() throws Exception {
-    UserCreateRequestDto user = new UserCreateRequestDto("jo","john@gmail.com","123456789");
+  void endpoint_throws_exception_if_the_username_is_short() throws Exception {
+    UserCreateRequestDto user = new UserCreateRequestDto("jo", "john@gmail.com", "123456789");
     Mockito.when(userService.store(Mockito.any())).thenThrow(ShortUsernameException.class);
 
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(user);
-    mvc.perform(MockMvcRequestBuilders.post("/register")
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
+    mvc.perform(
+            MockMvcRequestBuilders.post("/register")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(400));
   }
 
   @Test
-    void endpoint_throws_exception_if_the_password_is_short() throws Exception {
-    UserCreateRequestDto user = new UserCreateRequestDto("johny","john@gmail.com","1234");
+  void endpoint_throws_exception_if_the_password_is_short() throws Exception {
+    UserCreateRequestDto user = new UserCreateRequestDto("johny", "john@gmail.com", "1234");
     Mockito.when(userService.store(Mockito.any())).thenThrow(ShortPasswordException.class);
 
     ObjectMapper mapper = new ObjectMapper();
     String json = mapper.writeValueAsString(user);
-    mvc.perform(MockMvcRequestBuilders.post("/register")
-                        .content(json)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400));
+    mvc.perform(
+            MockMvcRequestBuilders.post("/register")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(400));
   }
 }

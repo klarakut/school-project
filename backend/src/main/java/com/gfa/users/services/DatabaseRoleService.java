@@ -28,30 +28,31 @@ public class DatabaseRoleService implements RoleService {
   private final PermissionRepository permissionRepository;
 
   @Autowired
-    public DatabaseRoleService(RoleRepository roleRepository, PermissionRepository permissionRepository) {
+  public DatabaseRoleService(
+      RoleRepository roleRepository, PermissionRepository permissionRepository) {
     this.roleRepository = roleRepository;
     this.permissionRepository = permissionRepository;
   }
 
   @Override
-    public List<RoleResponseDto> index() {
+  public List<RoleResponseDto> index() {
     List<Role> roles = roleRepository.findAll();
     return roles.stream().map(RoleResponseDto::new).collect(Collectors.toList());
   }
 
   @Override
-    public RoleResponseDto show(Long id) {
+  public RoleResponseDto show(Long id) {
     if (id <= 0) {
       throw new InvalidIdException();
     }
 
     Role role = roleRepository.findById(id).orElseThrow(() -> new IdNotFoundException());
-    RoleResponseDto roleDto = new RoleResponseDto(role.getId(),role.getRole());
+    RoleResponseDto roleDto = new RoleResponseDto(role.getId(), role.getRole());
     return roleDto;
   }
 
   @Override
-    public RoleResponseDto store(RoleRequestDto dto) {
+  public RoleResponseDto store(RoleRequestDto dto) {
     if (dto.role.isEmpty() || dto.role == null) {
       throw new EmptyBodyException();
     }
@@ -67,7 +68,7 @@ public class DatabaseRoleService implements RoleService {
     try {
       Role role = new Role(dto.role);
       roleRepository.save(role);
-      RoleResponseDto roleDto = new RoleResponseDto(role.getId(),role.getRole());
+      RoleResponseDto roleDto = new RoleResponseDto(role.getId(), role.getRole());
       return roleDto;
     } catch (Exception e) {
       throw new UnknownErrorException();
@@ -75,7 +76,7 @@ public class DatabaseRoleService implements RoleService {
   }
 
   @Override
-    public RoleResponseDto update(Long id, RoleRequestDto dto) {
+  public RoleResponseDto update(Long id, RoleRequestDto dto) {
     if (id < 0) {
       throw new InvalidIdException();
     }
@@ -99,7 +100,7 @@ public class DatabaseRoleService implements RoleService {
   }
 
   @Override
-    public StatusResponseDto destroy(Long id) {
+  public StatusResponseDto destroy(Long id) {
     if (id <= 0) {
       throw new InvalidIdException();
     }
@@ -114,7 +115,7 @@ public class DatabaseRoleService implements RoleService {
   }
 
   @Override
-    public StatusResponseDto storePermission(Long id, PermissionRequestDto permissionRequestDto) {
+  public StatusResponseDto storePermission(Long id, PermissionRequestDto permissionRequestDto) {
     if (permissionRequestDto.ability.isEmpty()) {
       throw new InvalidInputException();
     }
@@ -122,7 +123,10 @@ public class DatabaseRoleService implements RoleService {
     // TODO -> unauthorized user => 401
     // TODO -> insufficient rights to create roles => 403
 
-    Permission permission = permissionRepository.findById(permissionRequestDto.id).orElseThrow(() -> new PermissionIdNotFoundException());
+    Permission permission =
+        permissionRepository
+            .findById(permissionRequestDto.id)
+            .orElseThrow(() -> new PermissionIdNotFoundException());
     Role role = roleRepository.findById(id).orElseThrow(() -> new IdNotFoundException());
 
     boolean hasPermission = role.can(permission);
@@ -141,13 +145,16 @@ public class DatabaseRoleService implements RoleService {
   }
 
   @Override
-    public StatusResponseDto destroyPermission(Long id, Long permissionId) {
+  public StatusResponseDto destroyPermission(Long id, Long permissionId) {
 
     // TODO -> unauthorized user => 401
     // TODO -> insufficient rights to create roles => 403
 
     Role role = roleRepository.findById(id).orElseThrow(() -> new IdNotFoundException());
-    Permission permission = permissionRepository.findById(permissionId).orElseThrow(() -> new PermissionIdNotFoundException());
+    Permission permission =
+        permissionRepository
+            .findById(permissionId)
+            .orElseThrow(() -> new PermissionIdNotFoundException());
 
     boolean hasPermission = role.can(permission);
     if (!hasPermission) {

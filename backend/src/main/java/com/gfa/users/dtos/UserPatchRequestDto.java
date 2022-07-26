@@ -1,25 +1,12 @@
 package com.gfa.users.dtos;
 
-public class UserPatchRequestDto {
-    String email;
-    String username;
-    String password;
+import com.gfa.common.dtos.RequestDto;
+import com.gfa.common.dtos.UserDto;
 
-    public UserPatchRequestDto(String email, String username, String password) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-    }
+public class UserPatchRequestDto extends UserDto implements RequestDto {
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
+  public UserPatchRequestDto(String email, String username, String password) {
+    super(email, username, password);
+  }
 }
+

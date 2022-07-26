@@ -203,25 +203,4 @@ public class UserRestController {
       return new ResponseEntity<>(new UserErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
     }
   }
-
-  //  Added to /register endpoint
-  //  @PostMapping("/users")
-  //  public ResponseEntity<? extends ResponseDto> store(@RequestBody CreateUserRequestDto
-  // createUserRequestDto) {
-  //
-  //    try {
-  //      UserResponseDto dtoResponse = userService.store(createUserRequestDto);
-  //      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
-  //    } catch (InvalidRequestException e) {
-  //      return new ResponseEntity<>(new UserErrorResponseDto("User is required"),
-  // HttpStatus.BAD_REQUEST);
-  //    } catch (UserExistsException e) {
-  //      return new ResponseEntity<>(new UserErrorResponseDto("User is already exist"),
-  // HttpStatus.BAD_REQUEST);
-  //    } catch (UnknownErrorException e) {
-  //      return new ResponseEntity<>(new UserErrorResponseDto("Server error"),
-  // HttpStatus.BAD_REQUEST);
-  //    }
-  //  }
-
 }

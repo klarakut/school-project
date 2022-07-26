@@ -54,4 +54,6 @@ class UserRestControllerTest {
             .andExpect(jsonPath("$.username", is("username")))
             .andExpect(jsonPath("$.email", is("email@domain.com")));
   }
+
+
 }

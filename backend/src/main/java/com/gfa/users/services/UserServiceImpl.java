@@ -119,30 +119,43 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponseDto update(Long id, UserPatchRequestDto userPatchRequestDto) {
-    Boolean setNullVerificationAt = false;
+    boolean setNullVerificationAt = false;
     if (id <= 0) {
       throw new InvalidIdException();
     }
-    if (userPatchRequestDto.getUsername().isEmpty()) {
+    if (userPatchRequestDto.username == null) {
+      throw new InvalidRequestException();
+    }
+    if (userPatchRequestDto.email == null) {
+      throw new InvalidRequestException();
+    }
+    if (userPatchRequestDto.password == null) {
+      throw new InvalidRequestException();
+    }
+    if (userPatchRequestDto.username.isEmpty()) {
+      throw new InvalidRequestException();
+    }
+    if (userPatchRequestDto.email.isEmpty()) {
+      throw new InvalidRequestException();
+    }
+    if (userPatchRequestDto.password.isEmpty()) {
       throw new InvalidRequestException();
     }
     try {
       User userUpdate = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
-      userUpdate.setUsername(userPatchRequestDto.getUsername());
-      if (!userPatchRequestDto.getPassword().isEmpty()) {
-        if (userPatchRequestDto.getPassword().length() < 8) {
-          throw new ShortPasswordException();
-        }
-        userUpdate.setPassword(userPatchRequestDto.getPassword());
+      if (userPatchRequestDto.password.length() < 8) {
+        throw new ShortPasswordException();
       }
-      if (!userPatchRequestDto.getEmail().isEmpty()) {
-        if (userRepository.findByEmail(userPatchRequestDto.getEmail()).isPresent()) {
-          throw new EmailAlreadyExistException();
-        }
-        EmailValidator.validate(userPatchRequestDto.getEmail());
-        userUpdate.setEmail(userPatchRequestDto.getEmail()); // send new verification email
+
+      if (!userRepository.findByEmail(userPatchRequestDto.email).get().equals(userUpdate)) {
+        throw new EmailAlreadyExistException();
+      }
+      if (!userUpdate.getEmail().equals(userPatchRequestDto.email)) {
         setNullVerificationAt = true;
       }
+      userUpdate.setUsername(userPatchRequestDto.username);
+      userUpdate.setEmail(userPatchRequestDto.email);
+      userUpdate.setPassword(userPatchRequestDto.password);
       return new UserResponseDto(userRepository.save(userUpdate), setNullVerificationAt);
     } catch (UserNotFoundException e) {
       throw new UserNotFoundException();
