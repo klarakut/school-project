@@ -13,8 +13,13 @@ import javax.persistence.JoinColumn;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 @Entity
 @Table(name = "roles")
+@SQLDelete(sql = "UPDATE roles SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Role {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +29,11 @@ public class Role {
   @NotNull
   @Column(unique = true, name = "role")
   private String role;
+  private boolean deleted = Boolean.FALSE;
 
   @ManyToMany
   @JoinTable(
-      name = "roles_permission",
+      name = "role_permission",
       joinColumns = @JoinColumn(name = "role_id"),
       inverseJoinColumns = @JoinColumn(name = "permission_id"))
   private Set<Permission> permissions;
@@ -48,6 +54,10 @@ public class Role {
 
   public String getRole() {
     return role;
+  }
+
+  public void setRole(@NotNull String role) {
+    this.role = role;
   }
 
   public boolean addPermission(Permission permission) {

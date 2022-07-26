@@ -4,7 +4,7 @@ import com.gfa.common.dtos.ResponseDto;
 import com.gfa.users.models.User;
 import java.time.LocalDateTime;
 
-public class UserResponseDto extends ResponseDto {
+public class UserResponseDto implements ResponseDto {
 
   public final Long id;
   public final String username;
