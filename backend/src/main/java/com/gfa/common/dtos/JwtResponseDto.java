@@ -1,6 +1,6 @@
 package com.gfa.common.dtos;
 
-public class JwtResponseDto extends ResponseDto{
+public class JwtResponseDto implements ResponseDto{
 
     public String token;
 
