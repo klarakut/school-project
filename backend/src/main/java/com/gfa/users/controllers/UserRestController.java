@@ -9,11 +9,8 @@ import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.common.exceptions.UnknownErrorException;
 
+import com.gfa.users.dtos.*;
 import com.gfa.users.exceptions.*;
-import com.gfa.users.dtos.CreateUserRequestDto;
-import com.gfa.users.dtos.PasswordResetRequestDto;
-import com.gfa.users.dtos.UserResponseDto;
-import com.gfa.users.dtos.UserErrorResponseDto;
 
 import com.gfa.users.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +30,7 @@ public class UserRestController {
     this.userService = userService;
   }
 
-  @PostMapping("/register")
+  @PostMapping({"/register", "/users"})
   public ResponseEntity<? extends ResponseDto> store(@RequestBody CreateUserRequestDto dto) {
     try {
       UserResponseDto userResponse = userService.store(dto);
@@ -130,6 +127,48 @@ public class UserRestController {
       return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     } catch (InvalidIdException e) {
       return new ResponseEntity<>(new UserErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
+    } catch (UserNotFoundException e) {
+      return new ResponseEntity<>(new UserErrorResponseDto("User not found"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidRequestException e) {
+      return new ResponseEntity<>(new UserErrorResponseDto("Invalid data"), HttpStatus.BAD_REQUEST);
+    } catch (UnknownErrorException e) {
+      return new ResponseEntity<>(new UserErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
     }
   }
+
+  @PatchMapping("/users/{id}")
+  public ResponseEntity<? extends ResponseDto> update(
+          @PathVariable Long id, @RequestBody UserPatchRequestDto userPatchRequestDto) {
+    try {
+      UserResponseDto dtoResponse = userService.update(id, userPatchRequestDto);
+      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
+    } catch (InvalidIdException e) {
+      return new ResponseEntity<>(new UserErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
+    } catch (UserNotFoundException e) {
+      return new ResponseEntity<>(
+              new UserErrorResponseDto("User not found"), HttpStatus.BAD_REQUEST);
+    } catch (InvalidRequestException e) {
+      return new ResponseEntity<>(new UserErrorResponseDto("Invalid data"), HttpStatus.BAD_REQUEST);
+    } catch (UnknownErrorException e) {
+      return new ResponseEntity<>(new UserErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+
+//  Added to /register endpoint
+//  @PostMapping("/users")
+//  public ResponseEntity<? extends ResponseDto> store(@RequestBody CreateUserRequestDto createUserRequestDto) {
+//
+//    try {
+//      UserResponseDto dtoResponse = userService.store(createUserRequestDto);
+//      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
+//    } catch (InvalidRequestException e) {
+//      return new ResponseEntity<>(new UserErrorResponseDto("User is required"), HttpStatus.BAD_REQUEST);
+//    } catch (UserExistsException e) {
+//      return new ResponseEntity<>(new UserErrorResponseDto("User is already exist"), HttpStatus.BAD_REQUEST);
+//    } catch (UnknownErrorException e) {
+//      return new ResponseEntity<>(new UserErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+//    }
+//  }
+
 }

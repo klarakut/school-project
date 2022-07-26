@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface UserService {
   List<UserResponseDto> index();
 
-  UserResponseDto store(CreateUserRequestDto dto);
+  UserResponseDto store(CreateUserRequestDto dto);      //This should probably be called UserCreateRequestDto
 
   UserResponseDto show(Long id);
 
