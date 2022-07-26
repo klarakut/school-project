@@ -1,7 +1,6 @@
 package com.gfa.users.services;
 
 import com.gfa.common.dtos.PermissionRequestDto;
-import com.gfa.common.dtos.RolePatchRequestDto;
 import com.gfa.common.dtos.RoleRequestDto;
 import com.gfa.common.dtos.RoleResponseDto;
 import com.gfa.common.dtos.StatusResponseDto;
@@ -76,7 +75,7 @@ public class DatabaseRoleService implements RoleService {
   }
 
   @Override
-    public RoleResponseDto update(Long id, RolePatchRequestDto dto) {
+    public RoleResponseDto update(Long id, RoleRequestDto dto) {
     if (id < 0) {
       throw new InvalidIdException();
     }

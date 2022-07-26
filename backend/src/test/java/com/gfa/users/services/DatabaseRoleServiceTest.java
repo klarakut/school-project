@@ -1,6 +1,5 @@
 package com.gfa.users.services;
 
-import com.gfa.common.dtos.RolePatchRequestDto;
 import com.gfa.common.dtos.RoleRequestDto;
 import com.gfa.common.dtos.RoleResponseDto;
 import com.gfa.common.dtos.StatusResponseDto;
@@ -122,7 +121,7 @@ class DatabaseRoleServiceTest {
     PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
     RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-    RolePatchRequestDto dto = new RolePatchRequestDto("x");
+    RoleRequestDto dto = new RoleRequestDto("x");
     Role role = new Role("y");
 
     Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(role));
@@ -137,7 +136,7 @@ class DatabaseRoleServiceTest {
     PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
     RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-    RolePatchRequestDto mockedDto = Mockito.mock(RolePatchRequestDto.class);
+    RoleRequestDto mockedDto = Mockito.mock(RoleRequestDto.class);
 
     assertThrows(InvalidIdException.class,() -> roleService.update(-1L,mockedDto));
   }
@@ -148,7 +147,7 @@ class DatabaseRoleServiceTest {
     PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
     RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
 
-    RolePatchRequestDto dto = new RolePatchRequestDto("");
+    RoleRequestDto dto = new RoleRequestDto("");
 
     assertThrows(InvalidInputException.class,() -> roleService.update(1L,dto));
   }
@@ -158,7 +157,7 @@ class DatabaseRoleServiceTest {
     RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
     PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
     RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
-    RolePatchRequestDto dto = new RolePatchRequestDto("x");
+    RoleRequestDto dto = new RoleRequestDto("x");
 
     Mockito.when(mockedRoleRepo.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 

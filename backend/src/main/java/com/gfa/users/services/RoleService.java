@@ -1,6 +1,5 @@
 package com.gfa.users.services;
 
-import com.gfa.common.dtos.RolePatchRequestDto;
 import com.gfa.common.dtos.RoleRequestDto;
 import com.gfa.common.dtos.RoleResponseDto;
 import com.gfa.common.dtos.StatusResponseDto;
@@ -11,7 +10,7 @@ import java.util.List;
 public interface RoleService {
   RoleResponseDto store(RoleRequestDto dto);
 
-  RoleResponseDto update(Long id, RolePatchRequestDto dto);
+  RoleResponseDto update(Long id, RoleRequestDto dto);
 
   RoleResponseDto show(Long id);
 

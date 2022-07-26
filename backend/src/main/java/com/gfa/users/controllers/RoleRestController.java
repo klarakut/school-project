@@ -4,7 +4,6 @@ import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.dtos.ResponseDto;
 import com.gfa.common.dtos.RoleRequestDto;
 import com.gfa.common.dtos.RoleResponseDto;
-import com.gfa.common.dtos.RolePatchRequestDto;
 import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.common.dtos.PermissionRequestDto;
 import com.gfa.common.exceptions.EmptyBodyException;
@@ -78,7 +77,7 @@ public class RoleRestController {
   }
 
   @PutMapping("/roles/{id}")
-    public ResponseEntity<? extends ResponseDto> update(@PathVariable("id") Long id, @RequestBody RolePatchRequestDto dto) {
+    public ResponseEntity<? extends ResponseDto> update(@PathVariable("id") Long id, @RequestBody RoleRequestDto dto) {
     try {
       RoleResponseDto responseDto = roleService.update(id,dto);
       return new ResponseEntity<>(responseDto,HttpStatus.resolve(200));
