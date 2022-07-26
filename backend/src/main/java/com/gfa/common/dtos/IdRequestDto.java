@@ -2,7 +2,7 @@ package com.gfa.common.dtos;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-class IdRequestDto extends RequestDto {
+class IdRequestDto implements RequestDto {
   public final Long id;
 
   @JsonCreator
