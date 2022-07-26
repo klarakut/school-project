@@ -59,15 +59,15 @@ public class DatabaseTeamService implements TeamService {
 
   @Override
   public TeamResponseDto store(TeamCreateRequestDto teamCreateRequestDto) {
-    if (teamCreateRequestDto.getName().isEmpty()) {
+    if (teamCreateRequestDto.name.isEmpty()) {
       throw new InvalidRequestException();
     }
-    boolean team = teamRepository.findByName(teamCreateRequestDto.getName()).isPresent();
+    boolean team = teamRepository.findByName(teamCreateRequestDto.name).isPresent();
     if (team) {
       throw new TeamExistsException();
     }
     try {
-      Team teamCreate = new Team(teamCreateRequestDto.getName());
+      Team teamCreate = new Team(teamCreateRequestDto.name);
       // teamRepository.save(teamCreate);
       return new TeamResponseDto(teamRepository.save(teamCreate));
     } catch (Exception e) {
@@ -95,12 +95,12 @@ public class DatabaseTeamService implements TeamService {
     if (id <= 0) {
       throw new InvalidIdException();
     }
-    if (teamPatchRequestDto.getName().isEmpty()) {
+    if (teamPatchRequestDto.name.isEmpty()) {
       throw new InvalidRequestException();
     }
     try {
       Team teamUpdate = teamRepository.findById(id).orElseThrow(() -> new TeamNotFoundException());
-      teamUpdate.setName(teamPatchRequestDto.getName());
+      teamUpdate.setName(teamPatchRequestDto.name);
       return new TeamResponseDto(teamRepository.save(teamUpdate));
     } catch (TeamNotFoundException e) {
       throw new TeamNotFoundException();
@@ -179,7 +179,7 @@ public class DatabaseTeamService implements TeamService {
   @Override
   public StatusResponseDto addPermissionsToTeam(
       Long id, PermissionRequestDto permissionRequestDto) {
-    if (id < 0 || permissionRequestDto.getId() < 0) {
+    if (id < 0 || permissionRequestDto.id < 0) {
       throw new InvalidIdException();
     }
     try {
