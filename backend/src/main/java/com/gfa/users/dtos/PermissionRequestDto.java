@@ -1,6 +1,8 @@
 package com.gfa.users.dtos;
 
-public class PermissionRequestDto {
+import com.gfa.common.dtos.RequestDto;
+
+public class PermissionRequestDto extends RequestDto {
   Long id;
   String ability;
 

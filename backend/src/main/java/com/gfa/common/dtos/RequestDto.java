@@ -1,3 +1,3 @@
 package com.gfa.common.dtos;
 
-abstract class RequestDto {}
+public abstract class RequestDto {}

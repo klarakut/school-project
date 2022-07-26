@@ -1,6 +1,8 @@
 package com.gfa.users.dtos;
 
-public class TeamRequestDto {
+import com.gfa.common.dtos.RequestDto;
+
+public class TeamRequestDto extends RequestDto {
   String team;
 
   public TeamRequestDto(String team) {
