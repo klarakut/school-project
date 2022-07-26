@@ -2,9 +2,7 @@ package com.gfa.users.services;
 
 import com.gfa.common.dtos.EmailRequestDto;
 import com.gfa.common.dtos.StatusResponseDto;
-import com.gfa.users.dtos.CreateUserRequestDto;
-import com.gfa.users.dtos.PasswordResetRequestDto;
-import com.gfa.users.dtos.UserResponseDto;
+import com.gfa.users.dtos.*;
 import com.gfa.users.models.User;
 
 import java.util.List;
@@ -16,6 +14,10 @@ public interface UserService {
   UserResponseDto store(CreateUserRequestDto dto);      //This should probably be called UserCreateRequestDto
 
   UserResponseDto show(Long id);
+
+  UserResponseDto update(Long id, UserPatchRequestDto userPatchRequestDto);
+
+  EmptyResponseDto destroy(Long id);
 
   StatusResponseDto resetPasswords(EmailRequestDto emailDto);
 

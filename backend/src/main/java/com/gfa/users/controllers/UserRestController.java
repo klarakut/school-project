@@ -154,6 +154,21 @@ public class UserRestController {
     }
   }
 
+  @DeleteMapping("/users/{id}")
+  public ResponseEntity<? extends ResponseDto> destroy(@PathVariable Long id) {
+    try {
+      EmptyResponseDto dtoResponse = userService.destroy(id);       // proč tam je emptyDto????
+      return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
+    } catch (InvalidIdException e) {
+      return new ResponseEntity<>(new UserErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
+    } catch (UserNotFoundException e) {
+      return new ResponseEntity<>(
+              new UserErrorResponseDto("User not found"), HttpStatus.BAD_REQUEST);
+    } catch (UnknownErrorException e) {
+      return new ResponseEntity<>(new UserErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+    }
+  }
+
 
 //  Added to /register endpoint
 //  @PostMapping("/users")

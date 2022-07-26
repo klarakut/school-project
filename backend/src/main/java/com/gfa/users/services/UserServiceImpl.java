@@ -5,22 +5,10 @@ import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.common.exceptions.UnknownErrorException;
 import com.gfa.common.services.EmailValidator;
-import com.gfa.users.dtos.CreateUserRequestDto;
-import com.gfa.users.dtos.PasswordResetRequestDto;
+import com.gfa.users.dtos.*;
 import com.gfa.common.dtos.StatusResponseDto;
-import com.gfa.users.dtos.UserResponseDto;
-import com.gfa.users.exceptions.AlreadyVerifiedException;
-import com.gfa.users.exceptions.EmailMissingException;
-import com.gfa.users.exceptions.InvalidPasswordException;
-import com.gfa.users.exceptions.PasswordMissingException;
-import com.gfa.users.exceptions.PasswordTooShortException;
-import com.gfa.users.exceptions.ShortPasswordException;
-import com.gfa.users.exceptions.ShortUsernameException;
-import com.gfa.users.exceptions.UnexpectedErrorException;
-import com.gfa.users.exceptions.UnverifiedEmailException;
-import com.gfa.users.exceptions.UserNotFoundException;
-import com.gfa.users.exceptions.UsernameMissingException;
-import com.gfa.users.exceptions.UsernameTakenException;
+import com.gfa.users.exceptions.*;
+import com.gfa.users.models.Team;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
 import java.time.LocalDateTime;
@@ -110,6 +98,51 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserResponseDto show(Long id) {
     return null;
+  }
+
+  @Override
+  public UserResponseDto update(Long id, UserPatchRequestDto userPatchRequestDto) {
+    if (id <= 0) {
+      throw new InvalidIdException();
+    }
+    if (userPatchRequestDto.getUsername().isEmpty()) {
+      throw new InvalidRequestException();
+    }
+    try {
+      User userUpdate = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
+      userUpdate.setUsername(userPatchRequestDto.getUsername());
+      if (!userPatchRequestDto.getPassword().isEmpty()) {
+        if (userPatchRequestDto.getPassword().length() < 8) {
+          throw new ShortPasswordException();
+        }
+        userUpdate.setPassword(userPatchRequestDto.getPassword());
+      }
+      if (!userPatchRequestDto.getEmail().isEmpty()) {            //pokud je zadán nový email tak tam nacpat ten secret a opakovat email validaci
+        userUpdate.setEmail(userPatchRequestDto.getEmail());
+      }
+      String secretForImage = userUpdate.getSecret();
+      return new UserResponseDto(userRepository.save(userUpdate), secretForImage);
+    } catch (UserNotFoundException e) {
+      throw new UserNotFoundException();
+    } catch (Exception e) {
+      throw new UnknownErrorException();
+    }
+  }
+
+  @Override
+  public EmptyResponseDto destroy(Long id) {
+    if (id <= 0) {
+      throw new InvalidIdException();
+    }
+    try {
+      User userDestroy = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
+      userRepository.delete(userDestroy);
+      return new EmptyResponseDto("ok");
+    } catch (UserNotFoundException e) {
+      throw new UserNotFoundException();
+    } catch (Exception e) {
+      throw new UnknownErrorException();
+    }
   }
 
   @Override
