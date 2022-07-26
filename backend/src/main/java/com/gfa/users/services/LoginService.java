@@ -1,8 +1,8 @@
 package com.gfa.users.services;
 
-import com.gfa.common.dtos.JwtResponseDto;
 import com.gfa.common.dtos.LoginRequestDto;
+import com.gfa.common.dtos.StatusResponseDto;
 
 public interface LoginService {
-    JwtResponseDto login(LoginRequestDto dto);
+  StatusResponseDto login(LoginRequestDto dto);
 }
