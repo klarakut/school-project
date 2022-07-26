@@ -2,7 +2,7 @@ package com.gfa.users.controllers;
 
 import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.dtos.ResponseDto;
-import com.gfa.common.dtos.RoleCreateRequestDto;
+import com.gfa.common.dtos.RoleRequestDto;
 import com.gfa.common.dtos.RoleResponseDto;
 import com.gfa.common.dtos.RolePatchRequestDto;
 import com.gfa.common.dtos.StatusResponseDto;
@@ -45,7 +45,7 @@ public class RoleRestController {
   }
 
   @PostMapping("/roles")
-    public ResponseEntity<? extends ResponseDto> store(@RequestBody RoleCreateRequestDto dto) {
+    public ResponseEntity<? extends ResponseDto> store(@RequestBody RoleRequestDto dto) {
     try {
       RoleResponseDto role = roleService.store(dto);
       return new ResponseEntity<>(role,HttpStatus.CREATED);

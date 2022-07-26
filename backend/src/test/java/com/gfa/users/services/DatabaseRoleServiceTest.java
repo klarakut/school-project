@@ -1,7 +1,7 @@
 package com.gfa.users.services;
 
-import com.gfa.common.dtos.RoleCreateRequestDto;
 import com.gfa.common.dtos.RolePatchRequestDto;
+import com.gfa.common.dtos.RoleRequestDto;
 import com.gfa.common.dtos.RoleResponseDto;
 import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.common.dtos.PermissionRequestDto;
@@ -83,7 +83,7 @@ class DatabaseRoleServiceTest {
     RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
     PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
     RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
-    RoleCreateRequestDto dto = new RoleCreateRequestDto("x");
+    RoleRequestDto dto = new RoleRequestDto("x");
     Role mockedRole = Mockito.mock(Role.class);
 
     Mockito.when(mockedRoleRepo.save(Mockito.any())).thenReturn(mockedRole);
@@ -97,7 +97,7 @@ class DatabaseRoleServiceTest {
     RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
     PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
     RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
-    RoleCreateRequestDto dto = new RoleCreateRequestDto("");
+    RoleRequestDto dto = new RoleRequestDto("");
 
     assertThrows(EmptyBodyException.class,() -> roleService.store(dto));
   }
@@ -107,7 +107,7 @@ class DatabaseRoleServiceTest {
     RoleRepository mockedRoleRepo = Mockito.mock(RoleRepository.class);
     PermissionRepository mockedPermissionRepo = Mockito.mock(PermissionRepository.class);
     RoleService roleService = new DatabaseRoleService(mockedRoleRepo,mockedPermissionRepo);
-    RoleCreateRequestDto dto = new RoleCreateRequestDto("x");
+    RoleRequestDto dto = new RoleRequestDto("x");
     Role mockedRole = Mockito.mock(Role.class);
 
     Mockito.when(mockedRoleRepo.findByRole(Mockito.anyString())).thenReturn(Optional.of(mockedRole));
