@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class LoginRequestDto {
 
-    public String email;
-    public String password;
-    public String otp;
+  public String email;
+  public String password;
+  public String otp;
 
-    @JsonCreator
+  @JsonCreator
     public LoginRequestDto(String email, String password, String otp) {
-        this.email = email;
-        this.password = password;
-        this.otp = otp;
-    }
+    this.email = email;
+    this.password = password;
+    this.otp = otp;
+  }
 }
