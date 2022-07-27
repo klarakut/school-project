@@ -5,6 +5,7 @@ import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.common.exceptions.UnknownErrorException;
 import com.gfa.common.services.EmailValidator;
+import com.gfa.common.services.UpdateUserValidator;
 import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
 import com.gfa.users.dtos.UserCreateRequestDto;
@@ -16,7 +17,6 @@ import com.gfa.users.exceptions.EmailAlreadyExistException;
 import com.gfa.users.exceptions.EmailMissingException;
 import com.gfa.users.exceptions.InvalidIdException;
 import com.gfa.users.exceptions.InvalidPasswordException;
-import com.gfa.users.exceptions.InvalidRequestException;
 import com.gfa.users.exceptions.PasswordMissingException;
 import com.gfa.users.exceptions.PasswordTooShortException;
 import com.gfa.users.exceptions.ShortPasswordException;
@@ -123,24 +123,7 @@ public class UserServiceImpl implements UserService {
     if (id <= 0) {
       throw new InvalidIdException();
     }
-    if (userPatchRequestDto.username == null) {
-      throw new InvalidRequestException();
-    }
-    if (userPatchRequestDto.email == null) {
-      throw new InvalidRequestException();
-    }
-    if (userPatchRequestDto.password == null) {
-      throw new InvalidRequestException();
-    }
-    if (userPatchRequestDto.username.isEmpty()) {
-      throw new InvalidRequestException();
-    }
-    if (userPatchRequestDto.email.isEmpty()) {
-      throw new InvalidRequestException();
-    }
-    if (userPatchRequestDto.password.isEmpty()) {
-      throw new InvalidRequestException();
-    }
+    UpdateUserValidator.validate(userPatchRequestDto);
     try {
       User userUpdate = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
       if (userPatchRequestDto.password.length() < 8) {

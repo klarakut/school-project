@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.springframework.test.util.AssertionErrors.assertNull;
 
 import com.gfa.common.dtos.EmailRequestDto;
 import com.gfa.common.dtos.StatusResponseDto;
@@ -200,7 +199,7 @@ class UserServiceImplTest {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
     UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
 
-    UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", "",  "123456789");
+    UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", "", "123456789");
     assertThrows(InvalidRequestException.class, () -> userService.update(1L, dto));
   }
 
@@ -209,7 +208,7 @@ class UserServiceImplTest {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
     UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
 
-    UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", null,  "123456789");
+    UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", null, "123456789");
     assertThrows(InvalidRequestException.class, () -> userService.update(1L, dto));
   }
 
@@ -218,7 +217,7 @@ class UserServiceImplTest {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
     UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
 
-    UserPatchRequestDto dto = new UserPatchRequestDto("", "petr",  "123456789");
+    UserPatchRequestDto dto = new UserPatchRequestDto("", "petr", "123456789");
     assertThrows(InvalidRequestException.class, () -> userService.update(1L, dto));
   }
 
@@ -227,7 +226,7 @@ class UserServiceImplTest {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
     UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
 
-    UserPatchRequestDto dto = new UserPatchRequestDto(null, "petr",  "123456789");
+    UserPatchRequestDto dto = new UserPatchRequestDto(null, "petr", "123456789");
     assertThrows(InvalidRequestException.class, () -> userService.update(1L, dto));
   }
 
@@ -236,7 +235,7 @@ class UserServiceImplTest {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
     UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
 
-    UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", "petr",  "");
+    UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", "petr", "");
     assertThrows(InvalidRequestException.class, () -> userService.update(1L, dto));
   }
 
@@ -245,7 +244,7 @@ class UserServiceImplTest {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
     UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
 
-    UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", "petr",  null);
+    UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", "petr", null);
     assertThrows(InvalidRequestException.class, () -> userService.update(1L, dto));
   }
 
@@ -253,9 +252,9 @@ class UserServiceImplTest {
   void update_user_email_username_password_successfully() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
     UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
-    User user = new User(1L,"peter","peter@seznam.cz", "123456789", null, null,
-            null, null, null, null);
-    UserPatchRequestDto dto = new UserPatchRequestDto("peeeetr@seznam.cz", "peeeetr",  "987654321");
+    User user = new User(1L, "peter", "peter@seznam.cz", "123456789", null, null,
+        null, null, null, null);
+    UserPatchRequestDto dto = new UserPatchRequestDto("peeeetr@seznam.cz", "peeeetr", "987654321");
 
     Mockito.when(mockedUserRepo.findById(anyLong())).thenReturn(Optional.of(user));
     Mockito.when(mockedUserRepo.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);

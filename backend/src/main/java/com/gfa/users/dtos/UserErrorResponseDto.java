@@ -5,10 +5,10 @@ import com.gfa.common.dtos.ResponseDto;
 
 public class UserErrorResponseDto implements ResponseDto {
 
-    String error;
+  String error;
 
-    @JsonCreator
-    public UserErrorResponseDto(String error) {
-        this.error = error;
-    }
+  @JsonCreator
+  public UserErrorResponseDto(String error) {
+    this.error = error;
+  }
 }
