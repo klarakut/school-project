@@ -23,12 +23,12 @@ public interface TeamService {
 
   EmptyResponseDto destroy(Long id);
 
-  StatusResponseDto addUserToTeam(Long id, UserRequestDto userRequestDto); // //Zmeniť TeamResponse
+  StatusResponseDto addUserToTeam(Long id, UserRequestDto userRequestDto);
 
   EmptyResponseDto deleteUserFromTeam(Long id, Long userId);
 
   StatusResponseDto addPermissionsToTeam(
-      Long id, PermissionRequestDto permissionRequestDto); // //zmeniť Teamresponse
+      Long id, PermissionRequestDto permissionRequestDto);
 
   EmptyResponseDto deletePermissionFromTeam(Long id, Long permissionIdd);
 

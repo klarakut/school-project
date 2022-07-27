@@ -1,6 +1,6 @@
 package com.gfa.users.models;
 
-import com.gfa.users.dtos.CreateUserRequestDto;
+import com.gfa.users.dtos.UserCreateRequestDto;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -111,7 +111,7 @@ public class User {
   SecureRandom random = new SecureRandom();
   Integer randomSecureValue = random.nextInt();
 
-  public User(CreateUserRequestDto dto, Long expirationTime, String secret) {
+  public User(UserCreateRequestDto dto, Long expirationTime, String secret) {
     this(dto.username, dto.email, dto.password);
     this.verifiedAt = null;
     this.verificationToken = String.valueOf(randomSecureValue);
@@ -150,6 +150,10 @@ public class User {
 
   public String getUsername() {
     return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
   }
 
   public String getPassword() {

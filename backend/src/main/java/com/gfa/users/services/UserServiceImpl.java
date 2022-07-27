@@ -5,12 +5,17 @@ import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.common.exceptions.UnknownErrorException;
 import com.gfa.common.services.EmailValidator;
-import com.gfa.users.dtos.CreateUserRequestDto;
+import com.gfa.common.services.UpdateUserValidator;
 import com.gfa.users.dtos.PasswordResetRequestDto;
-import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.users.dtos.UserResponseDto;
+import com.gfa.users.dtos.UserCreateRequestDto;
+import com.gfa.users.dtos.UserPatchRequestDto;
+import com.gfa.users.dtos.EmptyResponseDto;
+import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.users.exceptions.AlreadyVerifiedException;
+import com.gfa.users.exceptions.EmailAlreadyExistException;
 import com.gfa.users.exceptions.EmailMissingException;
+import com.gfa.users.exceptions.InvalidIdException;
 import com.gfa.users.exceptions.InvalidPasswordException;
 import com.gfa.users.exceptions.PasswordMissingException;
 import com.gfa.users.exceptions.PasswordTooShortException;
@@ -53,7 +58,7 @@ public class UserServiceImpl implements UserService {
     this.totpManager = totpManager;
   }
 
-  public UserResponseDto store(CreateUserRequestDto dto) {
+  public UserResponseDto store(UserCreateRequestDto dto) {
 
     if (dto.username.isEmpty()) {
       throw new UsernameMissingException();
@@ -110,6 +115,52 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserResponseDto show(Long id) {
     return null;
+  }
+
+  @Override
+  public UserResponseDto update(Long id, UserPatchRequestDto userPatchRequestDto) {
+    boolean setNullVerificationAt = false;
+    if (id <= 0) {
+      throw new InvalidIdException();
+    }
+    UpdateUserValidator.validate(userPatchRequestDto);
+    try {
+      User userUpdate = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
+      if (userPatchRequestDto.password.length() < 8) {
+        throw new ShortPasswordException();
+      }
+
+      if (!userRepository.findByEmail(userPatchRequestDto.email).get().equals(userUpdate)) {
+        throw new EmailAlreadyExistException();
+      }
+      if (!userUpdate.getEmail().equals(userPatchRequestDto.email)) {
+        setNullVerificationAt = true;
+      }
+      userUpdate.setUsername(userPatchRequestDto.username);
+      userUpdate.setEmail(userPatchRequestDto.email);
+      userUpdate.setPassword(userPatchRequestDto.password);
+      return new UserResponseDto(userRepository.save(userUpdate), setNullVerificationAt);
+    } catch (UserNotFoundException e) {
+      throw new UserNotFoundException();
+    } catch (Exception e) {
+      throw new UnknownErrorException();
+    }
+  }
+
+  @Override
+  public EmptyResponseDto destroy(Long id) {
+    if (id <= 0) {
+      throw new InvalidIdException();
+    }
+    try {
+      User userDestroy = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
+      userRepository.delete(userDestroy);
+      return new EmptyResponseDto("ok");
+    } catch (UserNotFoundException e) {
+      throw new UserNotFoundException();
+    } catch (Exception e) {
+      throw new UnknownErrorException();
+    }
   }
 
   @Override

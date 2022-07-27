@@ -13,6 +13,7 @@ public class UserResponseDto implements ResponseDto {
   public final LocalDateTime createdAt;
   public final boolean mfa;
   public final String secretImageUri;
+  public final String password;
 
   public UserResponseDto(User user, String secretForImage) {
     this.id = user.getId();
@@ -22,5 +23,21 @@ public class UserResponseDto implements ResponseDto {
     this.createdAt = user.getCreatedAt();
     this.mfa = user.isMfa();
     this.secretImageUri = secretForImage;
+    this.password = user.getPassword();
+  }
+
+  public UserResponseDto(User user, Boolean setNullVerificationAt) {
+    this.id = user.getId();
+    this.username = user.getUsername();
+    this.email = user.getEmail();
+    if (setNullVerificationAt) {
+      this.verifiedAt = null;
+    } else {
+      this.verifiedAt = user.getVerifiedAt();
+    }
+    this.createdAt = user.getCreatedAt();
+    this.mfa = user.isMfa();
+    this.secretImageUri = user.getSecret();
+    this.password = user.getPassword();
   }
 }
