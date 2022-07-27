@@ -6,7 +6,7 @@ import com.gfa.common.dtos.ResponseDto;
 import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.users.exceptions.EmailMissingException;
 import com.gfa.users.exceptions.InvalidEmailException;
-import com.gfa.users.exceptions.InvalidLoginCredentialsExpcetion;
+import com.gfa.users.exceptions.InvalidLoginCredentialsException;
 import com.gfa.users.exceptions.PasswordMissingException;
 import com.gfa.users.exceptions.RequestBodyMissingException;
 import com.gfa.users.exceptions.UnknownErrorException;
@@ -41,7 +41,7 @@ public class LoginController {
       return new ResponseEntity<>(new ErrorResponseDto("Password missing"),HttpStatus.resolve(400));
     } catch (InvalidEmailException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Wrong password"),HttpStatus.resolve(400));
-    } catch (InvalidLoginCredentialsExpcetion e) {
+    } catch (InvalidLoginCredentialsException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Invalid login details"),HttpStatus.resolve(401));
     } catch (UnknownErrorException e) {
       return new ResponseEntity<>(new ErrorResponseDto("Server error"),HttpStatus.resolve(500));
