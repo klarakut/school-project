@@ -1,3 +1,3 @@
 package com.gfa.common.dtos;
 
-abstract interface RequestDto {}
+public abstract interface RequestDto {}
