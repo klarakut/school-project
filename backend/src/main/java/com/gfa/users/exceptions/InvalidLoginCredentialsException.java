@@ -1,4 +1,4 @@
 package com.gfa.users.exceptions;
 
-public class InvalidLoginCredentialsExpcetion extends RuntimeException{
+public class InvalidLoginCredentialsException extends RuntimeException{
 }
