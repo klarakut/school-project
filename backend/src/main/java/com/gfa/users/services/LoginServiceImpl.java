@@ -3,7 +3,7 @@ package com.gfa.users.services;
 import com.gfa.common.dtos.LoginRequestDto;
 import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.users.exceptions.EmailMissingException;
-import com.gfa.users.exceptions.InvalidLoginCredentialsExpcetion;
+import com.gfa.users.exceptions.InvalidLoginCredentialsException;
 import com.gfa.users.exceptions.InvalidPasswordException;
 import com.gfa.users.exceptions.PasswordMissingException;
 import com.gfa.users.exceptions.RequestBodyMissingException;
@@ -49,31 +49,24 @@ public class LoginServiceImpl implements LoginService {
     Optional<User> optionalUser = userRepository.findByEmail(dto.email);
 
     User user = null;
-    String passwordToCheck = "fakePasswordToCheck";
+    String usernameToCheck = "";
 
     if (optionalUser.isPresent()) {
       user = optionalUser.get();
-      passwordToCheck = user.getPassword();
+      usernameToCheck = user.getUsername();
       userCheckPassed = true;
     }
 
-    if (!(user == null)) {
-      try {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), dto.password));
-        passwordCheckPassed = true;
-      } catch (InvalidPasswordException ignored) {
-        passwordCheckPassed = false;
-      }
+    try {
+      Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(usernameToCheck, dto.password));
+      passwordCheckPassed = true;
+    } catch (InvalidPasswordException ignored) {
+      passwordCheckPassed = false;
     }
 
     if (userCheckPassed && passwordCheckPassed) {
-      //Authentication authentication = authenticationManager.authenticate(new )
-      // Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.email,dto.password));
-      /*String s = jwtTokenManager.generateToken(authentication);
-            JwtResponseDto response = new JwtResponseDto(s);
-            return response;*/
       return new StatusResponseDto("OK");
     }
-    throw new InvalidLoginCredentialsExpcetion();
+    throw new InvalidLoginCredentialsException();
   }
 }
