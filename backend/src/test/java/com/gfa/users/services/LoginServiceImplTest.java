@@ -1,24 +1,29 @@
 package com.gfa.users.services;
 
 import com.gfa.common.dtos.LoginRequestDto;
-import com.gfa.users.dtos.CreateUserRequestDto;
+import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.users.exceptions.EmailMissingException;
-import com.gfa.users.exceptions.InvalidLoginCredentialsExpcetion;
+import com.gfa.users.exceptions.InvalidLoginCredentialsException;
+import com.gfa.users.exceptions.InvalidPasswordException;
 import com.gfa.users.exceptions.PasswordMissingException;
 import com.gfa.users.exceptions.RequestBodyMissingException;
 import com.gfa.users.models.User;
 import com.gfa.users.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LoginServiceImplTest {
 
   UserRepository mockedUserRepository = Mockito.mock(UserRepository.class);
-  LoginService loginService = new LoginServiceImpl(mockedUserRepository,null,null);
+  AuthenticationManager mockedAuthManager = Mockito.mock(AuthenticationManager.class);
+  LoginService loginService = new LoginServiceImpl(mockedUserRepository,mockedAuthManager,null);
 
   @Test
     void login_method_throws_exception_if_empty() {
@@ -42,28 +47,30 @@ class LoginServiceImplTest {
   @Test
     void login_method_throws_exception_if_non_existent_user_is_trying_login() {
     LoginRequestDto dto = new LoginRequestDto("alex@gmail.com","abc","1234");
-    //LoginRequestDto mockedDto = Mockito.mock(LoginRequestDto.class);
-    // User user = new User ()
 
     Mockito.when(mockedUserRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
-    assertThrows(InvalidLoginCredentialsExpcetion.class,() -> loginService.login(dto));
+    assertThrows(InvalidLoginCredentialsException.class,() -> loginService.login(dto));
   }
 
   @Test
     void login_method_throws_exception_if_the_password_is_wrong() {
     LoginRequestDto dto = new LoginRequestDto("alex@gmail.com","abc","1234");
-    CreateUserRequestDto request = new CreateUserRequestDto("pepa","pepa@gmail.com","1234");
-    User user = new User(request,600L,null);
-    //User user = Mockito.mock(User.class);
+    User user = Mockito.mock(User.class);
     Mockito.when(mockedUserRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
-    assertThrows(InvalidLoginCredentialsExpcetion.class,() -> loginService.login(dto));
+    Mockito.when(mockedAuthManager.authenticate(Mockito.any())).thenThrow(InvalidPasswordException.class);
+
+    assertThrows(InvalidLoginCredentialsException.class,() -> loginService.login(dto));
   }
 
   @Test
-    void can_login() {
-    /*LoginRequestDto dto = new LoginRequestDto("alex@gmail.com","abc","1234");
+    void user_can_login() {
+    LoginRequestDto dto = new LoginRequestDto("alex@gmail.com","abc","1234");
+    User user = Mockito.mock(User.class);
+    Authentication authentication = Mockito.mock(Authentication.class);
+    Mockito.when(mockedUserRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
+    Mockito.when(mockedAuthManager.authenticate(Mockito.any())).thenReturn(authentication);
 
-    Mockito.when(mockedUserRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
-    assertThrows(InvalidLoginCredentialsException.class,() -> loginService.login(dto));*/
+    StatusResponseDto result = loginService.login(dto);
+    assertEquals("OK",result.status);
   }
 }
