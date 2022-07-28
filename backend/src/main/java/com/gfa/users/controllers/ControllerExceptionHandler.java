@@ -21,11 +21,16 @@ import com.gfa.users.exceptions.PermissionExistsException;
 import com.gfa.users.exceptions.PermissionIdNotFoundException;
 import com.gfa.users.exceptions.PermissionNotFoundException;
 import com.gfa.users.exceptions.RequestBodyMissingException;
+import com.gfa.users.exceptions.RoleExistsException;
+import com.gfa.users.exceptions.RoleNotFoundException;
 import com.gfa.users.exceptions.ShortPasswordException;
 import com.gfa.users.exceptions.ShortUsernameException;
+import com.gfa.users.exceptions.TeamExistsException;
+import com.gfa.users.exceptions.TeamNotFoundException;
 import com.gfa.users.exceptions.UnexpectedErrorException;
 import com.gfa.users.exceptions.UnknownErrorException;
 import com.gfa.users.exceptions.UnverifiedEmailException;
+import com.gfa.users.exceptions.UserExistsException;
 import com.gfa.users.exceptions.UserNotFoundException;
 import com.gfa.users.exceptions.UsernameMissingException;
 import com.gfa.users.exceptions.UsernameTakenException;
@@ -197,5 +202,35 @@ public class ControllerExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorResponseDto handlePermissionIdNotFoundException() {
     return new ErrorResponseDto("Permission not found");
+  }
+
+  @ExceptionHandler(TeamExistsException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponseDto handleTeamExistsException() {
+    return new ErrorResponseDto("Team is already exist");
+  }
+
+  @ExceptionHandler(TeamNotFoundException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponseDto handleTeamNotFoundException() {
+    return new ErrorResponseDto("Team not found");
+  }
+
+  @ExceptionHandler(UserExistsException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponseDto handleUserExistsException() {
+    return new ErrorResponseDto("User already exist in team");
+  }
+
+  @ExceptionHandler(RoleNotFoundException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponseDto handleRoleNotFoundException() {
+    return new ErrorResponseDto("Role not found");
+  }
+
+  @ExceptionHandler(UnknownErrorException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponseDto handleRoleExistsException() {
+    return new ErrorResponseDto("Role exist in team");
   }
 }
