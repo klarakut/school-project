@@ -58,7 +58,7 @@ public class UserRestController {
 
   @PostMapping({"/register", "/users"})
   public ResponseEntity<? extends ResponseDto> store(@RequestBody UserCreateRequestDto dto) {
-    try {
+
       UserResponseDto userResponse = userService.store(dto);
 
       /* URI location = ServletUriComponentsBuilder
@@ -70,48 +70,48 @@ public class UserRestController {
             .body(userResponse);*/
 
       return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
-    } catch (UsernameMissingException e) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Username is required"), HttpStatus.BAD_REQUEST);
-    } catch (PasswordMissingException e) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Password is required"), HttpStatus.BAD_REQUEST);
-    } catch (EmailMissingException e) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Email is required"), HttpStatus.BAD_REQUEST);
-    } catch (com.gfa.users.exceptions.InvalidEmailException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid email"), HttpStatus.BAD_REQUEST);
-    } catch (UsernameTakenException e) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Username is already taken"), HttpStatus.CONFLICT);
-    } catch (ShortUsernameException e) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Username must be at least 4 characters long"),
-          HttpStatus.BAD_REQUEST);
-    } catch (ShortPasswordException e) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Password must be at least 8 characters long"),
-          HttpStatus.BAD_REQUEST);
-    } catch (UnexpectedErrorException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Unknown error"), HttpStatus.BAD_REQUEST);
-    }
+//     catch (UsernameMissingException e) {
+//      return new ResponseEntity<>(
+//          new ErrorResponseDto("Username is required"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (PasswordMissingException e) {
+//      return new ResponseEntity<>(
+//          new ErrorResponseDto("Password is required"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (EmailMissingException e) {
+//      return new ResponseEntity<>(
+//          new ErrorResponseDto("Email is required"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (com.gfa.users.exceptions.InvalidEmailException e) {
+//      return new ResponseEntity<>(new ErrorResponseDto("Invalid email"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (UsernameTakenException e) {
+//      return new ResponseEntity<>(
+//          new ErrorResponseDto("Username is already taken"), HttpStatus.CONFLICT); HOTOVE
+//    } catch (ShortUsernameException e) {
+//      return new ResponseEntity<>(
+//          new ErrorResponseDto("Username must be at least 4 characters long"), HOTOVE
+//          HttpStatus.BAD_REQUEST);
+//    } catch (ShortPasswordException e) {
+//      return new ResponseEntity<>(
+//          new ErrorResponseDto("Password must be at least 8 characters long"), HOTOVE
+//          HttpStatus.BAD_REQUEST);
+//    } catch (UnexpectedErrorException e) {
+//      return new ResponseEntity<>(new ErrorResponseDto("Unknown error"), HttpStatus.BAD_REQUEST); HOTOVE
+//    }
   }
 
   @PostMapping("/email/verify/resend")
   public ResponseEntity<? extends ResponseDto> resendVerificationEmail(
       @RequestBody EmailRequestDto emailRequestDto) {
-    try {
+
       StatusResponseDto dtoStatus = userService.resendVerificationEmail(emailRequestDto);
       return new ResponseEntity<>(dtoStatus, HttpStatus.OK);
-    } catch (InvalidEmailException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid email"), HttpStatus.BAD_REQUEST);
-    } catch (AlreadyVerifiedException e) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Email already verified!"), HttpStatus.BAD_REQUEST);
-    } finally {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Unknown error"), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//     catch (InvalidEmailException e) {
+//      return new ResponseEntity<>(new ErrorResponseDto("Invalid email"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (AlreadyVerifiedException e) {
+//      return new ResponseEntity<>(
+//          new ErrorResponseDto("Email already verified!"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } finally {
+//      return new ResponseEntity<>(
+//          new ErrorResponseDto("Unknown error"), HttpStatus.INTERNAL_SERVER_ERROR); ???????????????????? JAK ŘEŠIT?
+//    }
   }
 
   @PostMapping("/reset-password")
@@ -124,10 +124,10 @@ public class UserRestController {
 //      return new ResponseEntity<>(new ErrorResponseDto("Invalid email"), HttpStatus.BAD_REQUEST); HOTOVE
 //    } catch (UnverifiedEmailException e) {
 //      return new ResponseEntity<>(
-//          new ErrorResponseDto("Unverified email!"), HttpStatus.BAD_REQUEST);
+//          new ErrorResponseDto("Unverified email!"), HttpStatus.BAD_REQUEST); HOTOVE
 //    } catch (UnknownErrorException e) {
 //      return new ResponseEntity<>(
-//          new ErrorResponseDto("Something goes wrong"), HttpStatus.BAD_REQUEST);
+//          new ErrorResponseDto("Something goes wrong"), HttpStatus.BAD_REQUEST); HOTOVE
 //    }
   }
 
