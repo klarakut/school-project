@@ -5,7 +5,6 @@ import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.users.exceptions.AlreadyVerifiedException;
-import com.gfa.users.exceptions.EmailMissingException;
 import com.gfa.users.exceptions.InvalidEmailException;
 import com.gfa.users.exceptions.InvalidIdException;
 import com.gfa.users.exceptions.InvalidPasswordException;
@@ -50,12 +49,6 @@ public class ControllerExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorResponseDto handleUnknownErrorException() {
     return new ErrorResponseDto("Server error");
-  }
-
-  @ExceptionHandler(InvalidRequestException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ErrorResponseDto handleUInvalidRequestException() {
-    return new ErrorResponseDto("Invalid data");
   }
 
   @ExceptionHandler(InvalidPasswordException.class)
@@ -135,10 +128,6 @@ public class ControllerExceptionHandler {
   public ErrorResponseDto handleUnexpectedErrorException() {
     return new ErrorResponseDto("Unknown error");
   }
-
-
-
-
 
 
 }
