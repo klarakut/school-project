@@ -117,38 +117,38 @@ public class UserRestController {
   @PostMapping("/reset-password")
   public ResponseEntity<? extends ResponseDto> resetPassword(
       @RequestBody EmailRequestDto emailDto) {
-    try {
+
       StatusResponseDto dtoStatus = userService.resetPasswords(emailDto);
       return new ResponseEntity<>(dtoStatus, HttpStatus.OK);
-    } catch (InvalidEmailException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid email"), HttpStatus.BAD_REQUEST);
-    } catch (UnverifiedEmailException e) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Unverified email!"), HttpStatus.BAD_REQUEST);
-    } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Something goes wrong"), HttpStatus.BAD_REQUEST);
-    }
+//     catch (InvalidEmailException e) {
+//      return new ResponseEntity<>(new ErrorResponseDto("Invalid email"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (UnverifiedEmailException e) {
+//      return new ResponseEntity<>(
+//          new ErrorResponseDto("Unverified email!"), HttpStatus.BAD_REQUEST);
+//    } catch (UnknownErrorException e) {
+//      return new ResponseEntity<>(
+//          new ErrorResponseDto("Something goes wrong"), HttpStatus.BAD_REQUEST);
+//    }
   }
 
   @PostMapping("/reset-password/{token}")
   public ResponseEntity<? extends ResponseDto> resetPassword(
       @RequestBody PasswordResetRequestDto passwordResetRequestDto, @PathVariable String token) {
-    try {
+
       StatusResponseDto dtoStatus = userService.resetPassword(token, passwordResetRequestDto);
       return new ResponseEntity<>(dtoStatus, HttpStatus.OK);
-    } catch (InvalidPasswordException e) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Invalid password!"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidTokenException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid token!"), HttpStatus.BAD_REQUEST);
-    } catch (TokenExpiredException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Expired token!"), HttpStatus.BAD_REQUEST);
-    } catch (PasswordTooShortException e) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Password must be at least 8 characters long"),
-          HttpStatus.BAD_REQUEST);
-    }
+//     catch (InvalidPasswordException e) {
+//      return new ResponseEntity<>(
+//          new ErrorResponseDto("Invalid password!"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (InvalidTokenException e) {
+//      return new ResponseEntity<>(new ErrorResponseDto("Invalid token!"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (TokenExpiredException e) {
+//      return new ResponseEntity<>(new ErrorResponseDto("Expired token!"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (PasswordTooShortException e) {
+//      return new ResponseEntity<>(
+//          new ErrorResponseDto("Password must be at least 8 characters long"), HOTOVE
+//          HttpStatus.BAD_REQUEST);
+//    }
   }
 
   @GetMapping("/users")
@@ -159,53 +159,53 @@ public class UserRestController {
   @GetMapping("/users/{id}")
   public ResponseEntity<? extends ResponseDto> show(@PathVariable Long id) {
 
-    try {
+
       UserResponseDto dtoResponse = userService.show(id);
       return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
-    } catch (InvalidIdException e) {
-      return "xxx";
-      //return new ResponseEntity<>(new UserErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-      //return new ErrorResponseDto();
-    } catch (UserNotFoundException e) {
-      return new ResponseEntity<>(
-          new UserErrorResponseDto("User not found"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidRequestException e) {
-      return new ResponseEntity<>(new UserErrorResponseDto("Invalid data"), HttpStatus.BAD_REQUEST);
-    } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(new UserErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
     }
-  }
+//    catch (InvalidIdException e) {
+//
+//      return new ResponseEntity<>(new UserErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST); HOTOVE
+//
+//    } catch (UserNotFoundException e) {
+//      return new ResponseEntity<>(new UserErrorResponseDto("User not found"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (InvalidRequestException e) {
+//      return new ResponseEntity<>(new UserErrorResponseDto("Invalid data"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (UnknownErrorException e) {
+//      return new ResponseEntity<>(new UserErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST); HOTOVE
+//    }
+//  }
 
   @PatchMapping("/users/{id}")
   public ResponseEntity<? extends ResponseDto> update(
       @PathVariable Long id, @RequestBody UserPatchRequestDto userPatchRequestDto) {
-    try {
+
       UserResponseDto dtoResponse = userService.update(id, userPatchRequestDto);
       return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
-    } catch (InvalidIdException e) {
-      return new ResponseEntity<>(new UserErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (UserNotFoundException e) {
-      return new ResponseEntity<>(
-          new UserErrorResponseDto("User not found"), HttpStatus.BAD_REQUEST);
-    } catch (InvalidRequestException e) {
-      return new ResponseEntity<>(new UserErrorResponseDto("Invalid data"), HttpStatus.BAD_REQUEST);
-    } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(new UserErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
-    }
+//     catch (InvalidIdException e) {
+//      return new ResponseEntity<>(new UserErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (UserNotFoundException e) {
+//      return new ResponseEntity<>(
+//          new UserErrorResponseDto("User not found"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (InvalidRequestException e) {
+//      return new ResponseEntity<>(new UserErrorResponseDto("Invalid data"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (UnknownErrorException e) {
+//      return new ResponseEntity<>(new UserErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST); HOTOVE
+//    }
   }
 
   @DeleteMapping("/users/{id}")
   public ResponseEntity<? extends ResponseDto> destroy(@PathVariable Long id) {
-    try {
+
       EmptyResponseDto dtoResponse = userService.destroy(id);
       return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
-    } catch (InvalidIdException e) {
-      return new ResponseEntity<>(new UserErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (UserNotFoundException e) {
-      return new ResponseEntity<>(
-          new UserErrorResponseDto("User not found"), HttpStatus.BAD_REQUEST);
-    } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(new UserErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
-    }
+//     catch (InvalidIdException e) {
+//      return new ResponseEntity<>(new UserErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (UserNotFoundException e) {
+//      return new ResponseEntity<>(
+//          new UserErrorResponseDto("User not found"), HttpStatus.BAD_REQUEST); HOTOVE
+//    } catch (UnknownErrorException e) {
+//      return new ResponseEntity<>(new UserErrorResponseDto("Server error"), HttpStatus.BAD_REQUEST);
+//    }
   }
 }
