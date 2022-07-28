@@ -30,6 +30,7 @@ import com.gfa.users.exceptions.UserNotFoundException;
 import com.gfa.users.exceptions.UsernameMissingException;
 import com.gfa.users.exceptions.UsernameTakenException;
 import com.gfa.users.services.UserService;
+import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,10 +48,12 @@ import java.util.List;
 public class UserRestController {
 
   private final UserService userService;
+  private final Environment environment;
 
   @Autowired
-  public UserRestController(UserService userService) {
+  public UserRestController(UserService userService, Environment environment) {
     this.userService = userService;
+    this.environment = environment;
   }
 
   @PostMapping({"/register", "/users"})
@@ -160,7 +163,9 @@ public class UserRestController {
       UserResponseDto dtoResponse = userService.show(id);
       return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     } catch (InvalidIdException e) {
-      return new ResponseEntity<>(new UserErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
+      return "xxx";
+      //return new ResponseEntity<>(new UserErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
+      //return new ErrorResponseDto();
     } catch (UserNotFoundException e) {
       return new ResponseEntity<>(
           new UserErrorResponseDto("User not found"), HttpStatus.BAD_REQUEST);
