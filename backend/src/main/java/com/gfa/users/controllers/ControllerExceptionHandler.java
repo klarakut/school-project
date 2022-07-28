@@ -13,6 +13,8 @@ import com.gfa.users.exceptions.InvalidPasswordException;
 import com.gfa.users.exceptions.InvalidRequestException;
 import com.gfa.users.exceptions.PasswordMissingException;
 import com.gfa.users.exceptions.PasswordTooShortException;
+import com.gfa.users.exceptions.PermissionExistsException;
+import com.gfa.users.exceptions.PermissionNotFoundException;
 import com.gfa.users.exceptions.RequestBodyMissingException;
 import com.gfa.users.exceptions.ShortPasswordException;
 import com.gfa.users.exceptions.ShortUsernameException;
@@ -148,5 +150,23 @@ public class ControllerExceptionHandler {
   @ResponseStatus(HttpStatus.UNAUTHORIZED)
   public ErrorResponseDto handleInvalidLoginCredentialsException() {
     return new ErrorResponseDto("Invalid login details");
+  }
+
+  @ExceptionHandler(PermissionExistsException.class)
+  @ResponseStatus(HttpStatus.CONFLICT)
+  public ErrorResponseDto handlePermissionExistsException() {
+    return new ErrorResponseDto("Ability already exist");
+  }
+
+  @ExceptionHandler(PermissionNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ErrorResponseDto handlePermissionNotFoundException() {
+    return new ErrorResponseDto("Permission not found");
+  }
+
+  @ExceptionHandler(PermissionNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ErrorResponseDto handleUnknownErrorException() {
+    return new ErrorResponseDto("Permission not found");
   }
 }
