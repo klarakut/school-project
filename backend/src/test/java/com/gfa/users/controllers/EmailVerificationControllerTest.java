@@ -1,13 +1,22 @@
 package com.gfa.users.controllers;
 
+import com.gfa.users.services.EmailVerificationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 @WebMvcTest(
     value = EmailVerificationController.class,
     excludeAutoConfiguration = SecurityAutoConfiguration.class)
 class EmailVerificationControllerTest {
+
+  @MockBean
+  UserDetailsService userDetailsService;
+
+  @MockBean
+  EmailVerificationService service;
 
   @Test
   void verify_with_no_or_empty_token_returns_an_error() {}

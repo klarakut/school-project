@@ -9,7 +9,7 @@ import com.gfa.users.exceptions.EmailAlreadyVerifiedException;
 import com.gfa.users.exceptions.EmailMissingException;
 import com.gfa.users.exceptions.RequestBodyMissingException;
 import com.gfa.users.exceptions.UserNotFoundException;
-import com.gfa.users.services.DatabaseEmailVerificationService;
+import com.gfa.users.services.EmailVerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class EmailVerificationController {
 
-  private final DatabaseEmailVerificationService service;
+  private final EmailVerificationService service;
 
   @Autowired
-  public EmailVerificationController(DatabaseEmailVerificationService service) {
+  public EmailVerificationController(EmailVerificationService service) {
     this.service = service;
   }
 
