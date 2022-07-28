@@ -228,7 +228,7 @@ public class ControllerExceptionHandler {
     return new ErrorResponseDto("Role not found");
   }
 
-  @ExceptionHandler(UnknownErrorException.class)
+  @ExceptionHandler(RoleExistsException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorResponseDto handleRoleExistsException() {
     return new ErrorResponseDto("Role exist in team");

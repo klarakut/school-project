@@ -1,6 +1,5 @@
 package com.gfa.users.controllers;
 
-import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.users.dtos.TeamResponseDto;
 import com.gfa.users.dtos.TeamCreateRequestDto;
 import com.gfa.users.dtos.TeamPatchRequestDto;
@@ -10,19 +9,6 @@ import com.gfa.users.dtos.UserRequestDto;
 import com.gfa.users.dtos.PermissionRequestDto;
 import com.gfa.users.dtos.RoleRequestDto;
 import com.gfa.common.dtos.ResponseDto;
-
-import com.gfa.users.exceptions.InvalidRequestException;
-import com.gfa.users.exceptions.TeamExistsException;
-import com.gfa.users.exceptions.UnknownErrorException;
-import com.gfa.users.exceptions.InvalidIdException;
-import com.gfa.users.exceptions.TeamNotFoundException;
-import com.gfa.users.exceptions.UserNotFoundException;
-import com.gfa.users.exceptions.UserExistsException;
-import com.gfa.users.exceptions.PermissionNotFoundException;
-import com.gfa.users.exceptions.PermissionExistsException;
-import com.gfa.users.exceptions.RoleNotFoundException;
-import com.gfa.users.exceptions.RoleExistsException;
-
 import com.gfa.users.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

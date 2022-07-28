@@ -1,15 +1,8 @@
 package com.gfa.users.controllers;
 
-import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.dtos.LoginRequestDto;
 import com.gfa.common.dtos.ResponseDto;
 import com.gfa.common.dtos.StatusResponseDto;
-import com.gfa.users.exceptions.EmailMissingException;
-import com.gfa.users.exceptions.InvalidEmailException;
-import com.gfa.users.exceptions.InvalidLoginCredentialsException;
-import com.gfa.users.exceptions.PasswordMissingException;
-import com.gfa.users.exceptions.RequestBodyMissingException;
-import com.gfa.users.exceptions.UnknownErrorException;
 import com.gfa.users.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

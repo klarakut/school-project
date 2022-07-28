@@ -1,18 +1,10 @@
 package com.gfa.users.controllers;
 
-import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.dtos.ResponseDto;
 import com.gfa.common.dtos.RoleRequestDto;
 import com.gfa.common.dtos.RoleResponseDto;
 import com.gfa.common.dtos.StatusResponseDto;
 import com.gfa.common.dtos.PermissionRequestDto;
-import com.gfa.common.exceptions.EmptyBodyException;
-import com.gfa.users.exceptions.DuplicateRoleException;
-import com.gfa.users.exceptions.InvalidIdException;
-import com.gfa.users.exceptions.UnknownErrorException;
-import com.gfa.users.exceptions.IdNotFoundException;
-import com.gfa.users.exceptions.PermissionIdNotFoundException;
-import com.gfa.users.exceptions.InvalidInputException;
 import com.gfa.users.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
