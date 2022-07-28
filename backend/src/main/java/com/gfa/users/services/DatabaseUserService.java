@@ -36,7 +36,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class DatabaseUserService implements UserService {
 
   private static final String DEFAULT_TOKEN_EXPIRATION = "600";
   private final UserRepository userRepository;
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
   private final TotpManager totpManager;
 
   @Autowired
-  public UserServiceImpl(
+  public DatabaseUserService(
       UserRepository userRepository,
       Environment environment,
       JwtTokenManager jwtTokenManager,
@@ -95,6 +95,9 @@ public class UserServiceImpl implements UserService {
     UserResponseDto userResponseDto =
         new UserResponseDto(user, totpManager.getUriForImage(user.getSecret()));
 
+    // TODO
+    // send the verification email
+
     boolean userCreated = userRepository.findByUsername(dto.username).isPresent();
     if (!userCreated) {
       throw new UnexpectedErrorException();
@@ -125,7 +128,7 @@ public class UserServiceImpl implements UserService {
     }
     UpdateUserValidator.validate(userPatchRequestDto);
     try {
-      User userUpdate = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
+      User userUpdate = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
       if (userPatchRequestDto.password.length() < 8) {
         throw new ShortPasswordException();
       }
@@ -139,6 +142,11 @@ public class UserServiceImpl implements UserService {
       userUpdate.setUsername(userPatchRequestDto.username);
       userUpdate.setEmail(userPatchRequestDto.email);
       userUpdate.setPassword(userPatchRequestDto.password);
+
+      // TODO
+      // if the email is changed set verified to null and
+      // send a new verification email
+
       return new UserResponseDto(userRepository.save(userUpdate), setNullVerificationAt);
     } catch (UserNotFoundException e) {
       throw new UserNotFoundException();

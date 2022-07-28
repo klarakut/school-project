@@ -18,14 +18,14 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class LoginServiceImpl implements LoginService {
+public class DatabaseLoginService implements LoginService {
 
   private final UserRepository userRepository;
   private final AuthenticationManager authenticationManager;
   private final JwtTokenManager jwtTokenManager;
 
   @Autowired
-    public LoginServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, JwtTokenManager jwtTokenManager) {
+    public DatabaseLoginService(UserRepository userRepository, AuthenticationManager authenticationManager, JwtTokenManager jwtTokenManager) {
     this.userRepository = userRepository;
     this.authenticationManager = authenticationManager;
     this.jwtTokenManager = jwtTokenManager;
