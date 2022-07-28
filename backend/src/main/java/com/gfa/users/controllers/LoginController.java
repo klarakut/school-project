@@ -30,21 +30,22 @@ public class LoginController {
 
   @PostMapping("/login")
   public ResponseEntity<? extends ResponseDto> login(@RequestBody LoginRequestDto dto) {
-    try {
+
       StatusResponseDto response = loginService.login(dto);
       return new ResponseEntity<>(response, HttpStatus.OK);
-    } catch (RequestBodyMissingException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid input"),HttpStatus.resolve(400));
-    } catch (EmailMissingException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Email missing"),HttpStatus.resolve(400));
-    } catch (PasswordMissingException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Password missing"),HttpStatus.resolve(400));
-    } catch (InvalidEmailException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Wrong password"),HttpStatus.resolve(400));
-    } catch (InvalidLoginCredentialsException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid login details"),HttpStatus.resolve(401));
-    } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Server error"),HttpStatus.resolve(500));
-    }
+
+//    catch (RequestBodyMissingException e) {
+//      return new ResponseEntity<>(new ErrorResponseDto("Invalid input"),HttpStatus.resolve(400)); HOTOVE
+//    } catch (EmailMissingException e) {
+//      return new ResponseEntity<>(new ErrorResponseDto("Email missing"),HttpStatus.resolve(400)); HOTOVE
+//    } catch (PasswordMissingException e) {
+//      return new ResponseEntity<>(new ErrorResponseDto("Password missing"),HttpStatus.resolve(400)); HOTOVE
+//    } catch (InvalidEmailException e) {
+//      return new ResponseEntity<>(new ErrorResponseDto("Wrong password"),HttpStatus.resolve(400)); HOTOVE
+//    } catch (InvalidLoginCredentialsException e) {
+//      return new ResponseEntity<>(new ErrorResponseDto("Invalid login details"),HttpStatus.resolve(401)); HOTOVE
+//    } catch (UnknownErrorException e) {
+//      return new ResponseEntity<>(new ErrorResponseDto("Server error"),HttpStatus.resolve(500)); HOTOVE
+//    }
   }
 }

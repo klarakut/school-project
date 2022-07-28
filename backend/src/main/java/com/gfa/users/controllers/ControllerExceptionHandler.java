@@ -5,12 +5,15 @@ import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.users.exceptions.AlreadyVerifiedException;
+import com.gfa.users.exceptions.EmailMissingException;
 import com.gfa.users.exceptions.InvalidEmailException;
 import com.gfa.users.exceptions.InvalidIdException;
+import com.gfa.users.exceptions.InvalidLoginCredentialsException;
 import com.gfa.users.exceptions.InvalidPasswordException;
 import com.gfa.users.exceptions.InvalidRequestException;
 import com.gfa.users.exceptions.PasswordMissingException;
 import com.gfa.users.exceptions.PasswordTooShortException;
+import com.gfa.users.exceptions.RequestBodyMissingException;
 import com.gfa.users.exceptions.ShortPasswordException;
 import com.gfa.users.exceptions.ShortUsernameException;
 import com.gfa.users.exceptions.UnexpectedErrorException;
@@ -46,7 +49,7 @@ public class ControllerExceptionHandler {
   }
 
   @ExceptionHandler(UnknownErrorException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ErrorResponseDto handleUnknownErrorException() {
     return new ErrorResponseDto("Server error");
   }
@@ -129,5 +132,21 @@ public class ControllerExceptionHandler {
     return new ErrorResponseDto("Unknown error");
   }
 
+  @ExceptionHandler(RequestBodyMissingException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponseDto handleRequestBodyMissingException() {
+    return new ErrorResponseDto("Invalid input");
+  }
 
+  @ExceptionHandler(EmailMissingException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponseDto handleEmailMissingException() {
+    return new ErrorResponseDto("Email missing");
+  }
+
+  @ExceptionHandler(InvalidLoginCredentialsException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  public ErrorResponseDto handleInvalidLoginCredentialsException() {
+    return new ErrorResponseDto("Invalid login details");
+  }
 }
