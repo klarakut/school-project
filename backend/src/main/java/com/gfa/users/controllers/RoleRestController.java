@@ -33,28 +33,21 @@ public class RoleRestController {
   private final RoleService roleService;
 
   @Autowired
-    public RoleRestController(RoleService roleService) {
+  public RoleRestController(RoleService roleService) {
     this.roleService = roleService;
   }
 
 
   @GetMapping("/roles")
-    public ResponseEntity<List<RoleResponseDto>> index() {
-    return new ResponseEntity(roleService.index(),HttpStatus.OK);
+  public ResponseEntity<List<RoleResponseDto>> index() {
+    return new ResponseEntity(roleService.index(), HttpStatus.OK);
   }
 
   @PostMapping("/roles")
-    public ResponseEntity<? extends ResponseDto> store(@RequestBody RoleRequestDto dto) {
-    try {
-      RoleResponseDto role = roleService.store(dto);
-      return new ResponseEntity<>(role,HttpStatus.CREATED);
-    } catch (EmptyBodyException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Role is required"), HttpStatus.BAD_REQUEST);
-    } catch (DuplicateRoleException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Role already exists"),HttpStatus.CONFLICT);
-    } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Unknown error"), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  public ResponseEntity<? extends ResponseDto> store(@RequestBody RoleRequestDto dto) {
+
+    RoleResponseDto role = roleService.store(dto);
+    return new ResponseEntity<>(role, HttpStatus.CREATED);
     //TODO
     /*catch (HttpClientErrorException.Unauthorized e){
             return new ResponseEntity<>(new ErrorResponseDto("Unauthorized user"), HttpStatus.UNAUTHORIZED);
@@ -65,31 +58,17 @@ public class RoleRestController {
   }
 
   @GetMapping("/roles/{id}")
-    public ResponseEntity<? extends ResponseDto> show(@PathVariable("id") Long id) {
-    try {
-      RoleResponseDto responseDto = roleService.show(id);
-      return new ResponseEntity<>(responseDto,HttpStatus.OK);
-    } catch (InvalidIdException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (IdNotFoundException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Role not found"),HttpStatus.NOT_FOUND);
-    }
+  public ResponseEntity<? extends ResponseDto> show(@PathVariable("id") Long id) {
+    RoleResponseDto responseDto = roleService.show(id);
+    return new ResponseEntity<>(responseDto, HttpStatus.OK);
   }
 
   @PutMapping("/roles/{id}")
-    public ResponseEntity<? extends ResponseDto> update(@PathVariable("id") Long id, @RequestBody RoleRequestDto dto) {
-    try {
-      RoleResponseDto responseDto = roleService.update(id,dto);
-      return new ResponseEntity<>(responseDto,HttpStatus.resolve(200));
-    } catch (InvalidIdException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (IdNotFoundException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Role not found"),HttpStatus.NOT_FOUND);
-    } catch (InvalidInputException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid data"),HttpStatus.BAD_REQUEST);
-    } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Unknown error"), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  public ResponseEntity<? extends ResponseDto> update(@PathVariable("id") Long id,
+      @RequestBody RoleRequestDto dto) {
+
+    RoleResponseDto responseDto = roleService.update(id, dto);
+    return new ResponseEntity<>(responseDto, HttpStatus.resolve(200));
     // TODO
     /*catch (HttpClientErrorException.Unauthorized e){
             return new ResponseEntity<>(new ErrorResponseDto("Unauthorized user"), HttpStatus.UNAUTHORIZED);
@@ -100,15 +79,10 @@ public class RoleRestController {
   }
 
   @DeleteMapping("/roles/{id}")
-    public ResponseEntity<? extends ResponseDto> destroy(@PathVariable("id") Long id) {
-    try {
-      StatusResponseDto status = roleService.destroy(id);
-      return new ResponseEntity<>(status,HttpStatus.resolve(201));
-    } catch (InvalidIdException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid id"), HttpStatus.BAD_REQUEST);
-    } catch (IdNotFoundException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Role not found"),HttpStatus.NOT_FOUND);
-    }
+  public ResponseEntity<? extends ResponseDto> destroy(@PathVariable("id") Long id) {
+
+    StatusResponseDto status = roleService.destroy(id);
+    return new ResponseEntity<>(status, HttpStatus.resolve(201));
     // TODO
     /*catch (HttpClientErrorException.Unauthorized e){
             return new ResponseEntity<>(new ErrorResponseDto("Unauthorized user"), HttpStatus.UNAUTHORIZED);
@@ -119,19 +93,11 @@ public class RoleRestController {
   }
 
   @PostMapping("roles/{id}/permissions")
-    public ResponseEntity<? extends ResponseDto> storePermission(@PathVariable ("id") Long id, @RequestBody PermissionRequestDto permission) {
-    try {
-      StatusResponseDto status = roleService.storePermission(id,permission);
-      return new ResponseEntity<>(status,HttpStatus.resolve(200));
-    } catch (InvalidInputException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid data"), HttpStatus.BAD_REQUEST);
-    } catch (IdNotFoundException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Role not found"), HttpStatus.NOT_FOUND);
-    } catch (PermissionIdNotFoundException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Permission not found"),HttpStatus.NOT_FOUND);
-    } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Unknown error"), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  public ResponseEntity<? extends ResponseDto> storePermission(@PathVariable("id") Long id,
+      @RequestBody PermissionRequestDto permission) {
+
+    StatusResponseDto status = roleService.storePermission(id, permission);
+    return new ResponseEntity<>(status, HttpStatus.resolve(200));
     // TODO
     /*catch (HttpClientErrorException.Unauthorized e){
             return new ResponseEntity<>(new ErrorResponseDto("Unauthorized user"), HttpStatus.UNAUTHORIZED);
@@ -142,20 +108,11 @@ public class RoleRestController {
   }
 
   @DeleteMapping("roles/{id}/permissions/{permission_id}")
-    public ResponseEntity<? extends ResponseDto> destroyPermission(@PathVariable ("id") Long id, @PathVariable ("permissionId") Long permissionId) {
-    try {
-      roleService.destroyPermission(id,permissionId);
-      return new ResponseEntity<>(HttpStatus.resolve(204));
-    } catch (IdNotFoundException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Role not found"),HttpStatus.NOT_FOUND);
-    } catch (PermissionIdNotFoundException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Permission not found"),HttpStatus.NOT_FOUND);
-    } catch (InvalidInputException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Invalid data"), HttpStatus.BAD_REQUEST);
-    } catch (UnknownErrorException e) {
-      return new ResponseEntity<>(new ErrorResponseDto("Unknown error"), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  public ResponseEntity<? extends ResponseDto> destroyPermission(@PathVariable("id") Long id,
+      @PathVariable("permissionId") Long permissionId) {
 
+    roleService.destroyPermission(id, permissionId);
+    return new ResponseEntity<>(HttpStatus.resolve(204));
     // TODO
     /*catch (HttpClientErrorException.Unauthorized e){
             return new ResponseEntity<>(new ErrorResponseDto("Unauthorized user"), HttpStatus.UNAUTHORIZED);

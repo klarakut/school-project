@@ -2,18 +2,23 @@ package com.gfa.users.controllers;
 
 
 import com.gfa.common.dtos.ErrorResponseDto;
+import com.gfa.common.exceptions.EmptyBodyException;
 import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.users.exceptions.AlreadyVerifiedException;
+import com.gfa.users.exceptions.DuplicateRoleException;
 import com.gfa.users.exceptions.EmailMissingException;
+import com.gfa.users.exceptions.IdNotFoundException;
 import com.gfa.users.exceptions.InvalidEmailException;
 import com.gfa.users.exceptions.InvalidIdException;
+import com.gfa.users.exceptions.InvalidInputException;
 import com.gfa.users.exceptions.InvalidLoginCredentialsException;
 import com.gfa.users.exceptions.InvalidPasswordException;
 import com.gfa.users.exceptions.InvalidRequestException;
 import com.gfa.users.exceptions.PasswordMissingException;
 import com.gfa.users.exceptions.PasswordTooShortException;
 import com.gfa.users.exceptions.PermissionExistsException;
+import com.gfa.users.exceptions.PermissionIdNotFoundException;
 import com.gfa.users.exceptions.PermissionNotFoundException;
 import com.gfa.users.exceptions.RequestBodyMissingException;
 import com.gfa.users.exceptions.ShortPasswordException;
@@ -164,9 +169,33 @@ public class ControllerExceptionHandler {
     return new ErrorResponseDto("Permission not found");
   }
 
-  @ExceptionHandler(PermissionNotFoundException.class)
+  @ExceptionHandler(EmptyBodyException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ErrorResponseDto handleUnknownErrorException() {
+  public ErrorResponseDto handleEmptyBodyException() {
+    return new ErrorResponseDto("Role is required");
+  }
+
+  @ExceptionHandler(DuplicateRoleException.class)
+  @ResponseStatus(HttpStatus.CONFLICT)
+  public ErrorResponseDto handleDuplicateRoleException() {
+    return new ErrorResponseDto("Role already exists");
+  }
+
+  @ExceptionHandler(IdNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ErrorResponseDto handleIdNotFoundException() {
+    return new ErrorResponseDto("Role not found");
+  }
+
+  @ExceptionHandler(InvalidInputException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponseDto handleInvalidInputException() {
+    return new ErrorResponseDto("Invalid data");
+  }
+
+  @ExceptionHandler(PermissionIdNotFoundException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponseDto handlePermissionIdNotFoundException() {
     return new ErrorResponseDto("Permission not found");
   }
 }
