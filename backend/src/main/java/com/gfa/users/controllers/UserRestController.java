@@ -39,15 +39,6 @@ public class UserRestController {
   public ResponseEntity<? extends ResponseDto> store(@RequestBody UserCreateRequestDto dto) {
 
     UserResponseDto userResponse = userService.store(dto);
-
-//    URI location = ServletUriComponentsBuilder
-//        .fromCurrentContextPath().path("/register/{username}")
-//        .buildAndExpand(userResponse.username).toUri();
-//
-//    return ResponseEntity
-//        .created(location)
-//        .body(userResponse);
-
     return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
 
   }
