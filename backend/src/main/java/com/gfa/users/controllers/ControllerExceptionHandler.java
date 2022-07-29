@@ -6,6 +6,7 @@ import com.gfa.common.exceptions.InvalidTokenException;
 import com.gfa.common.exceptions.TokenExpiredException;
 import com.gfa.users.exceptions.AlreadyVerifiedException;
 import com.gfa.users.exceptions.DuplicateRoleException;
+import com.gfa.users.exceptions.EmailAlreadyVerifiedException;
 import com.gfa.users.exceptions.EmailMissingException;
 import com.gfa.users.exceptions.IdNotFoundException;
 import com.gfa.users.exceptions.InvalidEmailException;
@@ -146,7 +147,7 @@ public class ControllerExceptionHandler {
   @ExceptionHandler(RequestBodyMissingException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorResponseDto handleRequestBodyMissingException() {
-    return new ErrorResponseDto("Invalid input");
+    return new ErrorResponseDto("No request body");
   }
 
   @ExceptionHandler(EmailMissingException.class)
@@ -231,5 +232,11 @@ public class ControllerExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorResponseDto handleRoleExistsException() {
     return new ErrorResponseDto("Role exist in team");
+  }
+
+  @ExceptionHandler(EmailAlreadyVerifiedException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponseDto handleEmailAlreadyVerifiedException() {
+    return new ErrorResponseDto("This email has already been verified");
   }
 }
