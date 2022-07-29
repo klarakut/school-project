@@ -1,6 +1,5 @@
 package com.gfa.users.controllers;
 
-
 import com.gfa.common.dtos.ErrorResponseDto;
 import com.gfa.common.exceptions.EmptyBodyException;
 import com.gfa.common.exceptions.InvalidTokenException;
@@ -34,7 +33,6 @@ import com.gfa.users.exceptions.UserExistsException;
 import com.gfa.users.exceptions.UserNotFoundException;
 import com.gfa.users.exceptions.UsernameMissingException;
 import com.gfa.users.exceptions.UsernameTakenException;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.ErrorMessages;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -233,10 +231,5 @@ public class ControllerExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorResponseDto handleRoleExistsException() {
     return new ErrorResponseDto("Role exist in team");
-  }
-
-  @ExceptionHandler(Exception.class)
-  public ErrorResponseDto resourceNotFoundException() {
-    return new ErrorResponseDto("some error");
   }
 }

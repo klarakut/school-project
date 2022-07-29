@@ -9,7 +9,6 @@ import com.gfa.users.dtos.PasswordResetRequestDto;
 import com.gfa.users.dtos.UserPatchRequestDto;
 import com.gfa.users.dtos.UserResponseDto;
 import com.gfa.users.services.UserService;
-import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
