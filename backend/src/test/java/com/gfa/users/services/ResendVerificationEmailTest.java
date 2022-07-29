@@ -20,7 +20,7 @@ class ResendVerificationEmailTest {
   @Test
   void can_resend_the_verification_email() {
     UserRepository mockedUserRepository = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepository, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepository, null, null, null);
 
     EmailRequestDto emailDto = new EmailRequestDto("alex@gmail.com");
     User user = Mockito.mock(User.class);
@@ -35,7 +35,7 @@ class ResendVerificationEmailTest {
   @Test
   void resend_to_an_already_verified_user_throw_an_exception() {
     UserRepository mockedUserRepository = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepository, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepository, null, null, null);
 
     EmailRequestDto emailDto = new EmailRequestDto("alex@gmail.com");
     User user = Mockito.mock(User.class);
@@ -52,7 +52,7 @@ class ResendVerificationEmailTest {
   @Test
   void resend_with_an_invalid_email_throw_an_exception() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepo, null, null, null);
 
     EmailRequestDto emailDto = new EmailRequestDto("alexgmail.com");
 
@@ -62,7 +62,7 @@ class ResendVerificationEmailTest {
   @Test
   void resend_to_an_non_existent_user_fails_silently() {
     UserRepository mockedUserRepository = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepository, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepository, null, null, null);
     EmailRequestDto emailDto = new EmailRequestDto("alex@gmail.com");
     User user = Mockito.mock(User.class);
 

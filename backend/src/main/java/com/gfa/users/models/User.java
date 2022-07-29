@@ -164,6 +164,12 @@ public class User {
     this.password = password;
   }
 
+  public void setVerified() {
+    verifiedAt = LocalDateTime.now();
+    verificationToken = null;
+    verificationTokenExpiresAt = null;
+  }
+
   public LocalDateTime getVerifiedAt() {
     return verifiedAt;
   }
@@ -175,6 +181,10 @@ public class User {
   public void setVerificationToken(@NotNull String verificationToken) {
     this.verificationToken = verificationToken;
     this.verifiedAt = null;
+  }
+
+  public void setVerificationTokenExpiresAt(LocalDateTime ldt) {
+    verificationTokenExpiresAt = ldt;
   }
 
   public LocalDateTime getVerificationTokenExpiresAt() {

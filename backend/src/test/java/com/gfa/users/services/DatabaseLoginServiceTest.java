@@ -19,11 +19,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class LoginServiceImplTest {
+class DatabaseLoginServiceTest {
 
   UserRepository mockedUserRepository = Mockito.mock(UserRepository.class);
   AuthenticationManager mockedAuthManager = Mockito.mock(AuthenticationManager.class);
-  LoginService loginService = new LoginServiceImpl(mockedUserRepository,mockedAuthManager,null);
+  LoginService loginService = new DatabaseLoginService(mockedUserRepository,mockedAuthManager,null);
 
   @Test
     void login_method_throws_exception_if_empty() {

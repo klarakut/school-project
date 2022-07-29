@@ -30,11 +30,11 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-class UserServiceImplTest {
+class DatabaseUserServiceTest {
 
   @Test
   void sending_empty_email_exception() {
-    UserService userService = new UserServiceImpl(null, null, null, null);
+    UserService userService = new DatabaseUserService(null, null, null, null);
     assertThrows(
         InvalidEmailException.class,
         () -> {
@@ -49,7 +49,7 @@ class UserServiceImplTest {
     Mockito.when(userRepository.findByEmail(Mockito.anyString()))
         .thenThrow(new UserNotFoundException());
 
-    UserService userService = new UserServiceImpl(userRepository, null, null, null);
+    UserService userService = new DatabaseUserService(userRepository, null, null, null);
     assertThrows(
         UserNotFoundException.class,
         () -> userService.resetPasswords(new EmailRequestDto("milarda@milarda.sk")));
@@ -63,7 +63,7 @@ class UserServiceImplTest {
     UserRepository userRepository = Mockito.mock(UserRepository.class);
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.of(user));
 
-    UserService userService = new UserServiceImpl(userRepository, null, null, null);
+    UserService userService = new DatabaseUserService(userRepository, null, null, null);
 
     assertThrows(
         UnverifiedEmailException.class,
@@ -81,7 +81,7 @@ class UserServiceImplTest {
     Mockito.when(userRepository.findByForgottenPasswordToken(Mockito.anyString()))
         .thenReturn(Optional.of(user));
 
-    UserService userService = new UserServiceImpl(userRepository, null, null, null);
+    UserService userService = new DatabaseUserService(userRepository, null, null, null);
     assertThrows(
         InvalidPasswordException.class,
         () -> userService.resetPassword("22", new PasswordResetRequestDto("")));
@@ -98,7 +98,7 @@ class UserServiceImplTest {
     Mockito.when(userRepository.findByForgottenPasswordToken(Mockito.anyString()))
         .thenReturn(Optional.of(user));
 
-    UserService userService = new UserServiceImpl(userRepository, null, null, null);
+    UserService userService = new DatabaseUserService(userRepository, null, null, null);
     assertThrows(
         InvalidTokenException.class,
         () -> userService.resetPassword("22", new PasswordResetRequestDto("DVAVVVAAA")));
@@ -115,7 +115,7 @@ class UserServiceImplTest {
     Mockito.when(userRepository.findByForgottenPasswordToken(Mockito.anyString()))
         .thenReturn(Optional.of(user));
 
-    UserService userService = new UserServiceImpl(userRepository, null, null, null);
+    UserService userService = new DatabaseUserService(userRepository, null, null, null);
     assertThrows(
         TokenExpiredException.class,
         () -> userService.resetPassword("22", new PasswordResetRequestDto("DVAVVVAAA")));
@@ -132,7 +132,7 @@ class UserServiceImplTest {
     Mockito.when(userRepository.findByForgottenPasswordToken(Mockito.anyString()))
         .thenReturn(Optional.of(user));
 
-    UserService userService = new UserServiceImpl(userRepository, null, null, null);
+    UserService userService = new DatabaseUserService(userRepository, null, null, null);
     assertThrows(
         PasswordTooShortException.class,
         () -> userService.resetPassword("22", new PasswordResetRequestDto("1")));
@@ -150,7 +150,7 @@ class UserServiceImplTest {
     Mockito.when(userRepository.findByForgottenPasswordToken(Mockito.anyString()))
         .thenReturn(Optional.of(user));
 
-    UserService userService = new UserServiceImpl(userRepository, null, null, null);
+    UserService userService = new DatabaseUserService(userRepository, null, null, null);
     assertDoesNotThrow(
         () -> userService.resetPassword("22", new PasswordResetRequestDto("V4l1d n3w P4$$w0rd")));
 
@@ -162,7 +162,7 @@ class UserServiceImplTest {
   @Test
   void delete_user_with_negative_id() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepo, null, null, null);
 
     assertThrows(InvalidIdException.class, () -> userService.destroy(-1L));
   }
@@ -170,7 +170,7 @@ class UserServiceImplTest {
   @Test
   void delete_user_with_not_exist_id() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepo, null, null, null);
 
     assertThrows(UserNotFoundException.class, () -> userService.destroy(1L));
   }
@@ -178,7 +178,7 @@ class UserServiceImplTest {
   @Test
   void update_negative_id_throws_exception() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepo, null, null, null);
 
     UserPatchRequestDto mockedDto = Mockito.mock(UserPatchRequestDto.class);
 
@@ -188,7 +188,7 @@ class UserServiceImplTest {
   @Test
   void update_user_with_not_exist_id() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepo, null, null, null);
 
     UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", "petr", "123456789");
     assertThrows(UserNotFoundException.class, () -> userService.update(1L, dto));
@@ -197,7 +197,7 @@ class UserServiceImplTest {
   @Test
   void update_username_is_empty_throws_exception() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepo, null, null, null);
 
     UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", "", "123456789");
     assertThrows(InvalidRequestException.class, () -> userService.update(1L, dto));
@@ -206,7 +206,7 @@ class UserServiceImplTest {
   @Test
   void update_username_is_null_throws_exception() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepo, null, null, null);
 
     UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", null, "123456789");
     assertThrows(InvalidRequestException.class, () -> userService.update(1L, dto));
@@ -215,7 +215,7 @@ class UserServiceImplTest {
   @Test
   void update_email_is_empty_throws_exception() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepo, null, null, null);
 
     UserPatchRequestDto dto = new UserPatchRequestDto("", "petr", "123456789");
     assertThrows(InvalidRequestException.class, () -> userService.update(1L, dto));
@@ -224,7 +224,7 @@ class UserServiceImplTest {
   @Test
   void update_email_is_null_throws_exception() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepo, null, null, null);
 
     UserPatchRequestDto dto = new UserPatchRequestDto(null, "petr", "123456789");
     assertThrows(InvalidRequestException.class, () -> userService.update(1L, dto));
@@ -233,7 +233,7 @@ class UserServiceImplTest {
   @Test
   void update_password_is_empty_throws_exception() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepo, null, null, null);
 
     UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", "petr", "");
     assertThrows(InvalidRequestException.class, () -> userService.update(1L, dto));
@@ -242,7 +242,7 @@ class UserServiceImplTest {
   @Test
   void update_password_is_null_throws_exception() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepo, null, null, null);
 
     UserPatchRequestDto dto = new UserPatchRequestDto("petr@seznam.cz", "petr", null);
     assertThrows(InvalidRequestException.class, () -> userService.update(1L, dto));
@@ -251,7 +251,7 @@ class UserServiceImplTest {
   @Test
   void update_user_email_username_password_successfully() {
     UserRepository mockedUserRepo = Mockito.mock(UserRepository.class);
-    UserService userService = new UserServiceImpl(mockedUserRepo, null, null, null);
+    UserService userService = new DatabaseUserService(mockedUserRepo, null, null, null);
     User user = new User(1L, "peter", "peter@seznam.cz", "123456789", null, null,
         null, null, null, null);
     UserPatchRequestDto dto = new UserPatchRequestDto("peeeetr@seznam.cz", "peeeetr", "987654321");
