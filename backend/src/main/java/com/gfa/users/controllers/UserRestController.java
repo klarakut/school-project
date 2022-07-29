@@ -27,12 +27,11 @@ import java.util.List;
 public class UserRestController {
 
   private final UserService userService;
-  private final Environment environment;
+
 
   @Autowired
-  public UserRestController(UserService userService, Environment environment) {
+  public UserRestController(UserService userService) {
     this.userService = userService;
-    this.environment = environment;
   }
 
   @PostMapping({"/register", "/users"})
